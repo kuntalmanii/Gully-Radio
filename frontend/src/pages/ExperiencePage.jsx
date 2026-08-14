@@ -37,12 +37,13 @@ function CassetteVisual({ isPlaying, trackTitle, album }) {
 
         <div className="cassette-label-area">
           <span className="cassette-label-title" style={{ fontFamily: "'Tiro Devanagari Hindi', serif" }}>
-            राम रेडियो सेशन्स
+            {trackTitle ?? 'राम रेडियो सेशन्स'}
           </span>
           <span className="cassette-label-sub" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
             {album ?? 'वॉल्यूम 01 — शाम की धूप'}
           </span>
         </div>
+
 
         <div className="cassette-reels">
           <div className={`cassette-reel ${isPlaying ? 'cassette-reel--spinning' : ''}`} />
@@ -170,10 +171,11 @@ export default function ExperiencePage() {
               <div className="exp-deck-status">
                 <div className={`exp-status-dot ${isPlaying ? 'exp-status-dot--active' : ''}`} />
                 <span style={{ fontFamily: "'Noto Sans Devanagari', sans-serif" }}>
-                  {isLoading ? 'लोड हो रहा है...' : isPlaying ? 'चल रहा है' : 'रुका हुआ'}
+                  {isLoading || loading ? 'लोड हो रहा है...' : isPlaying ? 'चल रहा है' : 'रुका हुआ'}
                 </span>
               </div>
             </motion.div>
+
 
             {/* Visual cassette */}
             <motion.div variants={FADE} custom={0.20}>

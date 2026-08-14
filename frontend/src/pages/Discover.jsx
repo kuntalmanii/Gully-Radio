@@ -170,7 +170,11 @@ export default function Discover() {
                   width: '100%',
                 }}
               />
-              {searchQuery && (
+              {isSearching ? (
+                <span style={{ fontSize: '0.62rem', color: 'rgba(215,178,122,0.6)', fontFamily: "'Noto Sans Devanagari', sans-serif", whiteSpace: 'nowrap' }}>
+                  खोज जारी...
+                </span>
+              ) : searchQuery ? (
                 <button
                   onClick={() => setSearchQuery('')}
                   style={{ background: 'none', border: 'none', color: 'rgba(215,178,122,0.5)', cursor: 'pointer', padding: 0 }}
@@ -179,9 +183,10 @@ export default function Discover() {
                 >
                   <X size={13} />
                 </button>
-              )}
+              ) : null}
             </motion.div>
           </div>
+
         </motion.header>
 
         {/* ── Live Search Results Drawer ───────────────────── */}

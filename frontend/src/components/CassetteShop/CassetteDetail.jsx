@@ -24,7 +24,8 @@ const FADE_UP = {
   }),
 }
 
-export default function CassetteDetail({ mixtape, onBack }) {
+export default function CassetteDetail({ mixtape }) {
+
   const cassetteRef  = useRef(null)
   const deckSlotRef  = useRef(null)
   const contentRef   = useRef(null)

@@ -306,7 +306,8 @@ export function renderSoundField(ctx, width, height, bands, time) {
   for (let r = 0; r < rows; r++) {
     const rowProgress = r / rows
     const yBase = horizonY + Math.pow(rowProgress, 1.8) * (height - horizonY)
-    const waveAmp = (1 - rowProgress * 0.5) * (bands.mid * 20 + bands.bass * 15)
+    const waveAmp = (1 - rowProgress * 0.5) * (bands.mid * 20 + bassPulse)
+
 
     ctx.beginPath()
     for (let c = 0; c <= cols; c++) {

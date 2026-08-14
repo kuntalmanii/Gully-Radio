@@ -13,9 +13,9 @@
  * Reacts directly to currently playing track frequency/amplitude.
  */
 
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Radio, X, Activity } from 'lucide-react'
+import { X, Activity } from 'lucide-react'
 import useAudioAnalyzer from './useAudioAnalyzer'
 import {
   renderAnalogWave,
@@ -50,7 +50,8 @@ export default function AudioVisualizer({
   const [isExpanded, setIsExpanded]   = useState(false)
   const [meterBands, setMeterBands]   = useState({ bass: 0, mid: 0, high: 0, amp: 0 })
 
-  const { getAnalyzerData, isPlaying, isAvailable } = useAudioAnalyzer()
+  const { getAnalyzerData } = useAudioAnalyzer()
+
 
   // Initialize particle pool once
   useEffect(() => {
