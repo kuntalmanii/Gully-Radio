@@ -3,7 +3,7 @@
  * ──────────────────────────────────────────────────────────────
  * The browse view — cassettes laid out on a counter surface.
  * Fetches mixtapes from backend API /api/mixtapes.
- * Hover to lift. Click to select (GSAP fly-to-center then swap view).
+ * Contemporary Devanagari Visual Identity.
  */
 
 import { useRef, useCallback, useState, useEffect } from 'react'
@@ -28,7 +28,6 @@ export default function CassetteCollection({ onSelect }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  /* Fetch mixtapes from API */
   const loadMixtapes = useCallback(async () => {
     setLoading(true)
     setError(null)
@@ -40,19 +39,23 @@ export default function CassetteCollection({ onSelect }) {
           const localMatch = LOCAL_MIXTAPES.find((lm) => lm.id === m.id || lm.id === m.shortId)
           return {
             ...m,
+            title: localMatch?.title || m.title,
+            titleEn: localMatch?.titleEn || m.titleEn,
+            curator: localMatch?.curator || m.curator,
+            description: localMatch?.description || m.description,
             theme: localMatch?.theme || m.theme || {
               shell: '#171512', label: '#2a2010', stripe: '#6a5820',
               accent: '#d4b030', text: '#f0e0a0', screw: '#221c0e'
             },
             labelArt: localMatch?.labelArt || 'grid',
-            tracks: m.tracks || localMatch?.tracks || [],
+            tracks: localMatch?.tracks || m.tracks || [],
           }
         })
         setMixtapes(merged)
       }
     } catch (err) {
       console.warn('[CassetteCollection] API fetch fallback:', err.message)
-      setError('Offline archival mode active')
+      setError('ऑफ़लाइन संग्रह सक्रिय')
     } finally {
       setLoading(false)
     }
@@ -66,12 +69,10 @@ export default function CassetteCollection({ onSelect }) {
     const el = cassetteRefs.current[index]
     if (!el) { onSelect(mixtape); return }
 
-    /* GSAP: cassette flies to center, scales up, then calls onSelect */
     const rect   = el.getBoundingClientRect()
     const cx     = window.innerWidth  / 2
     const cy     = window.innerHeight / 2
 
-    // Lift the cassette above all siblings
     gsap.set(el, { zIndex: 100 })
 
     gsap.to(el, {
@@ -106,24 +107,24 @@ export default function CassetteCollection({ onSelect }) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '0.92rem', letterSpacing: '0.04em' }}
       >
-        Cassettes from the archive — pick one up {loading ? '(Syncing...)' : ''}
+        एक कैसेट चुनिए — सुनने के लिए उठाइए {loading ? '(अपडेट जारी...)' : ''}
       </motion.p>
 
-      {/* Error banner */}
       {error && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(168, 79, 53, 0.15)', border: '1px solid rgba(168, 79, 53, 0.3)', padding: '0.4rem 0.8rem', borderRadius: '2px' }}>
-          <span style={{ fontSize: '0.58rem', color: '#F2E5CC', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-            <AlertCircle size={11} color="#C56A3E" />
+          <span style={{ fontSize: '0.7rem', color: '#F2E5CC', display: 'flex', alignItems: 'center', gap: '0.3rem', fontFamily: "'Noto Sans Devanagari', sans-serif" }}>
+            <AlertCircle size={12} color="#C56A3E" />
             {error}
           </span>
           <button
             onClick={loadMixtapes}
-            style={{ background: 'none', border: 'none', color: '#D7B27A', fontSize: '0.55rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem', textTransform: 'uppercase' }}
+            style={{ background: 'none', border: 'none', color: '#D7B27A', fontSize: '0.65rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem', fontFamily: "'Noto Sans Devanagari', sans-serif" }}
             type="button"
           >
-            <RefreshCw size={9} />
-            Retry
+            <RefreshCw size={10} />
+            पुनः प्रयास
           </button>
         </div>
       )}
@@ -146,9 +147,11 @@ export default function CassetteCollection({ onSelect }) {
                 size="md"
                 onClick={() => handleSelect(mix, i)}
               />
-              {/* Hover hint label */}
-              <span className="cassette-hover-hint">
-                {mix.tracks?.length || mix.trackCount || 0} tracks · {mix.year}
+              <span
+                className="cassette-hover-hint"
+                style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.62rem' }}
+              >
+                {mix.tracks?.length || 6} गाने · {mix.year}
               </span>
             </motion.div>
           ))}

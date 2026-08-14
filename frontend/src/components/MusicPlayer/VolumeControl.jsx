@@ -1,7 +1,6 @@
 /**
  * VolumeControl.jsx
- * Mute toggle icon + volume range slider.
- * Displays speaker icon variant based on volume level.
+ * Mute toggle icon + volume range slider with Hindi labels.
  */
 
 import { useRef, useEffect, useCallback } from 'react'
@@ -16,7 +15,6 @@ function VolumeIcon({ volume, isMuted }) {
 export default function VolumeControl({ volume, isMuted, onVolumeChange, onMuteToggle }) {
   const rangeRef = useRef(null)
 
-  /* Update --fill CSS variable imperatively */
   useEffect(() => {
     const pct = isMuted ? 0 : volume * 100
     rangeRef.current?.style.setProperty('--fill', `${pct.toFixed(1)}%`)
@@ -31,11 +29,12 @@ export default function VolumeControl({ volume, isMuted, onVolumeChange, onMuteT
   }, [])
 
   return (
-    <div className="player-volume" role="group" aria-label="Volume">
+    <div className="player-volume" role="group" aria-label="आवाज़ (Volume)">
       <button
         className="player-btn"
         onClick={onMuteToggle}
-        aria-label={isMuted ? 'Unmute' : 'Mute'}
+        aria-label={isMuted ? 'आवाज़ खोलें' : 'म्यूट करें'}
+        title="आवाज़ (Volume)"
         type="button"
         style={{ padding: '0.3rem' }}
       >
@@ -52,8 +51,8 @@ export default function VolumeControl({ volume, isMuted, onVolumeChange, onMuteT
         value={isMuted ? 0 : volume}
         onChange={handleChange}
         onInput={handleInput}
-        aria-label="Volume"
-        aria-valuetext={isMuted ? 'Muted' : `${Math.round(volume * 100)}%`}
+        aria-label="आवाज़ स्तर"
+        aria-valuetext={isMuted ? 'म्यूट' : `${Math.round(volume * 100)}%`}
       />
     </div>
   )

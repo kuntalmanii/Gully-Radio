@@ -3,15 +3,13 @@
  * ──────────────────────────────────────────────────────────────
  * Selected cassette view: deck slot + cassette insertion animation,
  * metadata, description, and interactive track listing.
- *
- * Fetches tracks from backend API /api/mixtapes/:id/tracks.
- * Connects to the global AudioContext to enable playback.
+ * Contemporary Devanagari Visual Identity.
  */
 
 import { useEffect, useRef, useCallback, useState } from 'react'
 import { motion, AnimatePresence }        from 'framer-motion'
 import { gsap }                           from 'gsap'
-import { Play, RefreshCw }                from 'lucide-react'
+import { Play }                           from 'lucide-react'
 import Cassette                           from './Cassette'
 import { getMixtapeQueue }                from './shopData'
 import { getMixtapeTracks }               from '../../services/api'
@@ -33,14 +31,13 @@ export default function CassetteDetail({ mixtape, onBack }) {
 
   const [tracks, setTracks]     = useState(mixtape.tracks || [])
   const [loading, setLoading]   = useState(false)
-  const [apiLoaded, setApiLoaded] = useState(false)
 
   const {
     loadQueue, playTrack, togglePlay,
     currentTrackId, isPlaying,
   } = useAudio()
 
-  /* ── Insertion animation: cassette slides from below into the deck */
+  /* ── Insertion animation ───────────────────────────────────── */
   useEffect(() => {
     const cassette = cassetteRef.current
     const content  = contentRef.current
@@ -81,15 +78,22 @@ export default function CassetteDetail({ mixtape, onBack }) {
       const res = await getMixtapeTracks(mixtape.id)
       const fetched = res?.tracks || res || []
       if (fetched.length > 0) {
-        setTracks(fetched)
-        setApiLoaded(true)
+        // Keep Hindi titles if available in local metadata
+        const mergedTracks = fetched.map((ft, idx) => {
+          const localTrack = mixtape.tracks?.[idx]
+          return {
+            ...ft,
+            title: localTrack?.title || ft.title,
+          }
+        })
+        setTracks(mergedTracks)
       }
     } catch (err) {
       console.warn('[CassetteDetail] Fallback to local tracks:', err.message)
     } finally {
       setLoading(false)
     }
-  }, [mixtape.id])
+  }, [mixtape.id, mixtape.tracks])
 
   useEffect(() => {
     fetchTracks()
@@ -131,11 +135,13 @@ export default function CassetteDetail({ mixtape, onBack }) {
     >
       {/* ── Deck / player slot ──────────────────────────────── */}
       <div ref={deckSlotRef} className="detail-deck">
-        <span className="detail-deck-label">
-          {apiLoaded ? 'Now Loading (API Synced)' : 'Now Loading'}
+        <span
+          className="detail-deck-label"
+          style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.62rem' }}
+        >
+          {loading ? 'लोड हो रहा है...' : 'डेक में कैसेट'}
         </span>
 
-        {/* Cassette — animated in */}
         <Cassette
           ref={cassetteRef}
           mixtape={{ ...mixtape, tracks }}
@@ -143,7 +149,6 @@ export default function CassetteDetail({ mixtape, onBack }) {
           isPlaying={isPlaying && isThisCassetteActive}
         />
 
-        {/* Playing bars indicator */}
         <div className="detail-deck-controls">
           <AnimatePresence>
             {isPlaying && isThisCassetteActive && (
@@ -168,38 +173,59 @@ export default function CassetteDetail({ mixtape, onBack }) {
 
         {/* Meta */}
         <motion.div className="detail-meta" variants={FADE_UP} initial="hidden" animate="visible">
-          <h2 className="detail-cassette-title">{mixtape.title}</h2>
-          <p className="detail-cassette-by">
-            Curated by {mixtape.curator}
+          <h2
+            className="detail-cassette-title"
+            style={{
+              fontFamily: "'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif",
+              fontSize: 'clamp(2.2rem, 4.5vw, 3.4rem)',
+              lineHeight: 1.15,
+            }}
+          >
+            {mixtape.title}
+          </h2>
+
+          <p
+            className="detail-cassette-by"
+            style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.8rem', color: 'rgba(215, 178, 122, 0.7)' }}
+          >
+            तैयार किया: {mixtape.curator}
           </p>
-          <p className="detail-cassette-desc">{mixtape.description}</p>
+
+          <p
+            className="detail-cassette-desc"
+            style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '0.94rem', lineHeight: 1.7 }}
+          >
+            {mixtape.description}
+          </p>
 
           <div className="detail-meta-tags">
-            <span className="detail-tag">{mixtape.genre}</span>
-            <span className="detail-tag">{mixtape.year}</span>
-            <span className="detail-tag">{tracks.length} tracks</span>
+            <span className="detail-tag" style={{ fontFamily: "'Inter', sans-serif" }}>{mixtape.genre}</span>
+            <span className="detail-tag" style={{ fontFamily: "'Inter', sans-serif" }}>{mixtape.year}</span>
+            <span className="detail-tag" style={{ fontFamily: "'Noto Sans Devanagari', sans-serif" }}>{tracks.length} गाने</span>
           </div>
 
           <button
             className="detail-play-all"
             onClick={handlePlayAll}
-            aria-label={`Play all tracks on ${mixtape.title}`}
+            aria-label={`${mixtape.title} के सभी गाने चलाएँ`}
+            type="button"
+            style={{ fontFamily: "'Noto Sans Devanagari', 'Inter', sans-serif", fontSize: '0.82rem' }}
           >
             <Play size={14} strokeWidth={1.5} />
-            Play All Tracks
+            सभी गाने चलाएँ
           </button>
         </motion.div>
 
         {/* Tracklist */}
         <motion.div className="detail-tracklist" variants={FADE_UP} custom={0.15} initial="hidden" animate="visible">
           <div className="detail-tracklist-header">
-            <span className="detail-tracklist-label">Tracks</span>
+            <span
+              className="detail-tracklist-label"
+              style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.72rem' }}
+            >
+              गाने
+            </span>
             <div className="detail-tracklist-rule" />
-            {loading && (
-              <span style={{ fontSize: '0.52rem', color: '#D7B27A', textTransform: 'uppercase' }}>
-                Updating...
-              </span>
-            )}
           </div>
 
           {tracks.map((track, i) => {
@@ -214,13 +240,20 @@ export default function CassetteDetail({ mixtape, onBack }) {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleTrackClick(qTrack?.id || track.id)}
-                aria-label={`${isActive && isPlaying ? 'Pause' : 'Play'} ${track.title}`}
+                aria-label={`${isActive && isPlaying ? 'रोकें' : 'चलाएँ'} ${track.title}`}
               >
-                <span className="detail-track-num">
+                <span className="detail-track-num" style={{ fontFamily: "'Inter', sans-serif" }}>
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <span className="detail-track-name">{track.title}</span>
-                <span className="detail-track-dur">{formatTime(track.duration)}</span>
+                <span
+                  className="detail-track-name"
+                  style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '0.95rem' }}
+                >
+                  {track.title}
+                </span>
+                <span className="detail-track-dur" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  {formatTime(track.duration)}
+                </span>
               </div>
             )
           })}

@@ -1,6 +1,6 @@
 /**
  * PlaybackControls.jsx
- * Previous / Play-Pause / Next + optional Shuffle/Repeat.
+ * Previous / Play-Pause / Next
  */
 
 import { SkipBack, SkipForward } from 'lucide-react'
@@ -18,7 +18,8 @@ export default function PlaybackControls({
       <button
         className="player-btn player-btn--skip"
         onClick={onPrev}
-        aria-label="Previous track"
+        aria-label="पिछला गाना (Previous track)"
+        title="पिछला गाना"
         type="button"
       >
         <SkipBack size={16} strokeWidth={1.5} />
@@ -33,7 +34,8 @@ export default function PlaybackControls({
       <button
         className="player-btn player-btn--skip"
         onClick={onNext}
-        aria-label="Next track"
+        aria-label="अगला गाना (Next track)"
+        title="अगला गाना"
         type="button"
       >
         <SkipForward size={16} strokeWidth={1.5} />

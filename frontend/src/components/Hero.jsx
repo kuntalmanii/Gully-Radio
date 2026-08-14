@@ -1,12 +1,27 @@
+/**
+ * Hero.jsx
+ * ──────────────────────────────────────────────────────────────
+ * Gully Radio Hero Experience — Contemporary Devanagari Identity.
+ *
+ * Headline:
+ *   संगीत
+ *   जो वक़्त
+ *   से बाहर है।
+ *
+ * Supporting Line:
+ *   पुरानी गलियों की नई आवाज़।
+ *
+ * CTA:
+ *   गली में चलें
+ *   सुनें • खोजें • याद करें
+ */
+
 import { useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { useCinematicTransition, MagneticButton } from './CinematicTransition'
 import '../styles/hero.css'
 
-/* ─── Particle data — generated once, outside render ─────────────
-   Keeps values stable across re-renders without needing useMemo.
-───────────────────────────────────────────────────────────────── */
 const PARTICLE_COUNT = 22
 const particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
   id:       i,
@@ -18,7 +33,6 @@ const particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
   drift:    `${(Math.random() * 30 - 15).toFixed(1)}px`,
 }))
 
-/* ─── Framer Motion entrance variant ──────────────────────────── */
 const FADE_UP = {
   hidden:  { opacity: 0, y: 36 },
   visible: (delay = 0) => ({
@@ -34,8 +48,8 @@ export default function Hero() {
   const headlineRef  = useRef(null)
   const taglineRef   = useRef(null)
   const ctaRef       = useRef(null)
-  const kbTlRef      = useRef(null)   // Ken Burns timeline ref (to kill on transition)
-  const shopHintRef  = useRef(null)   // Floating hint over shop
+  const kbTlRef      = useRef(null)
+  const shopHintRef  = useRef(null)
 
   const { trigger } = useCinematicTransition()
 
@@ -85,11 +99,7 @@ export default function Hero() {
     }
   }, [])
 
-  /* ─── Cinematic entrance transition ──────────────────────────
-     Called when "ENTER THE STREET" is clicked.
-     Receives the master GSAP timeline from CinematicTransition
-     and adds our hero-specific exit animations to it.
-  ─────────────────────────────────────────────────────────────── */
+  /* ─── Cinematic entrance transition ────────────────────────── */
   const handleEnterStreet = useCallback(() => {
     trigger({
       to: '/experience',
@@ -100,14 +110,11 @@ export default function Hero() {
         const tagline   = taglineRef.current
         const cta       = ctaRef.current
 
-        // Kill the looping Ken Burns so our zoom takes full control
         kbTlRef.current?.kill()
 
-        // ── Phase 1: Instant UI clear (header + scroll hint)
         tl.to('.site-header',           { opacity: 0, y: -18, duration: 0.55, ease: 'power2.inOut' }, 0)
           .to('.hero-scroll-indicator', { opacity: 0, duration: 0.3 }, 0)
 
-        // ── Phase 2: Headline dissolves upward (staggered lines)
         if (headline) {
           const lines = headline.querySelectorAll('span')
           tl.to(lines, {
@@ -119,21 +126,17 @@ export default function Hero() {
           }, 0.12)
         }
 
-        // ── Phase 3: Tagline + CTA follow
         tl.to(tagline, { opacity: 0, y: -32, duration: 0.65, ease: 'power2.inOut' }, 0.28)
           .to(cta,     { opacity: 0, y: -20, duration: 0.55, ease: 'power2.inOut' }, 0.38)
 
-        // ── Phase 4: Background enters the photograph
-        //    Pan toward the RAM Radio cassette shop (right-center of image)
         tl.to(bg, {
           scale:    2.4,
-          x:       '-9%',   // rightward pan (negative = moves content right → pans left in viewport)
-          y:        '4%',   // slight downward tilt into the street
+          x:       '-9%',
+          y:        '4%',
           duration: 3.4,
           ease:     'power2.inOut',
         }, 0.15)
 
-        // ── Phase 5: Deepen the atmosphere progressively
         tl.to('.hero-vignette',    { opacity: 1.8, duration: 2.4, ease: 'power2.inOut' }, 0.5)
           .to('.hero-bottom-fade', { opacity: 2.0, duration: 2.0, ease: 'power2.inOut' }, 0.6)
           .to('.hero-color-grade', { opacity: 1.6, duration: 2.0, ease: 'power2.inOut' }, 0.8)
@@ -142,9 +145,7 @@ export default function Hero() {
     })
   }, [trigger])
 
-  /* ─── Shop transition — zoom toward bottom-left cassette stall ─
-     Pan the bg toward the shop area, fade content, navigate /shop.
-  ─────────────────────────────────────────────────────────────── */
+  /* ─── Shop transition — zoom toward cassette stall ─────────── */
   const handleEnterShop = useCallback(() => {
     trigger({
       to: '/shop',
@@ -157,7 +158,6 @@ export default function Hero() {
 
         kbTlRef.current?.kill()
 
-        // Clear UI
         tl.to('.site-header',           { opacity: 0, y: -18, duration: 0.5, ease: 'power2.inOut' }, 0)
           .to('.hero-scroll-indicator', { opacity: 0, duration: 0.3 }, 0)
           .to(shopHintRef.current,      { opacity: 0, duration: 0.3 }, 0)
@@ -170,11 +170,10 @@ export default function Hero() {
         tl.to(tagline, { opacity: 0, y: -24, duration: 0.6, ease: 'power2.inOut' }, 0.2)
           .to(cta,     { opacity: 0, y: -18, duration: 0.5, ease: 'power2.inOut' }, 0.3)
 
-        // Zoom bg toward the shop stall (bottom-left of image)
         tl.to(bg, {
           scale:           2.8,
-          x:               '8%',   // shift right slightly → focuses on left of image
-          y:               '-6%',  // slight up shift → focuses on middle-top of shop stall
+          x:               '8%',
+          y:               '-6%',
           transformOrigin: '15% 60%',
           duration:        3.2,
           ease:            'power2.inOut',
@@ -191,7 +190,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       className="hero-section"
-      aria-label="Hero — Gully Radio"
+      aria-label="गली रेडियो — मुख्य पृष्ठ (Hero)"
     >
       {/* ── Background ─────────────────────────────────────────── */}
       <div className="hero-bg-wrap" aria-hidden="true">
@@ -228,18 +227,18 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* ── Copy ───────────────────────────────────────────────── */}
+      {/* ── Contemporary Devanagari Headline & Copy ─────────────── */}
       <div className="hero-content">
         <motion.h1
           ref={headlineRef}
           className="hero-headline"
           initial="hidden"
           animate="visible"
-          aria-label="Music from another time"
+          aria-label="संगीत जो वक़्त से बाहर है।"
         >
-          <motion.span className="line-1" variants={FADE_UP} custom={0.65}>MUSIC</motion.span>
-          <motion.span className="line-2" variants={FADE_UP} custom={0.82}>FROM</motion.span>
-          <motion.span className="line-3" variants={FADE_UP} custom={1.0}>ANOTHER TIME.</motion.span>
+          <motion.span className="line-1" variants={FADE_UP} custom={0.65}>संगीत</motion.span>
+          <motion.span className="line-2" variants={FADE_UP} custom={0.82}>जो वक़्त</motion.span>
+          <motion.span className="line-3" variants={FADE_UP} custom={1.0}>से बाहर है।</motion.span>
         </motion.h1>
 
         <motion.p
@@ -250,8 +249,7 @@ export default function Hero() {
           initial="hidden"
           animate="visible"
         >
-          A cinematic music experience inspired by the streets,
-          sounds and memories of another era.
+          पुरानी गलियों की नई आवाज़।
         </motion.p>
 
         <motion.div
@@ -262,19 +260,18 @@ export default function Hero() {
           initial="hidden"
           animate="visible"
         >
-          {/* MagneticButton wraps the visual button for hover/click effects */}
           <MagneticButton
             className="btn-enter"
             type="button"
             strength={0.28}
             onClick={handleEnterStreet}
-            aria-label="Enter the Gully Radio experience"
+            aria-label="गली में चलें"
           >
-            ENTER THE STREET
+            गली में चलें
           </MagneticButton>
 
           <span className="hero-listen-line" aria-hidden="true">
-            LISTEN&nbsp;&bull;&nbsp;DISCOVER&nbsp;&bull;&nbsp;REMEMBER
+            सुनें&nbsp;&bull;&nbsp;खोजें&nbsp;&bull;&nbsp;याद करें
           </span>
         </motion.div>
       </div>
@@ -287,28 +284,26 @@ export default function Hero() {
         transition={{ duration: 1.2, delay: 2.6 }}
         aria-hidden="true"
       >
-        <span className="scroll-label">Scroll</span>
+        <span className="scroll-label">नीचे चलें</span>
         <div className="scroll-line" />
       </motion.div>
 
-      {/* ── Shop zone — clickable hotspot over the cassette stall ─ */}
+      {/* ── Shop zone hotspot ───────────────────────────────────── */}
       <div
         className="hero-shop-zone"
         onClick={handleEnterShop}
         role="button"
         tabIndex={0}
-        aria-label="Enter the cassette shop"
+        aria-label="दुकान में चलें (Enter the cassette shop)"
         onKeyDown={(e) => e.key === 'Enter' && handleEnterShop()}
       >
-        {/* Warm glow overlay — CSS hover transition */}
         <div className="hero-shop-glow" aria-hidden="true" />
 
-        {/* Delayed floating hint */}
         <div ref={shopHintRef} className="hero-shop-hint" aria-hidden="true">
           <div className="hero-shop-hint-ring">
             <div className="hero-shop-hint-dot" />
           </div>
-          <span className="hero-shop-hint-label">Enter Shop</span>
+          <span className="hero-shop-hint-label">दुकान में चलें</span>
         </div>
       </div>
     </section>

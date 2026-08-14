@@ -1,14 +1,13 @@
 /**
  * MusicPlayer/index.jsx
  * ──────────────────────────────────────────────────────────────
- * Persistent bottom-bar player.
- * Rendered OUTSIDE <Routes> in App.jsx so it survives navigation.
+ * Persistent bottom-bar player with Contemporary Devanagari Identity.
  *
- * Desktop: single row — [Track Info] [Controls] [Progress + Volume]
- * Mobile:  two rows  — [Info + Controls] / [Full-width seek]
- *
- * Slides in from below when first track is loaded.
- * Does NOT autoplay — waits for user interaction.
+ * Labels:
+ *   अभी बज रहा है (Now Playing)
+ *   कतार (Queue)
+ *   चलाएँ / रोकें (Play / Pause)
+ *   आवाज़ (Volume)
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -36,15 +35,18 @@ function QueuePanel({ queue, currentTrackId, onSelect, onClose }) {
       exit={{ opacity: 0, y: 12 }}
       transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
       role="listbox"
-      aria-label="Track queue"
+      aria-label="गानों की कतार"
     >
       <div className="queue-panel-header">
-        <span className="queue-panel-label">Queue · {queue.length} tracks</span>
+        <span className="queue-panel-label" style={{ fontFamily: "'Noto Sans Devanagari', sans-serif" }}>
+          कतार · {queue.length} गाने
+        </span>
         <button
           className="player-btn"
           onClick={onClose}
-          aria-label="Close queue"
+          aria-label="कतार बंद करें"
           style={{ padding: '0.2rem' }}
+          type="button"
         >
           ✕
         </button>
@@ -60,9 +62,15 @@ function QueuePanel({ queue, currentTrackId, onSelect, onClose }) {
           tabIndex={0}
           onKeyDown={(e) => { if (e.key === 'Enter') { onSelect(track.id); onClose() } }}
         >
-          <span className="queue-item-num">{(i + 1).toString().padStart(2, '0')}</span>
-          <span className="queue-item-title" title={track.title}>{track.title}</span>
-          <span className="queue-item-dur">{formatTime(track.duration)}</span>
+          <span className="queue-item-num" style={{ fontFamily: "'Inter', sans-serif" }}>
+            {(i + 1).toString().padStart(2, '0')}
+          </span>
+          <span className="queue-item-title" title={track.title} style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '0.92rem' }}>
+            {track.title}
+          </span>
+          <span className="queue-item-dur" style={{ fontFamily: "'Inter', sans-serif" }}>
+            {formatTime(track.duration)}
+          </span>
         </div>
       ))}
     </motion.div>
@@ -84,11 +92,9 @@ export default function MusicPlayer() {
   const [queueOpen, setQueueOpen] = useState(false)
   const [showVisualizer, setShowVisualizer] = useState(false)
 
-  /* Find the current track object */
   const allTracks   = getAllTracks()
   const currentTrack = allTracks.find((t) => t.id === currentTrackId) ?? null
 
-  /* Add/remove body class for content padding compensation */
   useEffect(() => {
     if (currentTrackId) {
       document.body.classList.add('has-player')
@@ -98,7 +104,6 @@ export default function MusicPlayer() {
     return () => document.body.classList.remove('has-player')
   }, [currentTrackId])
 
-  /* Close queue on outside click */
   useEffect(() => {
     if (!queueOpen) return
     const close = (e) => {
@@ -125,20 +130,18 @@ export default function MusicPlayer() {
               top: '1.8rem',
               left: '2rem',
               zIndex: 500,
-              background: 'rgba(23, 21, 18, 0.8)',
+              background: 'rgba(23, 21, 18, 0.85)',
               border: '1px solid rgba(215, 178, 122, 0.25)',
               color: '#F2E5CC',
-              padding: '0.4rem 0.8rem',
+              padding: '0.45rem 0.9rem',
               borderRadius: '2px',
-              fontFamily: "'DM Sans'",
-              fontSize: '0.6rem',
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
+              fontFamily: "'Noto Sans Devanagari', sans-serif",
+              fontSize: '0.72rem',
               cursor: 'pointer',
             }}
             type="button"
           >
-            ✕ Close Visualizer
+            ✕ दृश्य प्रभाव बंद करें
           </button>
         </div>
       )}
@@ -161,7 +164,7 @@ export default function MusicPlayer() {
           <motion.div
             className="player-bar"
             role="region"
-            aria-label="Music player"
+            aria-label="संगीत प्लेयर (Music player)"
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0,   opacity: 1 }}
             exit={{    y: 100, opacity: 0 }}
@@ -195,8 +198,8 @@ export default function MusicPlayer() {
               <button
                 className="player-btn"
                 onClick={() => setShowVisualizer((v) => !v)}
-                aria-label={showVisualizer ? 'Hide visualizer' : 'Show visualizer'}
-                title="Audio Visualizer"
+                aria-label={showVisualizer ? 'दृश्य प्रभाव छिपाएँ' : 'दृश्य प्रभाव देखें'}
+                title="दृश्य प्रभाव (Audio Visualizer)"
                 type="button"
                 style={{ color: showVisualizer ? '#D7B27A' : undefined }}
               >
@@ -211,14 +214,18 @@ export default function MusicPlayer() {
 
             {/* ── Mobile-only: full-width seek row ───────────── */}
             <div className="player-mobile-seek">
-              <span className="player-time">{formatTime(currentTime)}</span>
+              <span className="player-time" style={{ fontFamily: "'Inter', sans-serif" }}>
+                {formatTime(currentTime)}
+              </span>
               <ProgressBar
                 currentTime={currentTime}
                 duration={duration}
                 onSeek={seekTo}
                 showTime={false}
               />
-              <span className="player-time player-time--right">{formatTime(duration)}</span>
+              <span className="player-time player-time--right" style={{ fontFamily: "'Inter', sans-serif" }}>
+                {formatTime(duration)}
+              </span>
             </div>
           </motion.div>
         )}

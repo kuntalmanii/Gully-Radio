@@ -3,19 +3,19 @@
  * ──────────────────────────────────────────────────────────────
  * Main container — route element for /shop.
  * Manages collection ↔ detail view state.
- * Same background world as hero: zoomed into the shop stall.
+ * Contemporary Devanagari Visual Identity.
  */
 
 import { useState, useCallback }      from 'react'
 import { AnimatePresence, motion }    from 'framer-motion'
-import { ArrowLeft, Store }           from 'lucide-react'
+import { ArrowLeft }                  from 'lucide-react'
 import { useCinematicTransition }     from '../CinematicTransition'
 import CassetteCollection             from './CassetteCollection'
 import CassetteDetail                 from './CassetteDetail'
 import './shop.css'
 
 export default function CassetteShop() {
-  const [view,     setView]     = useState('collection')  // 'collection' | 'detail'
+  const [view,     setView]     = useState('collection')
   const [selected, setSelected] = useState(null)
 
   const { trigger } = useCinematicTransition()
@@ -50,15 +50,23 @@ export default function CassetteShop() {
           <button
             className="shop-back-btn"
             onClick={view === 'detail' ? backToCollection : goBack}
-            aria-label={view === 'detail' ? 'Back to collection' : 'Back to street'}
+            aria-label={view === 'detail' ? 'सभी कैसेट देखें' : 'वापस गली में'}
+            type="button"
           >
-            <ArrowLeft size={12} />
-            {view === 'detail' ? 'All cassettes' : 'Back to street'}
+            <ArrowLeft size={13} />
+            <span>{view === 'detail' ? 'सभी कैसेट' : 'वापस गली में'}</span>
           </button>
 
           <div className="shop-title-group">
-            <span className="shop-name">Gully Radio Shop</span>
-            <span className="shop-sub">Cassette Archive · Vol. 01</span>
+            <span
+              className="shop-name"
+              style={{ fontFamily: "'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif", fontSize: '1.25rem' }}
+            >
+              पुरानी दुकान
+            </span>
+            <span className="shop-sub" style={{ fontFamily: "'Inter', sans-serif" }}>
+              CASSETTE ARCHIVE · VOL. 01
+            </span>
           </div>
 
           <div className="shop-header-spacer" aria-hidden="true" />

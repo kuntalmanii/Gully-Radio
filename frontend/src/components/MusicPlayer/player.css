@@ -122,28 +122,29 @@
 }
 
 .player-track-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 0.9rem;
+  font-family: 'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif;
+  font-size: 0.98rem;
   font-weight: 400;
   color: #F2E5CC;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   letter-spacing: 0.01em;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .player-track-artist {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.62rem;
-  font-weight: 300;
-  color: rgba(215, 178, 122, 0.45);
-  letter-spacing: 0.08em;
+  font-family: 'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: rgba(215, 178, 122, 0.55);
+  letter-spacing: 0.04em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: 2px;
+  margin-top: 1px;
 }
+
 
 /* ── Playback controls — center ─────────────────────────────────*/
 .player-controls {

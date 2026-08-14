@@ -1,7 +1,6 @@
 /**
  * PlayButton.jsx
  * Large circular play/pause button with loading spinner state.
- * Framer Motion AnimatePresence transitions between play/pause icons.
  */
 
 import { Play, Pause } from 'lucide-react'
@@ -14,7 +13,8 @@ export default function PlayButton({ isPlaying, isLoading, onClick, size = 'md' 
     <button
       className={`player-btn player-btn--play${size === 'lg' ? ' player-btn--play-lg' : ''}`}
       onClick={onClick}
-      aria-label={isPlaying ? 'Pause' : 'Play'}
+      aria-label={isPlaying ? 'रोकें (Pause)' : 'चलाएँ (Play)'}
+      title={isPlaying ? 'रोकें' : 'चलाएँ'}
       disabled={isLoading}
       type="button"
     >
@@ -45,7 +45,7 @@ export default function PlayButton({ isPlaying, isLoading, onClick, size = 'md' 
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             exit={{ opacity: 0, scale: 0.6, rotate: -15 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            style={{ marginLeft: 2 }}  /* optical centering for play triangle */
+            style={{ marginLeft: 2 }}
           >
             <Play size={iconSize} strokeWidth={1.5} />
           </motion.span>

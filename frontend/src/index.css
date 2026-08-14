@@ -1,14 +1,14 @@
 /* ─────────────────────────────────────────────────────────────────
-   Gully Radio — Global Styles
+   Gully Radio — Global Styles & Modern Devanagari Typography System
    Tailwind v4: use @import instead of @tailwind directives
 ───────────────────────────────────────────────────────────────── */
 @import "tailwindcss";
 
-/* ─── Design Tokens ──────────────────────────────────────────────
+/* ─── Design Tokens & Devanagari Typography Hierarchy ─────────────
    Register custom values into Tailwind's theme via @theme
 ───────────────────────────────────────────────────────────────── */
 @theme {
-  /* Colors */
+  /* Colors — Warm Analog Palette */
   --color-bg-deep:      #171512;
   --color-bg-dark:      #211C18;
   --color-rust:         #A84F35;
@@ -17,9 +17,15 @@
   --color-cream:        #F2E5CC;
   --color-forest:       #4E6254;
 
-  /* Typography */
-  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --font-sans:  'DM Sans', system-ui, -apple-system, sans-serif;
+  /* Contemporary Devanagari Typography System */
+  --font-display-hindi: 'Tiro Devanagari Hindi', 'Noto Serif Devanagari', Georgia, serif;
+  --font-serif-hindi:   'Noto Serif Devanagari', 'Tiro Devanagari Hindi', Georgia, serif;
+  --font-ui-hindi:      'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
+  --font-ui-en:         'Inter', 'Noto Sans Devanagari', system-ui, sans-serif;
+
+  /* Legacy aliases for smooth component mapping */
+  --font-serif:         'Tiro Devanagari Hindi', 'Noto Serif Devanagari', Georgia, serif;
+  --font-sans:          'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
 
   /* Easing */
   --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
@@ -37,18 +43,18 @@
 html {
   overflow-x: hidden;
   scroll-behavior: smooth;
-  /* Prevent layout shift from scrollbar appearing */
   scrollbar-gutter: stable;
 }
 
 body {
   background-color: #171512;
   color: #F2E5CC;
-  font-family: var(--font-sans);
+  font-family: var(--font-ui-hindi);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
+  line-height: 1.6;
 }
 
 /* ─── Editorial Text Selection ───────────────────────────────────*/
@@ -88,6 +94,34 @@ a:focus:not(:focus-visible) {
   background: rgba(215, 178, 122, 0.45);
 }
 
+/* ─── Matra Protection Utility ───────────────────────────────────
+   Ensures Devanagari top/bottom vowel marks never get clipped
+───────────────────────────────────────────────────────────────── */
+.devanagari-safe {
+  line-height: 1.35;
+  padding-top: 0.15em;
+  padding-bottom: 0.15em;
+}
+
+.devanagari-display {
+  font-family: var(--font-display-hindi);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.devanagari-serif {
+  font-family: var(--font-serif-hindi);
+}
+
+.devanagari-ui {
+  font-family: var(--font-ui-hindi);
+}
+
+.en-meta {
+  font-family: var(--font-ui-en);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 
 /* ─── Film Grain Animation ───────────────────────────────────────*/
 @keyframes grain {

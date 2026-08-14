@@ -407,36 +407,36 @@
 }
 
 .cassette-label-title {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.55rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-family: 'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .cassette--lg .cassette-label-title {
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
 }
 
 .cassette--sm .cassette-label-title {
-  font-size: 0.42rem;
+  font-size: 0.5rem;
 }
 
 .cassette-label-sub {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
   font-size: 0.45rem;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  opacity: 0.65;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 
 .cassette--lg .cassette-label-sub { font-size: 0.6rem; }
 .cassette--sm .cassette-label-sub { font-size: 0.38rem; }

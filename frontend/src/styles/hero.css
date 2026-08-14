@@ -228,16 +228,18 @@
 
 /* ─── Headline ───────────────────────────────────────────────────*/
 .hero-headline {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(3.8rem, 11vw, 8.5rem);
-  font-weight: 300;
-  line-height: 0.88;
+  font-family: 'Tiro Devanagari Hindi', 'Noto Serif Devanagari', Georgia, serif;
+  font-size: clamp(3.2rem, 9.5vw, 7.4rem);
+  font-weight: 400;
+  line-height: 1.1;
   letter-spacing: -0.01em;
   color: #F2E5CC;
   display: flex;
   flex-direction: column;
   gap: 0;
   margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
+  padding-top: 0.1em;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
 }
 
 .hero-headline .line-1,
@@ -247,20 +249,21 @@
 
 .hero-headline .line-3 {
   color: #C56A3E;
-  font-style: italic;
-  font-weight: 300;
+  font-style: normal;
+  font-weight: 400;
 }
 
 /* ─── Tagline ────────────────────────────────────────────────────*/
 .hero-tagline {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: clamp(0.8rem, 1.4vw, 0.95rem);
-  font-weight: 300;
-  line-height: 1.75;
-  color: rgba(242, 229, 204, 0.58);
-  max-width: 380px;
+  font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Hindi', Georgia, serif;
+  font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.7;
+  color: #D7B27A;
+  max-width: 420px;
   margin-bottom: clamp(2rem, 4vw, 2.8rem);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
 }
 
 /* ─── CTA area ───────────────────────────────────────────────────*/
@@ -273,16 +276,15 @@
 
 .btn-enter {
   display: inline-block;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.68rem;
+  font-family: 'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
+  font-size: 0.88rem;
   font-weight: 500;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: #171512;
   background: #D7B27A;
   border: 1px solid transparent;
   border-radius: 2px;
-  padding: 1.05rem 2.8rem;
+  padding: 0.95rem 2.8rem;
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -324,16 +326,15 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-
 .hero-listen-line {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.62rem;
+  font-family: 'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
+  font-size: 0.7rem;
   font-weight: 400;
-  letter-spacing: 0.32em;
-  color: rgba(215, 178, 122, 0.42);
-  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(215, 178, 122, 0.6);
   user-select: none;
 }
+
 
 /* ─── Scroll indicator ───────────────────────────────────────────*/
 .hero-scroll-indicator {

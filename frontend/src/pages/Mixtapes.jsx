@@ -2,12 +2,12 @@
  * Mixtapes.jsx
  * ──────────────────────────────────────────────────────────────
  * Horizontally Scrollable Mixtape Experience.
+ * Contemporary Devanagari Visual Identity.
  *
- * Fetches all 6 signature mixtapes from the Express backend API (/api/mixtapes).
- * Desktop: Horizontal scrolling with mouse wheel, drag, and arrow controls.
- * Mobile: Native swipe with snap points.
- *
- * Full playback connection to global AudioContext.
+ * Headline:
+ *   कुछ गाने
+ *   सिर्फ़ सुने नहीं जाते,
+ *   याद भी रहते हैं।
  */
 
 import { useRef, useState, useCallback, useEffect } from 'react'
@@ -55,24 +55,27 @@ export default function Mixtapes() {
       const res = await getMixtapes()
       const fetched = res?.mixtapes || res || []
       if (fetched.length > 0) {
-        // Merge with local artwork styles for rich CSS rendering
         const merged = fetched.map((m) => {
           const localMatch = LOCAL_MIXTAPES.find((lm) => lm.id === m.id || lm.id === m.shortId)
           return {
             ...m,
+            title: localMatch?.title || m.title,
+            titleEn: localMatch?.titleEn || m.titleEn,
+            curator: localMatch?.curator || m.curator,
+            description: localMatch?.description || m.description,
             theme: localMatch?.theme || m.theme || {
               shell: '#171512', label: '#2a2010', stripe: '#6a5820',
               accent: '#d4b030', text: '#f0e0a0', screw: '#221c0e'
             },
             labelArt: localMatch?.labelArt || 'grid',
-            tracks: m.tracks || localMatch?.tracks || [],
+            tracks: localMatch?.tracks || m.tracks || [],
           }
         })
         setMixtapes(merged)
       }
     } catch (err) {
       console.warn('[Mixtapes] Backend fetch fallback:', err.message)
-      setError('Signal Lost · Playing cached tape archive')
+      setError('ऑफ़लाइन कैसेट संग्रह सक्रिय')
     } finally {
       setLoading(false)
     }
@@ -82,7 +85,6 @@ export default function Mixtapes() {
     fetchMixtapesData()
   }, [fetchMixtapesData])
 
-  /* Check scroll boundaries */
   const checkScrollBounds = useCallback(() => {
     const el = scrollRef.current
     if (!el) return
@@ -102,7 +104,6 @@ export default function Mixtapes() {
     }
   }, [checkScrollBounds])
 
-  /* Mouse wheel horizontal scrolling */
   const handleWheel = useCallback((e) => {
     const el = scrollRef.current
     if (!el) return
@@ -111,7 +112,6 @@ export default function Mixtapes() {
     }
   }, [])
 
-  /* Drag scrolling */
   const handleMouseDown = useCallback((e) => {
     const el = scrollRef.current
     if (!el) return
@@ -134,14 +134,12 @@ export default function Mixtapes() {
     isDraggingRef.current = false
   }, [])
 
-  /* Step controls */
   const scrollByAmount = useCallback((offset) => {
     const el = scrollRef.current
     if (!el) return
     el.scrollBy({ left: offset, behavior: 'smooth' })
   }, [])
 
-  /* Play entire mixtape */
   const handlePlayMixtape = useCallback((mixtape) => {
     const queue = getMixtapeQueue(mixtape.id)
     const isTapeActive = queue.some((t) => t.id === currentTrackId)
@@ -170,15 +168,37 @@ export default function Mixtapes() {
           animate="visible"
         >
           <div className="mixtapes-header-left">
-            <motion.span className="mixtapes-tag" variants={FADE_UP} custom={0.1}>
-              Cassette Archive Edition · {loading ? 'Fetching API...' : 'Live Synced'}
+            <motion.span
+              className="mixtapes-tag"
+              variants={FADE_UP}
+              custom={0.1}
+              style={{ fontFamily: "'Noto Sans Devanagari', sans-serif" }}
+            >
+              कैसेट संग्रह · {loading ? 'लोड हो रहा है...' : 'लाइव सिंक'}
             </motion.span>
-            <motion.h1 className="mixtapes-headline" variants={FADE_UP} custom={0.2}>
-              THE SIX MIXTAPES.
+
+            <motion.h1
+              className="mixtapes-headline"
+              variants={FADE_UP}
+              custom={0.2}
+              style={{
+                fontFamily: "'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif",
+                fontSize: 'clamp(2.8rem, 6.5vw, 5.2rem)',
+                lineHeight: 1.15,
+                fontWeight: 400,
+                letterSpacing: '-0.01em',
+              }}
+            >
+              कुछ गाने सिर्फ़ सुने नहीं जाते, याद भी रहते हैं।
             </motion.h1>
-            <motion.p className="mixtapes-subhead" variants={FADE_UP} custom={0.35}>
-              Curated analog journeys recorded across Indian alleys, rooftop monsoons,
-              and late-night train corridors. Drag or scroll horizontally to explore.
+
+            <motion.p
+              className="mixtapes-subhead"
+              variants={FADE_UP}
+              custom={0.35}
+              style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: 'clamp(0.9rem, 1.4vw, 1.1rem)', lineHeight: 1.7 }}
+            >
+              भारतीय गलियों, छतों की बारिश और देर रात की ट्रेनों से चुनी हुई कुछ खास आवाज़ें। आगे देखने के लिए ड्रैग या स्क्रॉल करें।
             </motion.p>
           </div>
 
@@ -187,7 +207,7 @@ export default function Mixtapes() {
               className="mixtapes-nav-btn"
               onClick={() => scrollByAmount(-400)}
               disabled={!canScrollLeft}
-              aria-label="Scroll previous mixtapes"
+              aria-label="पिछले कैसेट"
               type="button"
             >
               <ChevronLeft size={20} />
@@ -196,7 +216,7 @@ export default function Mixtapes() {
               className="mixtapes-nav-btn"
               onClick={() => scrollByAmount(400)}
               disabled={!canScrollRight}
-              aria-label="Scroll next mixtapes"
+              aria-label="अगले कैसेट"
               type="button"
             >
               <ChevronRight size={20} />
@@ -207,17 +227,17 @@ export default function Mixtapes() {
         {/* Error Banner with Retry */}
         {error && (
           <div style={{ margin: '0 5vw 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(168, 79, 53, 0.12)', border: '1px solid rgba(168, 79, 53, 0.3)', padding: '0.6rem 1rem', borderRadius: '2px' }}>
-            <span style={{ fontSize: '0.62rem', color: '#F2E5CC', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <span style={{ fontSize: '0.72rem', color: '#F2E5CC', display: 'flex', alignItems: 'center', gap: '0.4rem', fontFamily: "'Noto Sans Devanagari', sans-serif" }}>
               <AlertCircle size={13} color="#C56A3E" />
               {error}
             </span>
             <button
               onClick={fetchMixtapesData}
-              style={{ background: 'none', border: 'none', color: '#D7B27A', fontSize: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.12em' }}
+              style={{ background: 'none', border: 'none', color: '#D7B27A', fontSize: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', fontFamily: "'Noto Sans Devanagari', sans-serif" }}
               type="button"
             >
               <RefreshCw size={11} />
-              Retry Connection
+              पुनः प्रयास
             </button>
           </div>
         )}
@@ -247,8 +267,15 @@ export default function Mixtapes() {
                   transition={{ duration: 0.8, delay: 0.15 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div className="mixtape-card-top">
-                    <span className="mixtape-index">VOL. 0{i + 1}</span>
-                    <span className="mixtape-track-count">{mix.tracks.length} Tracks · {mix.year}</span>
+                    <span className="mixtape-index" style={{ fontFamily: "'Inter', sans-serif" }}>
+                      VOL. 0{i + 1}
+                    </span>
+                    <span
+                      className="mixtape-track-count"
+                      style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.62rem' }}
+                    >
+                      {mix.tracks.length} गाने · {mix.year}
+                    </span>
                   </div>
 
                   {/* 3D Visual Cassette Showcase */}
@@ -264,9 +291,29 @@ export default function Mixtapes() {
 
                   {/* Info */}
                   <div className="mixtape-info">
-                    <h2 className="mixtape-title">{mix.title}</h2>
-                    <p className="mixtape-curator">Curated by {mix.curator} · {mix.genre}</p>
-                    <p className="mixtape-desc">{mix.description}</p>
+                    <h2
+                      className="mixtape-title"
+                      style={{
+                        fontFamily: "'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif",
+                        fontSize: '1.75rem',
+                        lineHeight: 1.2,
+                        fontWeight: 400,
+                      }}
+                    >
+                      {mix.title}
+                    </h2>
+                    <p
+                      className="mixtape-curator"
+                      style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.72rem' }}
+                    >
+                      तैयार किया: {mix.curator} · {mix.genre}
+                    </p>
+                    <p
+                      className="mixtape-desc"
+                      style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '0.88rem', lineHeight: 1.6 }}
+                    >
+                      {mix.description}
+                    </p>
                   </div>
 
                   {/* Action Strip */}
@@ -275,16 +322,17 @@ export default function Mixtapes() {
                       className="mixtape-play-btn"
                       onClick={() => handlePlayMixtape(mix)}
                       type="button"
+                      style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.74rem' }}
                     >
                       {isTapePlaying ? (
                         <>
-                          <Pause size={14} />
-                          <span>Pause</span>
+                          <Pause size={13} />
+                          <span>रोकें</span>
                         </>
                       ) : (
                         <>
-                          <Play size={14} style={{ marginLeft: 1 }} />
-                          <span>Play Tape</span>
+                          <Play size={13} style={{ marginLeft: 1 }} />
+                          <span>चलाएँ</span>
                         </>
                       )}
                     </button>
@@ -293,18 +341,20 @@ export default function Mixtapes() {
                       className="mixtape-inspect-link"
                       onClick={() => setActivePreview(isPreviewOpen ? null : mix.id)}
                       type="button"
+                      style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.7rem' }}
                     >
-                      <ListMusic size={14} />
-                      <span>{isPreviewOpen ? 'Hide Tracks' : 'Preview'}</span>
+                      <ListMusic size={13} />
+                      <span>{isPreviewOpen ? 'छिपाएँ' : 'गाने देखें'}</span>
                     </button>
 
                     <button
                       className="mixtape-inspect-link"
                       onClick={() => navigate('/shop')}
                       type="button"
-                      title="Inspect in Cassette Shop"
+                      title="दुकान में देखें"
+                      style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.7rem' }}
                     >
-                      <span>Shop</span>
+                      <span>दुकान</span>
                       <ArrowUpRight size={13} />
                     </button>
                   </div>
@@ -312,11 +362,17 @@ export default function Mixtapes() {
                   {/* Tracklist Preview Overlay */}
                   <div className="mixtape-tracks-preview">
                     <div className="preview-header">
-                      <span className="preview-title">{mix.title}</span>
+                      <span
+                        className="preview-title"
+                        style={{ fontFamily: "'Tiro Devanagari Hindi', serif", fontSize: '1.15rem' }}
+                      >
+                        {mix.title}
+                      </span>
                       <button
                         className="preview-close"
                         onClick={() => setActivePreview(null)}
                         type="button"
+                        aria-label="बंद करें"
                       >
                         ✕
                       </button>
@@ -325,23 +381,27 @@ export default function Mixtapes() {
                     <div className="preview-list">
                       {mix.tracks.map((t, idx) => (
                         <div key={t.id} className="preview-row">
-                          <span>{idx + 1}. {t.title}</span>
-                          <span style={{ color: '#D7B27A' }}>{formatTime(t.duration)}</span>
+                          <span style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '0.88rem' }}>
+                            {idx + 1}. {t.title}
+                          </span>
+                          <span style={{ color: '#D7B27A', fontFamily: "'Inter', sans-serif", fontSize: '0.68rem' }}>
+                            {formatTime(t.duration)}
+                          </span>
                         </div>
                       ))}
                     </div>
 
                     <button
                       className="mixtape-play-btn"
-                      style={{ width: '100%', justifyContent: 'center' }}
+                      style={{ width: '100%', justifyContent: 'center', fontFamily: "'Noto Sans Devanagari', sans-serif" }}
                       onClick={() => {
                         handlePlayMixtape(mix)
                         setActivePreview(null)
                       }}
                       type="button"
                     >
-                      <Play size={14} />
-                      <span>Play Full Mixtape</span>
+                      <Play size={13} />
+                      <span>पूरा मिक्सटेप चलाएँ</span>
                     </button>
                   </div>
                 </motion.article>
