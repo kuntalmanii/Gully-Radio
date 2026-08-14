@@ -13,9 +13,11 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Activity } from 'lucide-react'
 import { useAudio } from '../../contexts/AudioContext'
 import { getAllTracks } from '../../services/musicService'
 import { formatTime } from './ProgressBar'
+import AudioVisualizer from '../AudioVisualizer'
 
 import TrackInfo        from './TrackInfo'
 import PlaybackControls from './PlaybackControls'
@@ -80,6 +82,7 @@ export default function MusicPlayer() {
   } = useAudio()
 
   const [queueOpen, setQueueOpen] = useState(false)
+  const [showVisualizer, setShowVisualizer] = useState(false)
 
   /* Find the current track object */
   const allTracks   = getAllTracks()
@@ -111,6 +114,35 @@ export default function MusicPlayer() {
 
   return (
     <>
+      {/* Visualizer Floating Overlay / Modal when enabled */}
+      {showVisualizer && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 400 }}>
+          <AudioVisualizer showControls={true} />
+          <button
+            onClick={() => setShowVisualizer(false)}
+            style={{
+              position: 'fixed',
+              top: '1.8rem',
+              left: '2rem',
+              zIndex: 500,
+              background: 'rgba(23, 21, 18, 0.8)',
+              border: '1px solid rgba(215, 178, 122, 0.25)',
+              color: '#F2E5CC',
+              padding: '0.4rem 0.8rem',
+              borderRadius: '2px',
+              fontFamily: "'DM Sans'",
+              fontSize: '0.6rem',
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+            }}
+            type="button"
+          >
+            ✕ Close Visualizer
+          </button>
+        </div>
+      )}
+
       {/* Queue panel */}
       <AnimatePresence>
         {queueOpen && (
@@ -147,7 +179,7 @@ export default function MusicPlayer() {
               onNext={nextTrack}
             />
 
-            {/* ── Right: Progress + Volume + Queue ───────────── */}
+            {/* ── Right: Progress + Volume + Visualizer + Queue ── */}
             <div className="player-right">
               <ProgressBar
                 currentTime={currentTime}
@@ -160,6 +192,16 @@ export default function MusicPlayer() {
                 onVolumeChange={setVolume}
                 onMuteToggle={toggleMute}
               />
+              <button
+                className="player-btn"
+                onClick={() => setShowVisualizer((v) => !v)}
+                aria-label={showVisualizer ? 'Hide visualizer' : 'Show visualizer'}
+                title="Audio Visualizer"
+                type="button"
+                style={{ color: showVisualizer ? '#D7B27A' : undefined }}
+              >
+                <Activity size={16} strokeWidth={1.5} />
+              </button>
               <QueueButton
                 queueLength={queue.length}
                 isOpen={queueOpen}

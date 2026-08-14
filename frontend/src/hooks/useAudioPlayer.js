@@ -272,5 +272,6 @@ export default function useAudioPlayer() {
     toggleMute,
     nextTrack,
     prevTrack,
+    getAudioElement: () => audioRef.current,
   }
 }
