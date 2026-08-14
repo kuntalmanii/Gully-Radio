@@ -2,26 +2,22 @@
  * ExperiencePage
  * ──────────────────────────────────────────────────────────────
  * "Inside the photograph" — music experience view.
- * All audio state and controls come from AudioContext.
+ * Fetches track listing from Express API /api/tracks.
+ * All audio state and controls connect to global AudioContext.
  */
 
-import { useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   SkipBack, Pause, Play,
-  SkipForward, ArrowLeft
+  SkipForward, ArrowLeft, RefreshCw, AlertCircle
 } from 'lucide-react'
 import { useCinematicTransition } from '../components/CinematicTransition'
 import { useAudio }               from '../contexts/AudioContext'
-import { TRACKS }                 from '../services/musicService'
+import { getTracks }              from '../services/api'
+import { TRACKS as FALLBACK_TRACKS } from '../services/musicService'
 import { formatTime }             from '../components/MusicPlayer/ProgressBar'
 import '../styles/experience.css'
-
-/* ── Track data organised by tape side ──────────────────────────*/
-const SIDES = [
-  { label: 'SIDE A', tracks: TRACKS.filter((t) => t.side === 'A') },
-  { label: 'SIDE B', tracks: TRACKS.filter((t) => t.side === 'B') },
-]
 
 /* ── Framer Motion entrance variant ─────────────────────────────*/
 const FADE = {
@@ -65,10 +61,37 @@ export default function ExperiencePage() {
     currentTrackId, isPlaying, isLoading,
     currentTime, duration,
     togglePlay, prevTrack, nextTrack, playTrack,
-    queue,
+    loadQueue,
   } = useAudio()
 
+  const [tracks, setTracks]       = useState(FALLBACK_TRACKS)
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(null)
+
   const { trigger } = useCinematicTransition()
+
+  /* Fetch tracks from backend API */
+  const fetchTracksData = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await getTracks()
+      const fetchedTracks = res?.tracks || res || []
+      if (fetchedTracks.length > 0) {
+        setTracks(fetchedTracks)
+      }
+    } catch (err) {
+      console.warn('[ExperiencePage] Backend fetch fallback:', err.message)
+      setError('Signal Lost · Running in offline tape mode')
+      // Fallback tracks remain intact
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchTracksData()
+  }, [fetchTracksData])
 
   /* Reverse cinematic transition back to hero */
   const goBack = useCallback(() => {
@@ -85,7 +108,13 @@ export default function ExperiencePage() {
   }, [currentTrackId, togglePlay, playTrack])
 
   /* Current track metadata */
-  const currentTrack = TRACKS.find((t) => t.id === currentTrackId)
+  const currentTrack = tracks.find((t) => t.id === currentTrackId)
+
+  /* Track data organised by tape side */
+  const sides = [
+    { label: 'SIDE A', tracks: tracks.filter((t) => t.side === 'A') },
+    { label: 'SIDE B', tracks: tracks.filter((t) => t.side === 'B') },
+  ]
 
   return (
     <div className="exp-page">
@@ -181,34 +210,63 @@ export default function ExperiencePage() {
           <motion.div className="exp-tracklist" initial="hidden" animate="visible">
 
             <motion.div className="exp-tracklist-header" variants={FADE} custom={0.15}>
-              <span className="exp-tracklist-label">On the Tape</span>
+              <span className="exp-tracklist-label">On the Tape (API Connected)</span>
               <div className="exp-tracklist-rule" />
+              {loading && (
+                <span style={{ fontSize: '0.55rem', color: '#D7B27A', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                  Connecting...
+                </span>
+              )}
             </motion.div>
 
-            {SIDES.map((side, si) => (
+            {/* Error & Retry Banner */}
+            {error && (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(168, 79, 53, 0.12)', border: '1px solid rgba(168, 79, 53, 0.3)', padding: '0.6rem 0.8rem', borderRadius: '2px', marginBottom: '1.2rem' }}>
+                <span style={{ fontSize: '0.6rem', color: '#F2E5CC', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <AlertCircle size={12} color="#C56A3E" />
+                  {error}
+                </span>
+                <button
+                  onClick={fetchTracksData}
+                  style={{ background: 'none', border: 'none', color: '#D7B27A', fontSize: '0.58rem', display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.12em' }}
+                  type="button"
+                >
+                  <RefreshCw size={10} />
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {sides.map((side, si) => (
               <motion.div key={side.label} variants={FADE} custom={0.20 + si * 0.08}>
                 <p className="exp-side-divider">{side.label}</p>
 
-                {side.tracks.map((track) => {
-                  const isActive = currentTrackId === track.id
-                  return (
-                    <div
-                      key={track.id}
-                      className={`exp-track-row${isActive ? ' exp-track-row--active' : ''}`}
-                      onClick={() => handleTrackClick(track.id)}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`${isActive && isPlaying ? 'Pause' : 'Play'} ${track.title}`}
-                      onKeyDown={(e) => e.key === 'Enter' && handleTrackClick(track.id)}
-                    >
-                      <span className="exp-track-num">
-                        {track.side}{track.num}
-                      </span>
-                      <span className="exp-track-name">{track.title}</span>
-                      <span className="exp-track-dur">{formatTime(track.duration)}</span>
-                    </div>
-                  )
-                })}
+                {side.tracks.length === 0 ? (
+                  <p style={{ fontSize: '0.65rem', color: 'rgba(215,178,122,0.4)', padding: '0.5rem 0' }}>
+                    No tracks archived on this side.
+                  </p>
+                ) : (
+                  side.tracks.map((track) => {
+                    const isActive = currentTrackId === track.id
+                    return (
+                      <div
+                        key={track.id}
+                        className={`exp-track-row${isActive ? ' exp-track-row--active' : ''}`}
+                        onClick={() => handleTrackClick(track.id)}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${isActive && isPlaying ? 'Pause' : 'Play'} ${track.title}`}
+                        onKeyDown={(e) => e.key === 'Enter' && handleTrackClick(track.id)}
+                      >
+                        <span className="exp-track-num">
+                          {track.side || 'A'}{track.num || String(track.id).padStart(2, '0')}
+                        </span>
+                        <span className="exp-track-name">{track.title}</span>
+                        <span className="exp-track-dur">{formatTime(track.duration)}</span>
+                      </div>
+                    )
+                  })
+                )}
               </motion.div>
             ))}
           </motion.div>

@@ -3,14 +3,7 @@
  * ──────────────────────────────────────────────────────────────
  * Horizontally Scrollable Mixtape Experience.
  *
- * Mixtapes:
- *   1. MIDNIGHT GULLY
- *   2. CHAI & RAIN
- *   3. OLD CITY NIGHTS
- *   4. SUNDAY 1998
- *   5. LETTERS NEVER SENT
- *   6. AFTER THE LAST TRAIN
- *
+ * Fetches all 6 signature mixtapes from the Express backend API (/api/mixtapes).
  * Desktop: Horizontal scrolling with mouse wheel, drag, and arrow controls.
  * Mobile: Native swipe with snap points.
  *
@@ -19,12 +12,13 @@
 
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Play, Pause, ArrowUpRight, ListMusic } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Play, Pause, ArrowUpRight, ListMusic, RefreshCw, AlertCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAudio } from '../contexts/AudioContext'
 import Header from '../components/Header'
 import Cassette from '../components/CassetteShop/Cassette'
-import { MIXTAPES, getMixtapeQueue } from '../components/CassetteShop/shopData'
+import { getMixtapes } from '../services/api'
+import { MIXTAPES as LOCAL_MIXTAPES, getMixtapeQueue } from '../components/CassetteShop/shopData'
 import { formatTime } from '../components/MusicPlayer/ProgressBar'
 import '../styles/mixtapes.css'
 
@@ -38,6 +32,10 @@ const FADE_UP = {
 
 export default function Mixtapes() {
   const scrollRef = useRef(null)
+  const [mixtapes, setMixtapes] = useState(LOCAL_MIXTAPES)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
   const [activePreview, setActivePreview] = useState(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -48,6 +46,41 @@ export default function Mixtapes() {
 
   const navigate = useNavigate()
   const { currentTrackId, isPlaying, loadQueue, playTrack, togglePlay } = useAudio()
+
+  /* Fetch Mixtapes from Backend API */
+  const fetchMixtapesData = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await getMixtapes()
+      const fetched = res?.mixtapes || res || []
+      if (fetched.length > 0) {
+        // Merge with local artwork styles for rich CSS rendering
+        const merged = fetched.map((m) => {
+          const localMatch = LOCAL_MIXTAPES.find((lm) => lm.id === m.id || lm.id === m.shortId)
+          return {
+            ...m,
+            theme: localMatch?.theme || m.theme || {
+              shell: '#171512', label: '#2a2010', stripe: '#6a5820',
+              accent: '#d4b030', text: '#f0e0a0', screw: '#221c0e'
+            },
+            labelArt: localMatch?.labelArt || 'grid',
+            tracks: m.tracks || localMatch?.tracks || [],
+          }
+        })
+        setMixtapes(merged)
+      }
+    } catch (err) {
+      console.warn('[Mixtapes] Backend fetch fallback:', err.message)
+      setError('Signal Lost · Playing cached tape archive')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchMixtapesData()
+  }, [fetchMixtapesData])
 
   /* Check scroll boundaries */
   const checkScrollBounds = useCallback(() => {
@@ -138,7 +171,7 @@ export default function Mixtapes() {
         >
           <div className="mixtapes-header-left">
             <motion.span className="mixtapes-tag" variants={FADE_UP} custom={0.1}>
-              Cassette Archive Edition
+              Cassette Archive Edition · {loading ? 'Fetching API...' : 'Live Synced'}
             </motion.span>
             <motion.h1 className="mixtapes-headline" variants={FADE_UP} custom={0.2}>
               THE SIX MIXTAPES.
@@ -171,6 +204,24 @@ export default function Mixtapes() {
           </motion.div>
         </motion.header>
 
+        {/* Error Banner with Retry */}
+        {error && (
+          <div style={{ margin: '0 5vw 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(168, 79, 53, 0.12)', border: '1px solid rgba(168, 79, 53, 0.3)', padding: '0.6rem 1rem', borderRadius: '2px' }}>
+            <span style={{ fontSize: '0.62rem', color: '#F2E5CC', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <AlertCircle size={13} color="#C56A3E" />
+              {error}
+            </span>
+            <button
+              onClick={fetchMixtapesData}
+              style={{ background: 'none', border: 'none', color: '#D7B27A', fontSize: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.12em' }}
+              type="button"
+            >
+              <RefreshCw size={11} />
+              Retry Connection
+            </button>
+          </div>
+        )}
+
         {/* ── Horizontally Scrollable Carousel ─────────────── */}
         <div
           ref={scrollRef}
@@ -182,7 +233,7 @@ export default function Mixtapes() {
           onMouseLeave={handleMouseUp}
         >
           <div className="mixtapes-track">
-            {MIXTAPES.map((mix, i) => {
+            {mixtapes.map((mix, i) => {
               const queue = getMixtapeQueue(mix.id)
               const isTapePlaying = isPlaying && queue.some((t) => t.id === currentTrackId)
               const isPreviewOpen = activePreview === mix.id

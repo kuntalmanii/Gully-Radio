@@ -2,14 +2,17 @@
  * CassetteCollection.jsx
  * ──────────────────────────────────────────────────────────────
  * The browse view — cassettes laid out on a counter surface.
+ * Fetches mixtapes from backend API /api/mixtapes.
  * Hover to lift. Click to select (GSAP fly-to-center then swap view).
  */
 
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useState, useEffect } from 'react'
 import { motion }              from 'framer-motion'
-import { gsap }               from 'gsap'
+import { gsap }                from 'gsap'
+import { RefreshCw, AlertCircle } from 'lucide-react'
 import Cassette                from './Cassette'
-import { MIXTAPES }            from './shopData'
+import { getMixtapes }         from '../../services/api'
+import { MIXTAPES as LOCAL_MIXTAPES } from './shopData'
 
 const STAGGER = {
   hidden:  { opacity: 0, y: 28, scale: 0.94 },
@@ -21,6 +24,43 @@ const STAGGER = {
 
 export default function CassetteCollection({ onSelect }) {
   const cassetteRefs = useRef([])
+  const [mixtapes, setMixtapes] = useState(LOCAL_MIXTAPES)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  /* Fetch mixtapes from API */
+  const loadMixtapes = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await getMixtapes()
+      const list = res?.mixtapes || res || []
+      if (list.length > 0) {
+        const merged = list.map((m) => {
+          const localMatch = LOCAL_MIXTAPES.find((lm) => lm.id === m.id || lm.id === m.shortId)
+          return {
+            ...m,
+            theme: localMatch?.theme || m.theme || {
+              shell: '#171512', label: '#2a2010', stripe: '#6a5820',
+              accent: '#d4b030', text: '#f0e0a0', screw: '#221c0e'
+            },
+            labelArt: localMatch?.labelArt || 'grid',
+            tracks: m.tracks || localMatch?.tracks || [],
+          }
+        })
+        setMixtapes(merged)
+      }
+    } catch (err) {
+      console.warn('[CassetteCollection] API fetch fallback:', err.message)
+      setError('Offline archival mode active')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadMixtapes()
+  }, [loadMixtapes])
 
   const handleSelect = useCallback((mixtape, index) => {
     const el = cassetteRefs.current[index]
@@ -67,12 +107,30 @@ export default function CassetteCollection({ onSelect }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
       >
-        Cassettes from the archive — pick one up
+        Cassettes from the archive — pick one up {loading ? '(Syncing...)' : ''}
       </motion.p>
+
+      {/* Error banner */}
+      {error && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'rgba(168, 79, 53, 0.15)', border: '1px solid rgba(168, 79, 53, 0.3)', padding: '0.4rem 0.8rem', borderRadius: '2px' }}>
+          <span style={{ fontSize: '0.58rem', color: '#F2E5CC', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <AlertCircle size={11} color="#C56A3E" />
+            {error}
+          </span>
+          <button
+            onClick={loadMixtapes}
+            style={{ background: 'none', border: 'none', color: '#D7B27A', fontSize: '0.55rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem', textTransform: 'uppercase' }}
+            type="button"
+          >
+            <RefreshCw size={9} />
+            Retry
+          </button>
+        </div>
+      )}
 
       <div className="shop-counter">
         <div className="cassettes-display">
-          {MIXTAPES.map((mix, i) => (
+          {mixtapes.map((mix, i) => (
             <motion.div
               key={mix.id}
               className="cassette-wrapper"
@@ -90,7 +148,7 @@ export default function CassetteCollection({ onSelect }) {
               />
               {/* Hover hint label */}
               <span className="cassette-hover-hint">
-                {mix.tracks.length} tracks · {mix.year}
+                {mix.tracks?.length || mix.trackCount || 0} tracks · {mix.year}
               </span>
             </motion.div>
           ))}

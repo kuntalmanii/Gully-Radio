@@ -4,15 +4,17 @@
  * Selected cassette view: deck slot + cassette insertion animation,
  * metadata, description, and interactive track listing.
  *
+ * Fetches tracks from backend API /api/mixtapes/:id/tracks.
  * Connects to the global AudioContext to enable playback.
  */
 
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { motion, AnimatePresence }        from 'framer-motion'
 import { gsap }                           from 'gsap'
-import { Play, ChevronLeft }              from 'lucide-react'
+import { Play, RefreshCw }                from 'lucide-react'
 import Cassette                           from './Cassette'
 import { getMixtapeQueue }                from './shopData'
+import { getMixtapeTracks }               from '../../services/api'
 import { useAudio }                       from '../../contexts/AudioContext'
 import { formatTime }                     from '../MusicPlayer/ProgressBar'
 
@@ -29,6 +31,10 @@ export default function CassetteDetail({ mixtape, onBack }) {
   const deckSlotRef  = useRef(null)
   const contentRef   = useRef(null)
 
+  const [tracks, setTracks]     = useState(mixtape.tracks || [])
+  const [loading, setLoading]   = useState(false)
+  const [apiLoaded, setApiLoaded] = useState(false)
+
   const {
     loadQueue, playTrack, togglePlay,
     currentTrackId, isPlaying,
@@ -40,7 +46,6 @@ export default function CassetteDetail({ mixtape, onBack }) {
     const content  = contentRef.current
     if (!cassette || !content) return
 
-    // Start off-screen below
     gsap.set(cassette, { y: 80, opacity: 0, rotate: -4 })
     gsap.set(content,  { opacity: 0 })
 
@@ -53,7 +58,6 @@ export default function CassetteDetail({ mixtape, onBack }) {
       duration: 0.85,
       ease:     'power3.out',
     })
-    // Subtle "click" settle
     .to(cassette, {
       y:        4,
       duration: 0.12,
@@ -61,7 +65,6 @@ export default function CassetteDetail({ mixtape, onBack }) {
       yoyo:     true,
       repeat:   1,
     })
-    // Reveal content
     .to(content, {
       opacity:  1,
       duration: 0.6,
@@ -70,6 +73,27 @@ export default function CassetteDetail({ mixtape, onBack }) {
 
     return () => tl.kill()
   }, [mixtape.id])
+
+  /* ── Fetch latest tracks from Backend API ──────────────────── */
+  const fetchTracks = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await getMixtapeTracks(mixtape.id)
+      const fetched = res?.tracks || res || []
+      if (fetched.length > 0) {
+        setTracks(fetched)
+        setApiLoaded(true)
+      }
+    } catch (err) {
+      console.warn('[CassetteDetail] Fallback to local tracks:', err.message)
+    } finally {
+      setLoading(false)
+    }
+  }, [mixtape.id])
+
+  useEffect(() => {
+    fetchTracks()
+  }, [fetchTracks])
 
   /* ── Load this cassette's tracks into the global queue ─────── */
   useEffect(() => {
@@ -107,12 +131,14 @@ export default function CassetteDetail({ mixtape, onBack }) {
     >
       {/* ── Deck / player slot ──────────────────────────────── */}
       <div ref={deckSlotRef} className="detail-deck">
-        <span className="detail-deck-label">Now Loading</span>
+        <span className="detail-deck-label">
+          {apiLoaded ? 'Now Loading (API Synced)' : 'Now Loading'}
+        </span>
 
         {/* Cassette — animated in */}
         <Cassette
           ref={cassetteRef}
-          mixtape={mixtape}
+          mixtape={{ ...mixtape, tracks }}
           size="lg"
           isPlaying={isPlaying && isThisCassetteActive}
         />
@@ -151,7 +177,7 @@ export default function CassetteDetail({ mixtape, onBack }) {
           <div className="detail-meta-tags">
             <span className="detail-tag">{mixtape.genre}</span>
             <span className="detail-tag">{mixtape.year}</span>
-            <span className="detail-tag">{mixtape.tracks.length} tracks</span>
+            <span className="detail-tag">{tracks.length} tracks</span>
           </div>
 
           <button
@@ -169,20 +195,25 @@ export default function CassetteDetail({ mixtape, onBack }) {
           <div className="detail-tracklist-header">
             <span className="detail-tracklist-label">Tracks</span>
             <div className="detail-tracklist-rule" />
+            {loading && (
+              <span style={{ fontSize: '0.52rem', color: '#D7B27A', textTransform: 'uppercase' }}>
+                Updating...
+              </span>
+            )}
           </div>
 
-          {mixtape.tracks.map((track, i) => {
+          {tracks.map((track, i) => {
             const qTrack  = queue[i]
-            const isActive = currentTrackId === qTrack?.id
+            const isActive = currentTrackId === (qTrack?.id || track.id)
 
             return (
               <div
                 key={track.id}
                 className={`detail-track-row${isActive ? ' detail-track-row--active' : ''}`}
-                onClick={() => qTrack && handleTrackClick(qTrack.id)}
+                onClick={() => handleTrackClick(qTrack?.id || track.id)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && qTrack && handleTrackClick(qTrack.id)}
+                onKeyDown={(e) => e.key === 'Enter' && handleTrackClick(qTrack?.id || track.id)}
                 aria-label={`${isActive && isPlaying ? 'Pause' : 'Play'} ${track.title}`}
               >
                 <span className="detail-track-num">

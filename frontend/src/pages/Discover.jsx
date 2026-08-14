@@ -9,6 +9,7 @@
  *   TO END.
  *
  * Asymmetrical editorial layout with:
+ *   - Search the Archive (connected to Express /api/search?q=)
  *   - Featured Track Spotlight (vinyl disc spinning, liner notes)
  *   - Recently Added (editorial list with timestamps)
  *   - Nostalgic Picks (tape highlight cards)
@@ -18,12 +19,13 @@
  * Fully connected to global AudioContext for playback.
  */
 
-import { useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Play, Pause, Disc, ArrowRight, Sparkles, Moon, Clock } from 'lucide-react'
+import { Play, Pause, Disc, Sparkles, Moon, Search, X, RefreshCw } from 'lucide-react'
 import { useAudio } from '../contexts/AudioContext'
 import { formatTime } from '../components/MusicPlayer/ProgressBar'
 import Header from '../components/Header'
+import { searchTracks, getTracks } from '../services/api'
 import {
   FEATURED_TRACK,
   RECENTLY_ADDED,
@@ -47,6 +49,33 @@ export default function Discover() {
     currentTrackId, isPlaying,
     togglePlay, playTrack, loadQueue,
   } = useAudio()
+
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState(null)
+  const [isSearching, setIsSearching] = useState(false)
+
+  /* Live search handler debounced */
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults(null)
+      setIsSearching(false)
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true)
+      try {
+        const res = await searchTracks(searchQuery)
+        setSearchResults(res)
+      } catch (err) {
+        console.warn('[Discover] Search fallback:', err.message)
+      } finally {
+        setIsSearching(false)
+      }
+    }, 280)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
   /* Play any track from Discover */
   const handlePlay = useCallback((rawTrack, trackList = null) => {
@@ -84,7 +113,7 @@ export default function Discover() {
         >
           <motion.div className="discover-issue-tag" variants={FADE_UP} custom={0.1}>
             <Sparkles size={13} />
-            <span>Gully Radio Editorial · Issue No. 04</span>
+            <span>Gully Radio Editorial · Live Synced</span>
           </motion.div>
 
           <motion.h1 className="discover-headline" variants={FADE_UP} custom={0.2}>
@@ -93,11 +122,104 @@ export default function Discover() {
             <span className="accent-line">TO END.</span>
           </motion.h1>
 
-          <motion.p className="discover-subhead" variants={FADE_UP} custom={0.35}>
-            An analog catalogue of street recordings, unreleased master tapes,
-            and forgotten midnight transmissions from another era.
-          </motion.p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1.5rem' }}>
+            <motion.p className="discover-subhead" variants={FADE_UP} custom={0.35}>
+              An analog catalogue of street recordings, unreleased master tapes,
+              and forgotten midnight transmissions from another era.
+            </motion.p>
+
+            {/* Archive Search Bar (Connected to Express API) */}
+            <motion.div
+              variants={FADE_UP}
+              custom={0.4}
+              style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                background: 'rgba(23, 21, 18, 0.75)',
+                border: '1px solid rgba(215, 178, 122, 0.2)',
+                borderRadius: '30px',
+                padding: '0.4rem 1rem',
+                minWidth: '280px',
+              }}
+            >
+              <Search size={14} color="rgba(215, 178, 122, 0.5)" style={{ marginRight: '0.5rem' }} />
+              <input
+                type="text"
+                placeholder="Search archive or tape..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  outline: 'none',
+                  color: '#F2E5CC',
+                  fontFamily: "'DM Sans'",
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.08em',
+                  width: '100%',
+                }}
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  style={{ background: 'none', border: 'none', color: 'rgba(215,178,122,0.5)', cursor: 'pointer', padding: 0 }}
+                  type="button"
+                >
+                  <X size={13} />
+                </button>
+              )}
+            </motion.div>
+          </div>
         </motion.header>
+
+        {/* ── Live Search Results Drawer if searching ──────── */}
+        {searchResults && searchQuery && (
+          <section style={{ marginBottom: '4rem', background: 'rgba(24, 18, 14, 0.85)', border: '1px solid rgba(215, 178, 122, 0.2)', borderRadius: '4px', padding: '2rem' }}>
+            <div className="editorial-label">
+              <span className="editorial-label-title">
+                Search Results for "{searchQuery}" ({searchResults.totalResults} found)
+              </span>
+              <div className="editorial-label-line" />
+            </div>
+
+            {searchResults.totalResults === 0 ? (
+              <p style={{ fontFamily: "'DM Sans'", fontSize: '0.8rem', color: 'rgba(215, 178, 122, 0.4)', textAlign: 'center', padding: '2rem 0' }}>
+                No tapes or tracks matched "{searchQuery}" in the archive.
+              </p>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+                {searchResults.tracks?.map((t) => {
+                  const isActive = currentTrackId === t.id
+                  return (
+                    <div
+                      key={t.id}
+                      onClick={() => handlePlay(t)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '0.8rem 1rem',
+                        background: isActive ? 'rgba(168, 79, 53, 0.15)' : 'rgba(14, 10, 7, 0.5)',
+                        border: '1px solid rgba(215, 178, 122, 0.1)',
+                        borderRadius: '2px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <div>
+                        <p style={{ fontFamily: "'Cormorant Garamond'", fontSize: '1rem', color: isActive ? '#D7B27A' : '#F2E5CC' }}>{t.title}</p>
+                        <span style={{ fontSize: '0.55rem', color: 'rgba(215,178,122,0.45)' }}>{t.artist} · {t.genre}</span>
+                      </div>
+                      <button style={{ background: 'none', border: 'none', color: '#D7B27A', cursor: 'pointer' }} type="button">
+                        {isActive && isPlaying ? <Pause size={13} /> : <Play size={13} />}
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </section>
+        )}
 
         {/* ── Featured Track Spotlight ─────────────────────── */}
         <motion.section
