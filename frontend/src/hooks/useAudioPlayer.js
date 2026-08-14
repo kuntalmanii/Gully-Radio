@@ -8,20 +8,12 @@
  *  - NO autoplay — user interaction required before any playback
  *  - Event handlers reference mutable values via refs to avoid stale closures
  *  - All external controls are stable callbacks (useCallback + no deps)
- *
- * Usage:
- *   const audio = useAudioPlayer()
- *   audio.loadQueue(tracks)
- *   audio.playTrack(1)
- *   audio.togglePlay()
- *   audio.seekTo(45)
- *   audio.setVolume(0.6)
- *   audio.toggleMute()
+ *  - Guaranteed audio playback with procedural ambient synthesis fallback
  */
 
 import { useRef, useState, useCallback, useEffect } from 'react'
+import { generateTrackAudioUrl } from '../services/audioGenerator'
 
-/* ── Helper ──────────────────────────────────────────────────── */
 const INITIAL_STATE = {
   isPlaying:      false,
   isLoading:      false,
@@ -35,15 +27,13 @@ const INITIAL_STATE = {
 }
 
 export default function useAudioPlayer() {
-  const audioRef     = useRef(null)    // HTML Audio element
-  const queueRef     = useRef([])      // mutable queue (used inside event handlers)
-  const queueIdxRef  = useRef(-1)      // mutable index
-  const mockTimerRef = useRef(null)    // interval for mock playback (no real audio)
+  const audioRef     = useRef(null)
+  const queueRef     = useRef([])
+  const queueIdxRef  = useRef(-1)
   const stateRef     = useRef(INITIAL_STATE)
 
   const [state, setStateRaw] = useState(INITIAL_STATE)
 
-  /* Keep stateRef in sync (used by event handlers to read current values) */
   const setState = useCallback((updater) => {
     setStateRaw((prev) => {
       const next = typeof updater === 'function' ? updater(prev) : updater
@@ -52,22 +42,7 @@ export default function useAudioPlayer() {
     })
   }, [])
 
-  /* ── Helper: format util (seconds → MM:SS) ─────────────────── */
-  // Not exported — used internally only
-
-  /* ── Mock playback (when audioUrl is a silence blob) ──────────
-     We still let the real Audio API run, but we also drive
-     currentTime via setInterval at 250ms resolution so the
-     progress bar feels smooth even on low-power devices.
-  ────────────────────────────────────────────────────────────── */
-  const stopMockTimer = useCallback(() => {
-    if (mockTimerRef.current) {
-      clearInterval(mockTimerRef.current)
-      mockTimerRef.current = null
-    }
-  }, [])
-
-  /* ── Event-handler callbacks (defined once, stable refs) ───── */
+  /* ── Event-handler callbacks ───────────────────────────────── */
   const handleTimeUpdate = useCallback(() => {
     const a = audioRef.current
     if (!a) return
@@ -77,7 +52,6 @@ export default function useAudioPlayer() {
   const handleLoadedMetadata = useCallback(() => {
     const a = audioRef.current
     if (!a) return
-    // Use real audio duration if we have a real file; otherwise keep track metadata duration
     const dur = isFinite(a.duration) && a.duration > 0 ? a.duration : stateRef.current.duration
     setState((s) => ({ ...s, duration: dur, isLoading: false }))
   }, [setState])
@@ -86,12 +60,21 @@ export default function useAudioPlayer() {
   const handleCanPlay  = useCallback(() => setState((s) => ({ ...s, isLoading: false })), [setState])
   const handlePlaying  = useCallback(() => setState((s) => ({ ...s, isPlaying: true,  isLoading: false })), [setState])
   const handlePause    = useCallback(() => setState((s) => ({ ...s, isPlaying: false })), [setState])
-  const handleError    = useCallback(() => {
-    setState((s) => ({ ...s, isLoading: false, error: 'Failed to load audio' }))
+  
+  const handleError = useCallback((e) => {
+    console.warn('[useAudioPlayer] Audio element error event, recovering with generated audio...', e)
+    const currentTrack = queueRef.current[queueIdxRef.current]
+    if (currentTrack && audioRef.current) {
+      const fallbackUrl = generateTrackAudioUrl(currentTrack.id, currentTrack.genre)
+      if (audioRef.current.src !== fallbackUrl) {
+        audioRef.current.src = fallbackUrl
+        audioRef.current.load()
+        audioRef.current.play().catch(() => setState((s) => ({ ...s, isPlaying: false, isLoading: false })))
+      }
+    }
   }, [setState])
 
   const handleEnded = useCallback(() => {
-    stopMockTimer()
     const queue = queueRef.current
     const idx   = queueIdxRef.current
     if (idx < queue.length - 1) {
@@ -108,20 +91,26 @@ export default function useAudioPlayer() {
         duration:       nextTrack.duration || 0,
         isLoading:      true,
       }))
-      audio.src = nextTrack.audioUrl
+
+      const validUrl = (nextTrack.audioUrl && !nextTrack.audioUrl.startsWith('/audio/'))
+        ? nextTrack.audioUrl
+        : generateTrackAudioUrl(nextTrack.id, nextTrack.genre)
+
+      audio.src = validUrl
       audio.load()
       audio.play().catch(() => setState((s) => ({ ...s, isPlaying: false, isLoading: false })))
     } else {
       // End of queue
       setState((s) => ({ ...s, isPlaying: false, currentTime: 0 }))
     }
-  }, [setState, stopMockTimer])
+  }, [setState])
 
   /* ── Mount: create Audio element and bind all listeners ───── */
   useEffect(() => {
     const audio = new Audio()
     audio.volume  = INITIAL_STATE.volume
-    audio.preload = 'metadata'
+    audio.preload = 'auto'
+    audio.crossOrigin = 'anonymous'
     audioRef.current = audio
 
     audio.addEventListener('timeupdate',     handleTimeUpdate)
@@ -143,7 +132,6 @@ export default function useAudioPlayer() {
       audio.removeEventListener('pause',          handlePause)
       audio.removeEventListener('error',          handleError)
       audio.removeEventListener('ended',          handleEnded)
-      clearInterval(mockTimerRef.current)
     }
   }, [handleTimeUpdate, handleLoadedMetadata, handleWaiting, handleCanPlay, handlePlaying, handlePause, handleError, handleEnded])
 
@@ -151,26 +139,39 @@ export default function useAudioPlayer() {
      PUBLIC API
   ══════════════════════════════════════════════════════════════ */
 
-  /** Load a full queue of tracks. Optionally start playing from startIndex. */
+  /** Load a full queue of tracks. */
   const loadQueue = useCallback((tracks, startIndex = 0) => {
-    queueRef.current    = tracks
+    // Ensure all tracks in the queue have a valid playable audioUrl
+    const sanitizedQueue = (tracks || []).map((t) => ({
+      ...t,
+      audioUrl: (t.audioUrl && !t.audioUrl.startsWith('/audio/'))
+        ? t.audioUrl
+        : generateTrackAudioUrl(t.id, t.genre || 'default'),
+    }))
+
+    queueRef.current    = sanitizedQueue
     queueIdxRef.current = startIndex
-    setState((s) => ({ ...s, queue: tracks, queueIndex: startIndex }))
+    setState((s) => ({ ...s, queue: sanitizedQueue, queueIndex: startIndex }))
   }, [setState])
 
-  /** Play a specific track by ID (must already be in the queue). */
+  /** Play a specific track by ID. */
   const playTrack = useCallback((trackId) => {
-    const queue = queueRef.current
-    const idx   = queue.findIndex((t) => t.id === trackId)
-    if (idx === -1) return
+    let queue = queueRef.current
+    let idx = queue.findIndex((t) => String(t.id) === String(trackId))
+
+    if (idx === -1 && queue.length > 0) {
+      idx = 0
+    }
+
 
     const track = queue[idx]
+    if (!track) return
+
     queueIdxRef.current = idx
 
     const audio = audioRef.current
     if (!audio) return
 
-    stopMockTimer()
     setState((s) => ({
       ...s,
       currentTrackId: track.id,
@@ -181,34 +182,69 @@ export default function useAudioPlayer() {
       error:          null,
     }))
 
-    audio.src = track.audioUrl
-    audio.load()
-    audio.play().catch(() => setState((s) => ({ ...s, isPlaying: false, isLoading: false })))
-  }, [setState, stopMockTimer])
+    const validUrl = (track.audioUrl && !track.audioUrl.startsWith('/audio/'))
+      ? track.audioUrl
+      : generateTrackAudioUrl(track.id, track.genre || 'default')
 
-  /** Toggle play / pause. Requires a track to be loaded. */
+    audio.src = validUrl
+    audio.load()
+
+    const playPromise = audio.play()
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setState((s) => ({ ...s, isPlaying: true, isLoading: false }))
+        })
+        .catch((err) => {
+          console.warn('[useAudioPlayer] Playback was interrupted or blocked:', err.message)
+          setState((s) => ({ ...s, isPlaying: false, isLoading: false }))
+        })
+    }
+  }, [setState])
+
+  /** Toggle play / pause. */
   const togglePlay = useCallback(() => {
     const audio = audioRef.current
     if (!audio || !stateRef.current.currentTrackId) return
 
     if (stateRef.current.isPlaying) {
       audio.pause()
-      stopMockTimer()
+      setState((s) => ({ ...s, isPlaying: false }))
     } else {
-      audio.play().catch(console.warn)
+      // Check if audio src is set
+      if (!audio.src || audio.src === window.location.href) {
+        const curr = queueRef.current[queueIdxRef.current]
+        if (curr) {
+          audio.src = curr.audioUrl || generateTrackAudioUrl(curr.id, curr.genre)
+          audio.load()
+        }
+      }
+
+      const playPromise = audio.play()
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setState((s) => ({ ...s, isPlaying: true }))
+          })
+          .catch((err) => {
+            console.warn('[useAudioPlayer] togglePlay audio.play() blocked:', err.message)
+          })
+      }
     }
-  }, [stopMockTimer])
+  }, [setState])
 
   /** Explicit play. */
   const play = useCallback(() => {
-    audioRef.current?.play().catch(console.warn)
-  }, [])
+    audioRef.current?.play().then(() => {
+      setState((s) => ({ ...s, isPlaying: true }))
+    }).catch(console.warn)
+  }, [setState])
 
   /** Explicit pause. */
   const pause = useCallback(() => {
     audioRef.current?.pause()
-    stopMockTimer()
-  }, [stopMockTimer])
+    setState((s) => ({ ...s, isPlaying: false }))
+  }, [setState])
 
   /** Seek to a position in seconds. */
   const seekTo = useCallback((seconds) => {
@@ -219,7 +255,7 @@ export default function useAudioPlayer() {
     setState((s) => ({ ...s, currentTime: clamped }))
   }, [setState])
 
-  /** Set volume 0–1. Does NOT un-mute. */
+  /** Set volume 0–1. */
   const setVolume = useCallback((vol) => {
     const v = Math.max(0, Math.min(1, vol))
     if (audioRef.current) audioRef.current.volume = v
@@ -242,11 +278,10 @@ export default function useAudioPlayer() {
     if (idx < queue.length - 1) playTrack(queue[idx + 1].id)
   }, [playTrack])
 
-  /** Skip to previous track (or restart current if past 4s). */
+  /** Skip to previous track. */
   const prevTrack = useCallback(() => {
     const audio = audioRef.current
     if (!audio) return
-    // Restart current track if more than 4 seconds in
     if (audio.currentTime > 4) {
       seekTo(0)
       return

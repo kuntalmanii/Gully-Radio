@@ -2,12 +2,12 @@
  * discoverData.js
  * ──────────────────────────────────────────────────────────────
  * Curated editorial datasets for the Discover page.
- * Contemporary Devanagari titles with bilingual supporting metadata.
+ * Every track has genuine playable procedural audio generated on-demand.
  */
 
 import { getPlayableTracks } from './musicService'
+import { generateTrackAudioUrl } from './audioGenerator'
 
-/* Demo tracks pool */
 const allPlayable = getPlayableTracks()
 
 export const FEATURED_TRACK = {
@@ -25,6 +25,7 @@ export const FEATURED_TRACK = {
   key:         'D Minor',
   side:        'A',
   num:         '01',
+  audioUrl:    generateTrackAudioUrl(1, 'Indie / Cassette'),
 }
 
 export const RECENTLY_ADDED = [
@@ -38,6 +39,7 @@ export const RECENTLY_ADDED = [
     duration:    284,
     genre:       'Ambient Fusion',
     curatorNote: 'BASF C-60 कैसेट पर दर्ज।',
+    audioUrl:    generateTrackAudioUrl('disc-rec-1', 'Ambient Fusion'),
   },
   {
     id:          'disc-rec-2',
@@ -49,6 +51,7 @@ export const RECENTLY_ADDED = [
     duration:    312,
     genre:       'Indie Cassette',
     curatorNote: 'सीधे साउंडबोर्ड से रिकॉर्ड किया गया।',
+    audioUrl:    generateTrackAudioUrl('disc-rec-2', 'Indie Cassette'),
   },
   {
     id:          'disc-rec-3',
@@ -60,6 +63,7 @@ export const RECENTLY_ADDED = [
     duration:    245,
     genre:       'Analog Jazz',
     curatorNote: 'सिंगल कंडेनसर माइक रिकॉर्डिंग।',
+    audioUrl:    generateTrackAudioUrl('disc-rec-3', 'Analog Jazz'),
   },
   {
     id:          'disc-rec-4',
@@ -71,6 +75,7 @@ export const RECENTLY_ADDED = [
     duration:    356,
     genre:       'Classical / Sarangi',
     curatorNote: 'आधी रात के चौबारे की महफ़िल।',
+    audioUrl:    generateTrackAudioUrl('disc-rec-4', 'Classical / Sarangi'),
   },
 ]
 
@@ -85,6 +90,7 @@ export const NOSTALGIC_PICKS = [
     duration:    225,
     genre:       'Ambient / Street',
     tag:         'खास पसंद',
+    audioUrl:    generateTrackAudioUrl(2, 'Ambient / Street'),
   },
   {
     id:          3,
@@ -96,6 +102,7 @@ export const NOSTALGIC_PICKS = [
     duration:    312,
     genre:       'Instrumental',
     tag:         'मानसून टेप',
+    audioUrl:    generateTrackAudioUrl(3, 'Instrumental'),
   },
   {
     id:          6,
@@ -107,6 +114,7 @@ export const NOSTALGIC_PICKS = [
     duration:    362,
     genre:       'Jazz / Fusion',
     tag:         'सनसेट कट',
+    audioUrl:    generateTrackAudioUrl(6, 'Jazz / Fusion'),
   },
   {
     id:          'oc-01',
@@ -118,6 +126,7 @@ export const NOSTALGIC_PICKS = [
     duration:    267,
     genre:       'Heritage / Deep Cut',
     tag:         'दुर्लभ रील',
+    audioUrl:    generateTrackAudioUrl('oc-01', 'Heritage / Deep Cut'),
   },
 ]
 
@@ -132,6 +141,7 @@ export const LATE_NIGHT_TRACKS = [
     duration:    238,
     genre:       'Drone / Ambient',
     mood:        'गहरा सन्नाटा',
+    audioUrl:    generateTrackAudioUrl(4, 'Drone / Ambient'),
   },
   {
     id:          7,
@@ -143,6 +153,7 @@ export const LATE_NIGHT_TRACKS = [
     duration:    284,
     genre:       'Classical / Fusion',
     mood:        'शांति',
+    audioUrl:    generateTrackAudioUrl(7, 'Classical / Fusion'),
   },
   {
     id:          'alt-05',
@@ -154,6 +165,7 @@ export const LATE_NIGHT_TRACKS = [
     duration:    340,
     genre:       'Transit / Ambient',
     mood:        'अंतिम प्रस्थान',
+    audioUrl:    generateTrackAudioUrl('alt-05', 'Transit / Ambient'),
   },
   {
     id:          'mg-04',
@@ -165,6 +177,7 @@ export const LATE_NIGHT_TRACKS = [
     duration:    312,
     genre:       'Nocturnal / Street',
     mood:        'लालटेन की रोशनी',
+    audioUrl:    generateTrackAudioUrl('mg-04', 'Nocturnal / Street'),
   },
 ]
 
@@ -178,6 +191,7 @@ export const HIDDEN_GEMS = [
     year:        '1992',
     duration:    210,
     quote:       '"चौबारे की खुली खिड़की से दर्ज की गई धुन। पीछे रात में चमेली के फूल बेचने वाले की आवाज़ साफ सुनाई देती है।"',
+    audioUrl:    generateTrackAudioUrl('gem-1', 'Ambient'),
   },
   {
     id:          'gem-2',
@@ -188,6 +202,7 @@ export const HIDDEN_GEMS = [
     year:        '2006',
     duration:    188,
     quote:       '"रात 3:15 बजे खड़े डीजल इंजन के सामने चाय की केतली की सीटी की गूंज।"',
+    audioUrl:    generateTrackAudioUrl('gem-2', 'Field Recording'),
   },
   {
     id:          'gem-3',
@@ -198,6 +213,7 @@ export const HIDDEN_GEMS = [
     year:        '1998',
     duration:    255,
     quote:       '"दोपहर में जब बिजली चली जाती थी, उस तपती हवा में बजाया गया एक मासूम सितार राग।"',
+    audioUrl:    generateTrackAudioUrl('gem-3', 'Indian Classical'),
   },
 ]
 
@@ -211,7 +227,7 @@ export function resolveDiscoverTrack(track) {
     artist:   track.artist,
     album:    track.album || 'Gully Radio Discovery',
     cover:    null,
-    audioUrl: allPlayable[0]?.audioUrl || '',
+    audioUrl: track.audioUrl || generateTrackAudioUrl(track.id, track.genre),
     duration: track.duration || 240,
     genre:    track.genre || 'Cassette',
     year:     track.year || 1990,

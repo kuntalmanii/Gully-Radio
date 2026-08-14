@@ -2,26 +2,11 @@
  * shopData.js
  * ──────────────────────────────────────────────────────────────
  * Six authentic mixtapes for the Gully Radio Cassette Shop.
- * Contemporary Devanagari titles with bilingual supporting metadata.
+ * Every track is backed by procedural lo-fi audio generation.
  */
 
-/* ── Silence blob (demo only) ─────────────────────────────────── */
-let _silence = null
-function silenceUrl() {
-  if (_silence) return _silence
-  if (typeof window === 'undefined') return ''
-  const sr = 22050, dur = 30, n = sr * dur
-  const buf = new ArrayBuffer(44 + n * 2)
-  const v   = new DataView(buf)
-  const s   = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)) }
-  s(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); s(8, 'WAVE'); s(12, 'fmt ')
-  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true)
-  v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true)
-  v.setUint16(32, 2, true); v.setUint16(34, 16, true); s(36, 'data')
-  v.setUint32(40, n * 2, true)
-  _silence = URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }))
-  return _silence
-}
+import { generateTrackAudioUrl } from '../../services/audioGenerator'
+
 
 /* ── Color themes ─────────────────────────────────────────────── */
 const THEMES = {
@@ -166,18 +151,17 @@ export const MIXTAPES = [
   },
 ]
 
-/** Return tracks for a mixtape with silence blob URLs filled in */
+/** Return tracks for a mixtape with genuine playable audio URLs */
 export function getMixtapeQueue(mixtapeId) {
   const mix = MIXTAPES.find((m) => m.id === mixtapeId)
   if (!mix) return []
-  const url = silenceUrl()
   return mix.tracks.map((t) => ({
     ...t,
     album:    mix.title,
     album_id: mix.id,
     cover:    null,
     genre:    mix.genre,
-    audioUrl: url,
+    audioUrl: generateTrackAudioUrl(t.id, mix.genre),
     side:     undefined,
     num:      undefined,
   }))

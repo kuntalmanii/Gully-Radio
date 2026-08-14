@@ -92,8 +92,11 @@ export default function MusicPlayer() {
   const [queueOpen, setQueueOpen] = useState(false)
   const [showVisualizer, setShowVisualizer] = useState(false)
 
-  const allTracks   = getAllTracks()
-  const currentTrack = allTracks.find((t) => t.id === currentTrackId) ?? null
+  const allTracks = getAllTracks()
+  const currentTrack = (queue && queue.find((t) => String(t.id) === String(currentTrackId)))
+    ?? allTracks.find((t) => String(t.id) === String(currentTrackId))
+    ?? null
+
 
   useEffect(() => {
     if (currentTrackId) {
