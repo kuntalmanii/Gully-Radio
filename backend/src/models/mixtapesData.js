@@ -15,7 +15,7 @@ const MIXTAPES = [
     year: 1998,
     genre: 'Nocturnal / Street',
     description: 'Late nights in lanes that never sleep. The hiss of a radio, the last chai stall still burning its lantern.',
-    trackIds: ['track-001', 'track-002', 'track-004', 'track-005'],
+    trackIds: ['track-heer'],
   },
   {
     id: 'mixtape-chai-and-rain',
@@ -26,7 +26,7 @@ const MIXTAPES = [
     year: 2001,
     genre: 'Monsoon / Slow',
     description: 'Monsoon afternoons with nowhere to be. Warm cups, wet pavements, and the smell of petrichor on hot stone.',
-    trackIds: ['track-003', 'track-006'],
+    trackIds: ['track-heer'],
   },
   {
     id: 'mixtape-old-city-nights',
@@ -37,7 +37,7 @@ const MIXTAPES = [
     year: 1995,
     genre: 'Heritage / Deep Cut',
     description: 'Recorded in the narrow lanes of a walled city. The azaan, the temple bells, and the man who sells jasmine after dark.',
-    trackIds: ['track-007', 'track-008'],
+    trackIds: ['track-heer'],
   },
   {
     id: 'mixtape-sunday-1998',
@@ -48,7 +48,7 @@ const MIXTAPES = [
     year: 1998,
     genre: 'Nostalgia / Easy',
     description: 'A Sunday that lasted a whole decade. Doordarshan static, mango season, and neighbourhood FM.',
-    trackIds: ['track-003', 'track-006'],
+    trackIds: ['track-heer'],
   },
   {
     id: 'mixtape-letters-never-sent',
@@ -59,7 +59,7 @@ const MIXTAPES = [
     year: 2003,
     genre: 'Intimate / Melancholic',
     description: 'For every unsent letter and unmade phone call. Recorded in a single winter night.',
-    trackIds: ['track-001', 'track-004'],
+    trackIds: ['track-heer'],
   },
   {
     id: 'mixtape-after-the-last-train',
@@ -70,7 +70,7 @@ const MIXTAPES = [
     year: 2006,
     genre: 'Transit / Ambient',
     description: 'The platform after the last service. Station lights humming. The city going quiet.',
-    trackIds: ['track-008', 'track-005'],
+    trackIds: ['track-heer'],
   },
 ]
 

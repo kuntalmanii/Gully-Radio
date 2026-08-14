@@ -2,248 +2,39 @@
  * discoverData.js
  * ──────────────────────────────────────────────────────────────
  * Curated editorial datasets for the Discover page.
- * Every track has genuine playable procedural audio generated on-demand.
+ * Connected directly to your personal music library.
  */
 
-import { getPlayableTracks } from './musicService'
-import { generateTrackAudioUrl } from './audioGenerator'
-
-const allPlayable = getPlayableTracks()
-
 export const FEATURED_TRACK = {
-  id:          1,
-  title:       'तेरी याद (Extended Mix)',
-  titleEn:     'Teri Yaad (Extended Mix)',
-  artist:      'Ram Radio Sessions',
-  album:       'वॉल्यूम 01 — शाम की धूप',
-  recordedAt:  'पुरानी दिल्ली · 1987',
-  linerNotes:  'चांदनी चौक की एक पुरानी इलेक्ट्रॉनिक्स दुकान के पीछे से मिला बिना लेबल का 1/4" मास्टर रील। इसमें असली वैक्यूम ट्यूब की गरमाहट, कैसेट का सुरूर और टीन की छत पर गिरती बारिश की गूंज शामिल है।',
-  linerNotesEn:'An uncompressed 1/4" master reel uncovered in an unmarked aluminium canister behind a defunct electrical shop. Features warm tube saturation, analog tape flutter, and the distant sound of rain.',
-  duration:    263,
-  genre:       'Indie / Cassette',
-  bpm:         82,
-  key:         'D Minor',
+  id:          'track-heer',
+  title:       'हीर (Heer)',
+  titleEn:     'Heer',
+  artist:      'Ali Raza Shjr',
+  album:       'Gully Radio Special Archives',
+  location:    'विशेष अभिलेखागार · 2024',
+  recordedAt:  'विशेष अभिलेखागार · 2024',
+  linerNotes:  'वारिस शाह की कालजयी रचना का एक अत्यंत भावुक और रूहानी प्रस्तुतीकरण। असली सुर, शांत गिटार और अली रज़ा की जादू भरी आवाज़।',
+  linerNotesEn:'A timeless soul-stirring rendition of Waris Shah\'s poetry by Ali Raza Shjr, recorded with acoustic richness and vintage atmospheric resonance.',
+  duration:    251,
+  genre:       'Sufi / Folk',
+  bpm:         76,
+  key:         'E Minor',
   side:        'A',
   num:         '01',
-  audioUrl:    generateTrackAudioUrl(1, 'Indie / Cassette'),
+  audioUrl:    '/audio/Heer_-_Ali_Raza_Shjr_Lyrics.mp3',
 }
 
-export const RECENTLY_ADDED = [
-  {
-    id:          'track-heer',
-    title:       'हीर (Heer)',
-    titleEn:     'Heer',
-    artist:      'Ali Raza Shjr',
-    album:       'Gully Radio Special Archives',
-    location:    'लाहौर / दिल्ली · 2024',
-    duration:    251,
-    genre:       'Sufi / Folk',
-    side:        'A',
-    num:         '01',
-    audioUrl:    '/audio/Heer_-_Ali_Raza_Shjr_Lyrics.mp3',
-  },
-  {
-    id:          'disc-rec-1',
-    title:       'विक्टोरिया रोड की शाम',
+export const RECENTLY_ADDED = [FEATURED_TRACK]
+export const NOSTALGIC_PICKS = [FEATURED_TRACK]
+export const LATE_NIGHT_TRACKS = [FEATURED_TRACK]
+export const HIDDEN_GEMS = [FEATURED_TRACK]
+export const CURATED_PICKS = [FEATURED_TRACK]
 
-    titleEn:     'Dusk on Victoria Road',
-    artist:      'Kalyan & Co.',
-    album:       'Bombay Archives',
-    location:    'बॉम्बे डॉकयार्ड · 1989',
-    duration:    284,
-    genre:       'Ambient Fusion',
-    curatorNote: 'BASF C-60 कैसेट पर दर्ज।',
-    audioUrl:    generateTrackAudioUrl('disc-rec-1', 'Ambient Fusion'),
-  },
-  {
-    id:          'disc-rec-2',
-    title:       'रीगल हॉल की रात (Live)',
-    titleEn:     'Radio Mirage (Live at Regal)',
-    artist:      'The Gully Trio',
-    album:       'Regal Hall Recordings',
-    location:    'कलकत्ता · 1991',
-    duration:    312,
-    genre:       'Indie Cassette',
-    curatorNote: 'सीधे साउंडबोर्ड से रिकॉर्ड किया गया।',
-    audioUrl:    generateTrackAudioUrl('disc-rec-2', 'Indie Cassette'),
-  },
-  {
-    id:          'disc-rec-3',
-    title:       'चौपाटी सुबह 4 बजे',
-    titleEn:     'Chowpatty 4 AM',
-    artist:      'Late Hour Quartet',
-    album:       'Monsoon Tapes',
-    location:    'मरीन ड्राइव · 1988',
-    duration:    245,
-    genre:       'Analog Jazz',
-    curatorNote: 'सिंगल कंडेनसर माइक रिकॉर्डिंग।',
-    audioUrl:    generateTrackAudioUrl('disc-rec-3', 'Analog Jazz'),
-  },
-  {
-    id:          'disc-rec-4',
-    title:       'बाज़ार की रात और सारंगी',
-    titleEn:     'Bazaar Nocturne',
-    artist:      'Ustad Nisar Ali',
-    album:       'Heritage Series',
-    location:    'लखनऊ · 1984',
-    duration:    356,
-    genre:       'Classical / Sarangi',
-    curatorNote: 'आधी रात के चौबारे की महफ़िल।',
-    audioUrl:    generateTrackAudioUrl('disc-rec-4', 'Classical / Sarangi'),
-  },
-]
+export const TIME_CAPSULE_YEARS = ['2024']
+export const TIME_CAPSULE_TRACKS = {
+  '2024': [FEATURED_TRACK],
+}
 
-export const NOSTALGIC_PICKS = [
-  {
-    id:          2,
-    title:       'गली की रातें',
-    titleEn:     'Gully Nights',
-    artist:      'Ram Radio Sessions',
-    album:       'Vol. 01 — Golden Hours',
-    location:    'पुराना शहर · 1988',
-    duration:    225,
-    genre:       'Ambient / Street',
-    tag:         'खास पसंद',
-    audioUrl:    generateTrackAudioUrl(2, 'Ambient / Street'),
-  },
-  {
-    id:          3,
-    title:       'बारिश और कैसेट',
-    titleEn:     'Cassette Rain',
-    artist:      'Ram Radio Sessions',
-    album:       'Vol. 01 — Golden Hours',
-    location:    'वाराणसी · 1989',
-    duration:    312,
-    genre:       'Instrumental',
-    tag:         'मानसून टेप',
-    audioUrl:    generateTrackAudioUrl(3, 'Instrumental'),
-  },
-  {
-    id:          6,
-    title:       'शाम की सुनहरी धूप',
-    titleEn:     'Golden Hours',
-    artist:      'Ram Radio Sessions',
-    album:       'Vol. 01 — Golden Hours',
-    location:    'जयपुर · 1988',
-    duration:    362,
-    genre:       'Jazz / Fusion',
-    tag:         'सनसेट कट',
-    audioUrl:    generateTrackAudioUrl(6, 'Jazz / Fusion'),
-  },
-  {
-    id:          'oc-01',
-    title:       'पुरानी हवेली',
-    titleEn:     'Purani Haveli',
-    artist:      'Old City Archive',
-    album:       'OLD CITY NIGHTS',
-    location:    'चारदीवारी · 1995',
-    duration:    267,
-    genre:       'Heritage / Deep Cut',
-    tag:         'दुर्लभ रील',
-    audioUrl:    generateTrackAudioUrl('oc-01', 'Heritage / Deep Cut'),
-  },
-]
-
-export const LATE_NIGHT_TRACKS = [
-  {
-    id:          4,
-    title:       'रेडियो का सन्नाटा',
-    titleEn:     'Radio Silence',
-    artist:      'Ram Radio Sessions',
-    album:       'Vol. 01 — Golden Hours',
-    location:    'एफएम ब्रॉडकास्ट लीक · 1986',
-    duration:    238,
-    genre:       'Drone / Ambient',
-    mood:        'गहरा सन्नाटा',
-    audioUrl:    generateTrackAudioUrl(4, 'Drone / Ambient'),
-  },
-  {
-    id:          7,
-    title:       'दरबारी कान्हड़ा (आधी रात)',
-    titleEn:     'Late Night Raga',
-    artist:      'Ram Radio Sessions',
-    album:       'Vol. 01 — Golden Hours',
-    location:    'आकाशवाणी अभिलेखागार · 1985',
-    duration:    284,
-    genre:       'Classical / Fusion',
-    mood:        'शांति',
-    audioUrl:    generateTrackAudioUrl(7, 'Classical / Fusion'),
-  },
-  {
-    id:          'alt-05',
-    title:       'सफ़र का अंत',
-    titleEn:     'Signal Clear',
-    artist:      'Ram Radio',
-    album:       'AFTER THE LAST TRAIN',
-    location:    'रेलवे केबिन · 2006',
-    duration:    340,
-    genre:       'Transit / Ambient',
-    mood:        'अंतिम प्रस्थान',
-    audioUrl:    generateTrackAudioUrl('alt-05', 'Transit / Ambient'),
-  },
-  {
-    id:          'mg-04',
-    title:       'सुबह तीन बजे',
-    titleEn:     'Three A.M.',
-    artist:      'Ram Radio',
-    album:       'MIDNIGHT GULLY',
-    location:    'चाय की दुकान का कोना · 1998',
-    duration:    312,
-    genre:       'Nocturnal / Street',
-    mood:        'लालटेन की रोशनी',
-    audioUrl:    generateTrackAudioUrl('mg-04', 'Nocturnal / Street'),
-  },
-]
-
-export const HIDDEN_GEMS = [
-  {
-    id:          'gem-1',
-    title:       'चौबारे की खिड़की (Reel Extract)',
-    titleEn:     'The Courtyard (Reel Extract)',
-    artist:      'Unknown Street Trio',
-    album:       'Lost Tape 04',
-    year:        '1992',
-    duration:    210,
-    quote:       '"चौबारे की खुली खिड़की से दर्ज की गई धुन। पीछे रात में चमेली के फूल बेचने वाले की आवाज़ साफ सुनाई देती है।"',
-    audioUrl:    generateTrackAudioUrl('gem-1', 'Ambient'),
-  },
-  {
-    id:          'gem-2',
-    title:       'प्लेटफॉर्म 4 की सरसराहट',
-    titleEn:     'Platform 4 Hiss',
-    artist:      'Station Master Archive',
-    album:       'Railway Nights',
-    year:        '2006',
-    duration:    188,
-    quote:       '"रात 3:15 बजे खड़े डीजल इंजन के सामने चाय की केतली की सीटी की गूंज।"',
-    audioUrl:    generateTrackAudioUrl('gem-2', 'Field Recording'),
-  },
-  {
-    id:          'gem-3',
-    title:       'आम का मौसम (Unreleased Take)',
-    titleEn:     'Mango Season (Unreleased Take)',
-    artist:      'The Gully Ensemble',
-    album:       'Summer Tapes',
-    year:        '1998',
-    duration:    255,
-    quote:       '"दोपहर में जब बिजली चली जाती थी, उस तपती हवा में बजाया गया एक मासूम सितार राग।"',
-    audioUrl:    generateTrackAudioUrl('gem-3', 'Indian Classical'),
-  },
-]
-
-export function resolveDiscoverTrack(track) {
-  const match = allPlayable.find((t) => t.id === track.id)
-  if (match) return match
-
-  return {
-    id:       track.id,
-    title:    track.title,
-    artist:   track.artist,
-    album:    track.album || 'Gully Radio Discovery',
-    cover:    null,
-    audioUrl: track.audioUrl || generateTrackAudioUrl(track.id, track.genre),
-    duration: track.duration || 240,
-    genre:    track.genre || 'Cassette',
-    year:     track.year || 1990,
-  }
+export function resolveDiscoverTrack() {
+  return FEATURED_TRACK
 }

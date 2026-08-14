@@ -2,11 +2,8 @@
  * shopData.js
  * ──────────────────────────────────────────────────────────────
  * Six authentic mixtapes for the Gully Radio Cassette Shop.
- * Every track is backed by procedural lo-fi audio generation.
+ * Connected directly to your personal music library.
  */
-
-import { generateTrackAudioUrl } from '../../services/audioGenerator'
-
 
 /* ── Color themes ─────────────────────────────────────────────── */
 const THEMES = {
@@ -16,6 +13,14 @@ const THEMES = {
   sunday:   { shell: '#18140a', label: '#2a2010', stripe: '#6a5820', accent: '#d4b030', text: '#f0e0a0', screw: '#221c0e' },
   letters:  { shell: '#18060a', label: '#2a0c14', stripe: '#7a1a28', accent: '#d45060', text: '#f0b0b8', screw: '#220a10' },
   train:    { shell: '#101010', label: '#1a1a1a', stripe: '#2a2a2a', accent: '#e87820', text: '#d0c0b0', screw: '#1e1e1e' },
+}
+
+export const HEER_TRACK = {
+  id: 'track-heer',
+  title: 'हीर (Heer)',
+  artist: 'Ali Raza Shjr',
+  duration: 251,
+  audioUrl: '/audio/Heer_-_Ali_Raza_Shjr_Lyrics.mp3',
 }
 
 /* ── Mixtape catalogue ────────────────────────────────────────── */
@@ -33,16 +38,7 @@ export const MIXTAPES = [
     description: 'जागती गलियों में देर रात की हलचल, रेडियो की सुरीली सरसराहट और आखिरी चाय की दुकान की लालटेन।',
     descriptionEn: 'Late nights in lanes that never sleep. The hiss of a radio, the last chai stall still burning its lantern.',
     labelArt:    'grid',
-    tracks: [
-      { id: 'track-heer', title: 'हीर (Heer)',    artist: 'Ali Raza Shjr', duration: 251, audioUrl: '/audio/Heer_-_Ali_Raza_Shjr_Lyrics.mp3' },
-      { id: 'mg-01', title: 'रात के मुसाफ़िर',    artist: 'Ram Radio', duration: 243 },
-      { id: 'mg-02', title: 'नियॉन गली',         artist: 'Ram Radio', duration: 198 },
-      { id: 'mg-03', title: 'अंतिम चाय की दुकान', artist: 'Ram Radio', duration: 274 },
-      { id: 'mg-04', title: 'सुबह तीन बजे',      artist: 'Ram Radio', duration: 312 },
-      { id: 'mg-05', title: 'रेडियो स्टैटिक',    artist: 'Ram Radio', duration: 187 },
-      { id: 'mg-06', title: 'सवेरे की धूप',       artist: 'Ram Radio', duration: 256 },
-    ],
-
+    tracks:      [HEER_TRACK],
   },
   {
     id:          'cr',
@@ -57,13 +53,7 @@ export const MIXTAPES = [
     description: 'मानसून की वो दोपहरें जब कहीं जाने की जल्दी नहीं होती। मिट्टी की सौंधी खुशबू और गर्म चाय की प्याली।',
     descriptionEn: 'Monsoon afternoons with nowhere to be. Warm cups, wet pavements, and the smell of petrichor.',
     labelArt:    'lines',
-    tracks: [
-      { id: 'cr-01', title: 'बारिश का पहला दिन', artist: 'Ram Radio', duration: 220 },
-      { id: 'cr-02', title: 'ख़ुमार',            artist: 'Ram Radio', duration: 285 },
-      { id: 'cr-03', title: 'गरम चाय',          artist: 'Ram Radio', duration: 198 },
-      { id: 'cr-04', title: 'खिड़की की सीट',     artist: 'Ram Radio', duration: 240 },
-      { id: 'cr-05', title: 'ठहरा हुआ पहर',      artist: 'Ram Radio', duration: 310 },
-    ],
+    tracks:      [HEER_TRACK],
   },
   {
     id:          'oc',
@@ -75,17 +65,10 @@ export const MIXTAPES = [
     year:        '1995',
     genre:       'Heritage / Deep Cut',
     theme:       THEMES.oldcity,
-    description: 'चारदीवारी वाले शहर की तंग गलियों में दर्ज आवाज़ें। मंदिर की घंटियाँ, अज़ान और रात में चमेली का इत्र बेचने वाला।',
-    descriptionEn: 'Recorded in the narrow lanes of a walled city. The azaan, temple bells, and night jasmine.',
+    description: 'चारदीवारी वाले शहर की तंग गलियों में दर्ज आवाज़ें। मंदिर की घंटियाँ, अज़ान और रात में चमेली का इत्र।',
+    descriptionEn: 'Recorded in the narrow lanes of a walled city. The azaan, the temple bells, and the jasmine seller.',
     labelArt:    'circles',
-    tracks: [
-      { id: 'oc-01', title: 'पुरानी हवेली',      artist: 'Ram Radio', duration: 267 },
-      { id: 'oc-02', title: 'चमेली का इत्र',     artist: 'Ram Radio', duration: 198 },
-      { id: 'oc-03', title: 'चिराग और साया',    artist: 'Ram Radio', duration: 344 },
-      { id: 'oc-04', title: 'चौबारे की हवा',     artist: 'Ram Radio', duration: 230 },
-      { id: 'oc-05', title: 'शाम का राग',       artist: 'Ram Radio', duration: 286 },
-      { id: 'oc-06', title: 'अंधेरे की धुन',      artist: 'Ram Radio', duration: 378 },
-    ],
+    tracks:      [HEER_TRACK],
   },
   {
     id:          's98',
@@ -100,13 +83,7 @@ export const MIXTAPES = [
     description: 'वो इतवार जो एक सदी जैसा लंबा लगता था। दूरदर्शन का एंटीना, आम का अचार और पड़ोस के रेडियो की गूंज।',
     descriptionEn: 'A Sunday that lasted a whole decade. Doordarshan static, mango season, and neighbourhood FM.',
     labelArt:    'dots',
-    tracks: [
-      { id: 's98-01', title: 'दूरदर्शन',          artist: 'Ram Radio', duration: 212 },
-      { id: 's98-02', title: 'आम का मौसम',       artist: 'Ram Radio', duration: 245 },
-      { id: 's98-03', title: 'पड़ोस का ट्रांजिस्टर', artist: 'Ram Radio', duration: 198 },
-      { id: 's98-04', title: 'दोपहर की नींद',      artist: 'Ram Radio', duration: 420 },
-      { id: 's98-05', title: 'गली का क्रिकेट',     artist: 'Ram Radio', duration: 267 },
-    ],
+    tracks:      [HEER_TRACK],
   },
   {
     id:          'lns',
@@ -121,14 +98,7 @@ export const MIXTAPES = [
     description: 'उन ख़तों के नाम जो कभी भेजे नहीं गए और वो बातें जो सिर्फ कागज़ पर ही रह गईं।',
     descriptionEn: 'For every unsent letter and unmade phone call. Recorded in a single winter night.',
     labelArt:    'diagonal',
-    tracks: [
-      { id: 'lns-01', title: 'पहला ख़त',         artist: 'Ram Radio', duration: 234 },
-      { id: 'lns-02', title: 'तेरी आहट',         artist: 'Ram Radio', duration: 298 },
-      { id: 'lns-03', title: 'काट दिए लफ़्ज़',    artist: 'Ram Radio', duration: 187 },
-      { id: 'lns-04', title: 'लिफ़ाफ़े में क़ैद', artist: 'Ram Radio', duration: 356 },
-      { id: 'lns-05', title: 'आख़िरी लाइन',      artist: 'Ram Radio', duration: 210 },
-      { id: 'lns-06', title: 'राख की धुन',       artist: 'Ram Radio', duration: 285 },
-    ],
+    tracks:      [HEER_TRACK],
   },
   {
     id:          'alt',
@@ -143,30 +113,15 @@ export const MIXTAPES = [
     description: 'आखरी ट्रेन छूटने के बाद सुनसान प्लेटफॉर्म। पीली लाइटों की गूंज और शहर का धीरे-धीरे सो जाना।',
     descriptionEn: 'The platform after the last service. Station lights humming. The city going quiet.',
     labelArt:    'line',
-    tracks: [
-      { id: 'alt-01', title: 'प्लेटफॉर्म 4',      artist: 'Ram Radio', duration: 198 },
-      { id: 'alt-02', title: 'खाली डिब्बे',       artist: 'Ram Radio', duration: 245 },
-      { id: 'alt-03', title: 'सिग्नल की बत्ती',   artist: 'Ram Radio', duration: 312 },
-      { id: 'alt-04', title: 'जंक्शन की रात',     artist: 'Ram Radio', duration: 276 },
-      { id: 'alt-05', title: 'सफ़र का अंत',       artist: 'Ram Radio', duration: 340 },
-    ],
+    tracks:      [HEER_TRACK],
   },
 ]
 
-/** Return tracks for a mixtape with genuine playable audio URLs */
 export function getMixtapeQueue(mixtapeId) {
-  const mix = MIXTAPES.find((m) => m.id === mixtapeId)
-  if (!mix) return []
-  return mix.tracks.map((t) => ({
-    ...t,
-    album:    mix.title,
-    album_id: mix.id,
-    cover:    null,
-    genre:    mix.genre,
-    audioUrl: generateTrackAudioUrl(t.id, mix.genre),
-    side:     undefined,
-    num:      undefined,
-  }))
+  const mix = MIXTAPES.find((m) => m.id === mixtapeId || m.slug === mixtapeId)
+  return mix?.tracks || [HEER_TRACK]
 }
 
-export function getMixtapeById(id) { return MIXTAPES.find((m) => m.id === id) }
+export function getMixtapeById(id) {
+  return MIXTAPES.find((m) => m.id === id || m.slug === id) ?? MIXTAPES[0]
+}
