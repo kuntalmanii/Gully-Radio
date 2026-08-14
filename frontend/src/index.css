@@ -1,15 +1,91 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ─────────────────────────────────────────────────────────────────
+   Gully Radio — Global Styles
+   Tailwind v4: use @import instead of @tailwind directives
+───────────────────────────────────────────────────────────────── */
+@import "tailwindcss";
 
-/* ─── Global resets / base styles ─────────────────────────────── */
-*, *::before, *::after {
+/* ─── Design Tokens ──────────────────────────────────────────────
+   Register custom values into Tailwind's theme via @theme
+───────────────────────────────────────────────────────────────── */
+@theme {
+  /* Colors */
+  --color-bg-deep:      #171512;
+  --color-bg-dark:      #211C18;
+  --color-rust:         #A84F35;
+  --color-terracotta:   #C56A3E;
+  --color-sand:         #D7B27A;
+  --color-cream:        #F2E5CC;
+  --color-forest:       #4E6254;
+
+  /* Typography */
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans:  'DM Sans', system-ui, -apple-system, sans-serif;
+
+  /* Easing */
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─── Base Reset ─────────────────────────────────────────────────*/
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  /* Prevent layout shift from scrollbar appearing */
+  scrollbar-gutter: stable;
 }
 
 body {
-  margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #171512;
+  color: #F2E5CC;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Film Grain Animation ───────────────────────────────────────*/
+@keyframes grain {
+  0%,
+  100% { transform: translate(0, 0); }
+  10%  { transform: translate(-4px, -5px); }
+  20%  { transform: translate(-8px,  3px); }
+  30%  { transform: translate( 5px, -6px); }
+  40%  { transform: translate(-5px,  8px); }
+  50%  { transform: translate( 8px, -4px); }
+  60%  { transform: translate(-6px,  5px); }
+  70%  { transform: translate( 6px, -8px); }
+  80%  { transform: translate(-4px,  6px); }
+  90%  { transform: translate( 5px, -5px); }
+}
+
+/* ─── Particle Float Animation ───────────────────────────────────*/
+@keyframes float-particle {
+  0%   { transform: translateY(0) translateX(0px); opacity: 0; }
+  5%   { opacity: 1; }
+  85%  { opacity: 0.6; }
+  100% { transform: translateY(-110vh) translateX(var(--drift, 15px)); opacity: 0; }
+}
+
+/* ─── Scroll Line Pulse ──────────────────────────────────────────*/
+@keyframes scroll-pulse {
+  0%, 100% { transform: scaleY(1); opacity: 0.4; }
+  50%       { transform: scaleY(0.6); opacity: 0.15; }
+}
+
+/* ─── Reduce motion overrides ────────────────────────────────────*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,0 +1,44 @@
+/* ─────────────────────────────────────────────────────────────────
+   CinematicTransition — Overlay & Ripple Styles
+───────────────────────────────────────────────────────────────── */
+
+/* Dark overlay: always in DOM, transitions between pages */
+.ct-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #171512;
+  opacity: 0;
+  pointer-events: none;   /* passes through when transparent */
+  will-change: opacity;
+}
+
+/* When opacity > 0 block interaction (prevent double-clicks mid-transition) */
+.ct-overlay.ct-overlay--active {
+  pointer-events: all;
+}
+
+/* ── Magnetic button shell ──────────────────────────────────────*/
+/* MagneticButton renders children as-is; the motion transform
+   is applied to the wrapper, not the visual button itself,
+   so existing .btn-enter styles are preserved. */
+.ct-magnetic-wrap {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ── Press ripple ───────────────────────────────────────────────*/
+@keyframes ct-ripple {
+  0%   { transform: scale(0);   opacity: 0.35; }
+  60%  { transform: scale(2.2); opacity: 0.12; }
+  100% { transform: scale(3);   opacity: 0; }
+}
+
+.ct-ripple-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(215, 178, 122, 0.5);
+  pointer-events: none;
+  animation: ct-ripple 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}

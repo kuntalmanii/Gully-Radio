@@ -1,0 +1,425 @@
+/* ─────────────────────────────────────────────────────────────────
+   Gully Radio — Experience Page
+   "Inside the photograph" — the music experience
+───────────────────────────────────────────────────────────────── */
+
+/* ── Page shell ─────────────────────────────────────────────────*/
+.exp-page {
+  min-height: 100svh;
+  background-color: #171512;
+  color: #F2E5CC;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── Background ─────────────────────────────────────────────────
+   Same image — zoomed and panned toward the cassette shop (right).
+   Feels like you stepped inside the alley.
+───────────────────────────────────────────────────────────────── */
+.exp-bg {
+  position: fixed;
+  inset: -4%;
+  background-image: url('/assets/hero/hero-street.jpg');
+  background-size: 170%;
+  background-position: 82% 42%;
+  background-repeat: no-repeat;
+  z-index: 0;
+  will-change: transform;
+}
+
+.exp-bg-grade {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 90% 90% at 50% 50%, transparent 0%, rgba(23,21,18,0.72) 60%, rgba(23,21,18,0.97) 100%),
+    linear-gradient(to top, rgba(23,21,18,1) 0%, rgba(23,21,18,0.85) 25%, rgba(23,21,18,0.45) 60%, transparent 100%);
+  pointer-events: none;
+}
+
+/* ── Main layout ────────────────────────────────────────────────*/
+.exp-layout {
+  position: relative;
+  z-index: 10;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding-top: 6rem;   /* below fixed header */
+}
+
+.exp-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  padding: 3rem 6vw 5rem;
+  align-items: start;
+}
+
+/* ── Left column — Player ───────────────────────────────────────*/
+.exp-player {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* ── Now playing label ──────────────────────────────────────────*/
+.exp-now-playing-label {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: rgba(215, 178, 122, 0.45);
+  text-transform: uppercase;
+}
+
+/* ── Cassette visual ────────────────────────────────────────────*/
+.exp-cassette {
+  display: flex;
+  justify-content: center;
+}
+
+.cassette-body {
+  width: 260px;
+  height: 160px;
+  background: linear-gradient(145deg, #1e1a16 0%, #2a2420 50%, #1a1612 100%);
+  border: 1px solid rgba(215, 178, 122, 0.15);
+  border-radius: 6px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 1px rgba(215, 178, 122, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(215, 178, 122, 0.08);
+}
+
+/* Cassette label area */
+.cassette-label-area {
+  width: 200px;
+  height: 68px;
+  background: linear-gradient(135deg, #211c16 0%, #2d2418 100%);
+  border: 1px solid rgba(215, 178, 122, 0.12);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.cassette-label-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: rgba(215, 178, 122, 0.7);
+  text-transform: uppercase;
+}
+
+.cassette-label-sub {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: rgba(215, 178, 122, 0.35);
+}
+
+/* Reel windows */
+.cassette-reels {
+  display: flex;
+  gap: 60px;
+  align-items: center;
+}
+
+.cassette-reel {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(215, 178, 122, 0.25);
+  background: radial-gradient(circle at center, #2a2218 0%, #1a1510 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Inner hub */
+.cassette-reel::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #171512;
+  border: 1px solid rgba(215, 178, 122, 0.2);
+}
+
+/* Spoke marks */
+.cassette-reel::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 1px dashed rgba(215, 178, 122, 0.15);
+}
+
+@keyframes reel-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.cassette-reel--spinning {
+  animation: reel-spin 2.4s linear infinite;
+}
+.cassette-reel--spinning-slow {
+  animation: reel-spin 4s linear infinite;
+}
+
+/* Tape notch between reels */
+.cassette-tape-bridge {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(215,178,122,0.2), transparent);
+  border-top: 1px solid rgba(215, 178, 122, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Corner holes */
+.cassette-corner-hole {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(215, 178, 122, 0.1);
+}
+.cassette-corner-hole:nth-child(1) { top: 8px; left: 8px; }
+.cassette-corner-hole:nth-child(2) { top: 8px; right: 8px; }
+.cassette-corner-hole:nth-child(3) { bottom: 8px; left: 8px; }
+.cassette-corner-hole:nth-child(4) { bottom: 8px; right: 8px; }
+
+/* ── Track info ─────────────────────────────────────────────────*/
+.exp-track-info {
+  text-align: center;
+}
+
+.exp-track-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 400;
+  color: #F2E5CC;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.01em;
+}
+
+.exp-track-artist {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: rgba(215, 178, 122, 0.5);
+  text-transform: uppercase;
+}
+
+/* ── Progress bar ───────────────────────────────────────────────*/
+.exp-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.exp-progress-time {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: rgba(215, 178, 122, 0.4);
+  white-space: nowrap;
+  min-width: 2.5rem;
+}
+
+.exp-progress-track {
+  flex: 1;
+  height: 1px;
+  background: rgba(215, 178, 122, 0.15);
+  position: relative;
+  cursor: pointer;
+}
+
+.exp-progress-fill {
+  height: 100%;
+  width: 38%;
+  background: linear-gradient(90deg, #A84F35, #D7B27A);
+  position: relative;
+}
+
+.exp-progress-dot {
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #D7B27A;
+}
+
+/* ── Player controls ────────────────────────────────────────────*/
+.exp-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+}
+
+.exp-ctrl-btn {
+  background: none;
+  border: none;
+  color: rgba(215, 178, 122, 0.45);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+.exp-ctrl-btn:hover {
+  color: #D7B27A;
+  transform: scale(1.1);
+}
+
+.exp-ctrl-btn--play {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(215, 178, 122, 0.3) !important;
+  color: #D7B27A;
+  background: rgba(215, 178, 122, 0.06) !important;
+  transition: background 0.3s ease, border-color 0.3s ease !important;
+}
+
+.exp-ctrl-btn--play:hover {
+  background: rgba(215, 178, 122, 0.12) !important;
+  border-color: rgba(215, 178, 122, 0.5) !important;
+  transform: scale(1.05) !important;
+}
+
+/* ── Right column — Track listing ───────────────────────────────*/
+.exp-tracklist {
+  display: flex;
+  flex-direction: column;
+}
+
+.exp-tracklist-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.exp-tracklist-label {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: rgba(215, 178, 122, 0.4);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.exp-tracklist-rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(215, 178, 122, 0.1);
+}
+
+/* Side divider */
+.exp-side-divider {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: rgba(168, 79, 53, 0.6);
+  text-transform: uppercase;
+  margin: 1.2rem 0 0.6rem;
+}
+
+/* Track row */
+.exp-track-row {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid rgba(215, 178, 122, 0.05);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: 2px;
+}
+
+.exp-track-row:hover {
+  background: rgba(215, 178, 122, 0.04);
+  padding-left: 0.4rem;
+  margin-left: -0.4rem;
+}
+
+.exp-track-row--active {
+  background: rgba(168, 79, 53, 0.06);
+  padding-left: 0.4rem;
+  margin-left: -0.4rem;
+}
+
+.exp-track-num {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: rgba(215, 178, 122, 0.3);
+  letter-spacing: 0.05em;
+}
+
+.exp-track-row--active .exp-track-num {
+  color: #C56A3E;
+}
+
+.exp-track-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(242, 229, 204, 0.75);
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+.exp-track-row:hover .exp-track-name,
+.exp-track-row--active .exp-track-name {
+  color: #F2E5CC;
+}
+
+.exp-track-dur {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: rgba(215, 178, 122, 0.3);
+  letter-spacing: 0.05em;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────*/
+@media (max-width: 900px) {
+  .exp-body {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+    padding: 2rem 6vw 4rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .exp-layout { padding-top: 5rem; }
+  .cassette-body { width: 220px; height: 135px; }
+  .cassette-label-area { width: 170px; height: 58px; }
+  .cassette-reels { gap: 48px; }
+}

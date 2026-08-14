@@ -1,0 +1,414 @@
+/* ─────────────────────────────────────────────────────────────────
+   Gully Radio — Hero Component Styles
+   All visual effects for the full-screen hero experience
+───────────────────────────────────────────────────────────────── */
+
+/* ─── Section shell ──────────────────────────────────────────────*/
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100svh;           /* small viewport units — correct on mobile */
+  min-height: 600px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  background-color: #171512;
+}
+
+/* ─── Background layer ───────────────────────────────────────────
+   Extra padding so Ken Burns / parallax movement never exposes
+   a raw edge.
+───────────────────────────────────────────────────────────────── */
+.hero-bg-wrap {
+  position: absolute;
+  inset: -6%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/hero/hero-street.jpg');
+  background-size: cover;
+  background-position: center 40%;
+  background-repeat: no-repeat;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* ─── Color-grade overlay ────────────────────────────────────────
+   Warms the image and ties it to our brand palette without 
+   hiding the photography. mix-blend-mode: multiply deepens shadows.
+───────────────────────────────────────────────────────────────── */
+.hero-color-grade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      160deg,
+      rgba(23, 21, 18, 0.38) 0%,
+      rgba(168, 79, 53, 0.10) 45%,
+      rgba(23, 21, 18, 0.55) 100%
+    );
+  pointer-events: none;
+}
+
+/* ─── Vignette ───────────────────────────────────────────────────*/
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    transparent 20%,
+    rgba(23, 21, 18, 0.45) 60%,
+    rgba(23, 21, 18, 0.88) 100%
+  );
+  pointer-events: none;
+}
+
+/* Bottom-up darkness so text is always readable */
+.hero-bottom-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65%;
+  z-index: 3;
+  background: linear-gradient(
+    to top,
+    rgba(23, 21, 18, 0.96) 0%,
+    rgba(23, 21, 18, 0.60) 40%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ─── Film grain ─────────────────────────────────────────────────
+   Tiled SVG noise pattern shifted in steps to simulate real grain.
+   Kept at 4% opacity for subtlety.
+───────────────────────────────────────────────────────────────── */
+.hero-grain {
+  position: absolute;
+  inset: -80px;              /* oversized so shift doesn't show edge */
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0.042;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  animation: grain 0.18s steps(1) infinite;
+}
+
+/* ─── Atmospheric particles ──────────────────────────────────────*/
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-particle {
+  position: absolute;
+  bottom: -4px;
+  border-radius: 50%;
+  background: #D7B27A;
+  animation: float-particle linear infinite;
+  will-change: transform, opacity;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────*/
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 4vw;
+  /* Long gradient so header is always legible */
+  background: linear-gradient(
+    to bottom,
+    rgba(23, 21, 18, 0.78) 0%,
+    transparent 100%
+  );
+  backdrop-filter: blur(0px);      /* no blur — keeps cinematic feel */
+}
+
+.site-logo {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  color: #F2E5CC;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.site-logo:hover { color: #D7B27A; }
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  list-style: none;
+}
+
+.site-nav a {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: rgba(242, 229, 204, 0.65);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+  position: relative;
+}
+
+.site-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #C56A3E;
+  transition: width 0.3s var(--ease-cinematic, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.site-nav a:hover {
+  color: #F2E5CC;
+}
+
+.site-nav a:hover::after {
+  width: 100%;
+}
+
+/* Mobile hamburger toggle (hidden on desktop) */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: #F2E5CC;
+  transition: opacity 0.2s ease;
+}
+
+/* ─── Hero content ───────────────────────────────────────────────*/
+.hero-content {
+  position: relative;
+  z-index: 20;
+  padding: 0 6vw 8vh;
+  max-width: min(800px, 90vw);
+  width: 100%;
+}
+
+/* ─── Headline ───────────────────────────────────────────────────*/
+.hero-headline {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(3.8rem, 11vw, 8.5rem);
+  font-weight: 300;
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  color: #F2E5CC;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
+}
+
+.hero-headline .line-1,
+.hero-headline .line-2 {
+  color: #F2E5CC;
+}
+
+.hero-headline .line-3 {
+  color: #C56A3E;
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* ─── Tagline ────────────────────────────────────────────────────*/
+.hero-tagline {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(242, 229, 204, 0.58);
+  max-width: 380px;
+  margin-bottom: clamp(2rem, 4vw, 2.8rem);
+  letter-spacing: 0.01em;
+}
+
+/* ─── CTA area ───────────────────────────────────────────────────*/
+.hero-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+
+.btn-enter {
+  display: inline-block;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #171512;
+  background: #D7B27A;
+  border: none;
+  padding: 1rem 2.6rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.35s ease, color 0.35s ease, transform 0.2s ease;
+}
+
+/* Subtle shimmer on hover */
+.btn-enter::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(242, 229, 204, 0.35) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.btn-enter:hover {
+  background: #F2E5CC;
+  transform: translateY(-2px);
+}
+
+.btn-enter:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-enter:active {
+  transform: translateY(0);
+}
+
+.hero-listen-line {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  color: rgba(215, 178, 122, 0.42);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* ─── Scroll indicator ───────────────────────────────────────────*/
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 4vw;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scroll-label {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: rgba(215, 178, 122, 0.35);
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 3.5rem;
+  background: linear-gradient(to bottom, rgba(215, 178, 122, 0.5), transparent);
+  transform-origin: top;
+  animation: scroll-pulse 2.4s ease-in-out infinite;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .site-header {
+    padding: 1.4rem 5vw;
+  }
+
+  /* Show hamburger, hide nav links */
+  .nav-toggle {
+    display: flex;
+  }
+
+  .site-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(280px, 80vw);
+    background: rgba(23, 21, 18, 0.97);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 4rem 3rem;
+    z-index: 200;
+    border-left: 1px solid rgba(215, 178, 122, 0.1);
+  }
+
+  .site-nav.is-open {
+    display: flex;
+  }
+
+  .site-nav a {
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+  }
+
+  .hero-content {
+    padding: 0 6vw 10vh;
+  }
+
+  .hero-tagline {
+    max-width: 100%;
+  }
+
+  .hero-scroll-indicator {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-headline {
+    font-size: clamp(3rem, 15vw, 4.5rem);
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero-content {
+    padding: 0 8vw 10vh;
+    max-width: 960px;
+  }
+}
