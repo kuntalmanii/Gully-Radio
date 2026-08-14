@@ -34,6 +34,7 @@ export const MIXTAPES = [
     descriptionEn: 'Late nights in lanes that never sleep. The hiss of a radio, the last chai stall still burning its lantern.',
     labelArt:    'grid',
     tracks: [
+      { id: 'track-heer', title: 'हीर (Heer)',    artist: 'Ali Raza Shjr', duration: 251, audioUrl: '/audio/Heer_-_Ali_Raza_Shjr_Lyrics.mp3' },
       { id: 'mg-01', title: 'रात के मुसाफ़िर',    artist: 'Ram Radio', duration: 243 },
       { id: 'mg-02', title: 'नियॉन गली',         artist: 'Ram Radio', duration: 198 },
       { id: 'mg-03', title: 'अंतिम चाय की दुकान', artist: 'Ram Radio', duration: 274 },
@@ -41,6 +42,7 @@ export const MIXTAPES = [
       { id: 'mg-05', title: 'रेडियो स्टैटिक',    artist: 'Ram Radio', duration: 187 },
       { id: 'mg-06', title: 'सवेरे की धूप',       artist: 'Ram Radio', duration: 256 },
     ],
+
   },
   {
     id:          'cr',

@@ -30,8 +30,22 @@ export const FEATURED_TRACK = {
 
 export const RECENTLY_ADDED = [
   {
+    id:          'track-heer',
+    title:       'हीर (Heer)',
+    titleEn:     'Heer',
+    artist:      'Ali Raza Shjr',
+    album:       'Gully Radio Special Archives',
+    location:    'लाहौर / दिल्ली · 2024',
+    duration:    251,
+    genre:       'Sufi / Folk',
+    side:        'A',
+    num:         '01',
+    audioUrl:    '/audio/Heer_-_Ali_Raza_Shjr_Lyrics.mp3',
+  },
+  {
     id:          'disc-rec-1',
     title:       'विक्टोरिया रोड की शाम',
+
     titleEn:     'Dusk on Victoria Road',
     artist:      'Kalyan & Co.',
     album:       'Bombay Archives',

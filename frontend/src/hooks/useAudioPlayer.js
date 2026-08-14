@@ -7,7 +7,7 @@
  *  - Single HTML5 Audio instance
  *  - Queue management: loadQueue, addToQueue, playNext, removeFromQueue, clearQueue
  *  - Automatic Recently Played tracking via libraryStorage
- *  - Procedural sound synthesis fallback for instant audible playback
+ *  - Real MP3 audio playback with seamless procedural fallback
  *  - Non-blocking error recovery
  */
 
@@ -63,7 +63,7 @@ export default function useAudioPlayer() {
   const handlePause    = useCallback(() => setState((s) => ({ ...s, isPlaying: false })), [setState])
 
   const handleError = useCallback((e) => {
-    console.warn('[useAudioPlayer] Audio loading issue, switching to procedural soundscape...', e)
+    console.warn('[useAudioPlayer] Audio loading error on src, fallback to synthesized audio...', e)
     const currentTrack = queueRef.current[queueIdxRef.current]
     if (currentTrack && audioRef.current) {
       const fallbackUrl = generateTrackAudioUrl(currentTrack.id, currentTrack.genre)
@@ -95,9 +95,7 @@ export default function useAudioPlayer() {
 
       addRecentlyPlayed(nextTrack)
 
-      const validUrl = (nextTrack.audioUrl && !nextTrack.audioUrl.startsWith('/audio/'))
-        ? nextTrack.audioUrl
-        : generateTrackAudioUrl(nextTrack.id, nextTrack.genre)
+      const validUrl = nextTrack.audioUrl || generateTrackAudioUrl(nextTrack.id, nextTrack.genre)
 
       audio.src = validUrl
       audio.load()
@@ -146,9 +144,7 @@ export default function useAudioPlayer() {
   const loadQueue = useCallback((tracks, startIndex = 0) => {
     const sanitizedQueue = (tracks || []).map((t) => ({
       ...t,
-      audioUrl: (t.audioUrl && !t.audioUrl.startsWith('/audio/'))
-        ? t.audioUrl
-        : generateTrackAudioUrl(t.id, t.genre || 'default'),
+      audioUrl: t.audioUrl || generateTrackAudioUrl(t.id, t.genre || 'default'),
     }))
 
     queueRef.current    = sanitizedQueue
@@ -161,9 +157,7 @@ export default function useAudioPlayer() {
     if (!track) return
     const sanitized = {
       ...track,
-      audioUrl: (track.audioUrl && !track.audioUrl.startsWith('/audio/'))
-        ? track.audioUrl
-        : generateTrackAudioUrl(track.id, track.genre || 'default'),
+      audioUrl: track.audioUrl || generateTrackAudioUrl(track.id, track.genre || 'default'),
     }
 
     const updated = [...queueRef.current, sanitized]
@@ -176,9 +170,7 @@ export default function useAudioPlayer() {
     if (!track) return
     const sanitized = {
       ...track,
-      audioUrl: (track.audioUrl && !track.audioUrl.startsWith('/audio/'))
-        ? track.audioUrl
-        : generateTrackAudioUrl(track.id, track.genre || 'default'),
+      audioUrl: track.audioUrl || generateTrackAudioUrl(track.id, track.genre || 'default'),
     }
 
     const currentIdx = queueIdxRef.current
@@ -237,9 +229,7 @@ export default function useAudioPlayer() {
       error:          null,
     }))
 
-    const validUrl = (track.audioUrl && !track.audioUrl.startsWith('/audio/'))
-      ? track.audioUrl
-      : generateTrackAudioUrl(track.id, track.genre || 'default')
+    const validUrl = track.audioUrl || generateTrackAudioUrl(track.id, track.genre || 'default')
 
     audio.src = validUrl
     audio.load()
