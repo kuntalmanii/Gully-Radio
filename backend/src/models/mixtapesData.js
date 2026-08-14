@@ -1,0 +1,115 @@
+/**
+ * models/mixtapesData.js
+ * ──────────────────────────────────────────────────────────────
+ * In-memory repository for the six Gully Radio signature mixtapes.
+ */
+
+const MIXTAPES = [
+  {
+    id: 'midnight-gully',
+    shortId: 'mg',
+    title: 'MIDNIGHT GULLY',
+    curator: 'Rohan M.',
+    year: 1998,
+    genre: 'Nocturnal / Street',
+    description: 'Late nights in lanes that never sleep. The hiss of a radio, the last chai stall still burning its lantern.',
+    trackCount: 6,
+    tracks: [
+      { id: 'mg-01', title: 'Raat Ke Musafir', artist: 'Ram Radio', duration: 243 },
+      { id: 'mg-02', title: 'Neon Gali', artist: 'Ram Radio', duration: 198 },
+      { id: 'mg-03', title: 'Last Chai Stand', artist: 'Ram Radio', duration: 274 },
+      { id: 'mg-04', title: 'Three A.M.', artist: 'Ram Radio', duration: 312 },
+      { id: 'mg-05', title: 'Radio Static', artist: 'Ram Radio', duration: 187 },
+      { id: 'mg-06', title: 'Dawn Coming', artist: 'Ram Radio', duration: 256 },
+    ],
+  },
+  {
+    id: 'chai-and-rain',
+    shortId: 'cr',
+    title: 'CHAI & RAIN',
+    curator: 'Priya K.',
+    year: 2001,
+    genre: 'Monsoon / Slow',
+    description: 'Monsoon afternoons with nowhere to be. Warm cups, wet pavements, and the smell of petrichor on hot stone.',
+    trackCount: 5,
+    tracks: [
+      { id: 'cr-01', title: 'Barish Ka Pehla Din', artist: 'Ram Radio', duration: 220 },
+      { id: 'cr-02', title: 'Khumaar', artist: 'Ram Radio', duration: 285 },
+      { id: 'cr-03', title: 'Garam Chai', artist: 'Ram Radio', duration: 198 },
+      { id: 'cr-04', title: 'Window Seat', artist: 'Ram Radio', duration: 240 },
+      { id: 'cr-05', title: 'Slow Hour', artist: 'Ram Radio', duration: 310 },
+    ],
+  },
+  {
+    id: 'old-city-nights',
+    shortId: 'oc',
+    title: 'OLD CITY NIGHTS',
+    curator: 'Vikram S.',
+    year: 1995,
+    genre: 'Heritage / Deep Cut',
+    description: 'Recorded in the narrow lanes of a walled city. The azaan, the temple bells, and the man who sells jasmine after dark.',
+    trackCount: 6,
+    tracks: [
+      { id: 'oc-01', title: 'Purani Haveli', artist: 'Ram Radio', duration: 267 },
+      { id: 'oc-02', title: 'Jasmine Seller', artist: 'Ram Radio', duration: 198 },
+      { id: 'oc-03', title: 'Lamp & Shadow', artist: 'Ram Radio', duration: 344 },
+      { id: 'oc-04', title: 'The Courtyard', artist: 'Ram Radio', duration: 230 },
+      { id: 'oc-05', title: 'Before the Mosque', artist: 'Ram Radio', duration: 286 },
+      { id: 'oc-06', title: 'Dusk Raga', artist: 'Ram Radio', duration: 378 },
+    ],
+  },
+  {
+    id: 'sunday-1998',
+    shortId: 's98',
+    title: 'SUNDAY 1998',
+    curator: 'Ananya R.',
+    year: 1998,
+    genre: 'Nostalgia / Easy',
+    description: 'A Sunday that lasted a whole decade. Doordarshan static, mango pickle, and the neighbour\'s FM bleeding through the wall.',
+    trackCount: 5,
+    tracks: [
+      { id: 's98-01', title: 'Doordarshan', artist: 'Ram Radio', duration: 212 },
+      { id: 's98-02', title: 'Mango Season', artist: 'Ram Radio', duration: 245 },
+      { id: 's98-03', title: 'Neighbour\'s Radio', artist: 'Ram Radio', duration: 198 },
+      { id: 's98-04', title: 'Afternoon Nap', artist: 'Ram Radio', duration: 420 },
+      { id: 's98-05', title: 'Evening Cricket', artist: 'Ram Radio', duration: 267 },
+    ],
+  },
+  {
+    id: 'letters-never-sent',
+    shortId: 'lns',
+    title: 'LETTERS NEVER SENT',
+    curator: 'Dev P.',
+    year: 2003,
+    genre: 'Intimate / Melancholic',
+    description: 'For every unsent letter and every phone call that never happened. Recorded in a single winter night.',
+    trackCount: 6,
+    tracks: [
+      { id: 'lns-01', title: 'First Draft', artist: 'Ram Radio', duration: 234 },
+      { id: 'lns-02', title: 'Teri Aahat', artist: 'Ram Radio', duration: 298 },
+      { id: 'lns-03', title: 'Crossed Out', artist: 'Ram Radio', duration: 187 },
+      { id: 'lns-04', title: 'Sealed, Unsent', artist: 'Ram Radio', duration: 356 },
+      { id: 'lns-05', title: 'Last Line', artist: 'Ram Radio', duration: 210 },
+      { id: 'lns-06', title: 'Burned', artist: 'Ram Radio', duration: 285 },
+    ],
+  },
+  {
+    id: 'after-the-last-train',
+    shortId: 'alt',
+    title: 'AFTER THE LAST TRAIN',
+    curator: 'Meera J.',
+    year: 2006,
+    genre: 'Transit / Ambient',
+    description: 'The platform after the last service. The station lights humming. The city going quiet, one signal at a time.',
+    trackCount: 5,
+    tracks: [
+      { id: 'alt-01', title: 'Platform 4', artist: 'Ram Radio', duration: 198 },
+      { id: 'alt-02', title: 'Departure Board', artist: 'Ram Radio', duration: 245 },
+      { id: 'alt-03', title: 'Empty Carriage', artist: 'Ram Radio', duration: 312 },
+      { id: 'alt-04', title: 'Junction Night', artist: 'Ram Radio', duration: 276 },
+      { id: 'alt-05', title: 'Signal Clear', artist: 'Ram Radio', duration: 340 },
+    ],
+  },
+]
+
+module.exports = MIXTAPES

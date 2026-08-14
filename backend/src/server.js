@@ -1,79 +1,92 @@
-'use strict'
-
-require('dotenv').config()
+/**
+ * server.js
+ * ──────────────────────────────────────────────────────────────
+ * Gully Radio — Express API Server
+ */
 
 const express = require('express')
-const cors = require('cors')
 const helmet = require('helmet')
+const cors = require('cors')
 const morgan = require('morgan')
-const path = require('path')
 
-// ─── App ─────────────────────────────────────────────────────────
+const config = require('./config')
+const routes = require('./routes')
+const { rateLimiter, notFoundHandler, errorHandler } = require('./middleware')
+
 const app = express()
-const PORT = process.env.PORT || 5001
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
 
-// ─── Security ────────────────────────────────────────────────────
+/* ── Security Middlewares ─────────────────────────────────────── */
 app.use(helmet())
 
-// ─── CORS ────────────────────────────────────────────────────────
+// CORS configuration supporting frontend dev & preview origins
 app.use(
   cors({
-    origin: FRONTEND_URL,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true)
+
+      const allowedOrigins = [
+        config.frontendUrl,
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'http://localhost:3000',
+      ]
+
+      if (allowedOrigins.includes(origin) || config.isDev) {
+        return callback(null, true)
+      }
+
+      callback(new Error('Cross-Origin Request Blocked by CORS'))
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
 )
 
-// ─── Logging ─────────────────────────────────────────────────────
-if (process.env.NODE_ENV !== 'test') {
-  app.use(morgan('dev'))
-}
-
-// ─── Body Parsers ────────────────────────────────────────────────
+/* ── Request Parsers & Logging ────────────────────────────────── */
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// ─── Static — Uploads ────────────────────────────────────────────
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
+if (config.isDev) {
+  app.use(morgan('dev'))
+} else {
+  app.use(morgan('combined'))
+}
 
-// ─── Routes ──────────────────────────────────────────────────────
-// Health check — always first
-app.get('/api/health', (_req, res) => {
-  res.json({
-    status: 'ok',
-    service: 'gully-radio-backend',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    port: PORT,
+/* ── Rate Limiting ────────────────────────────────────────────── */
+app.use('/api', rateLimiter)
+
+/* ── API Routes ───────────────────────────────────────────────── */
+app.use('/api', routes)
+
+/* ── 404 Not Found Handling ───────────────────────────────────── */
+app.use(notFoundHandler)
+
+/* ── Centralized Error Handling ───────────────────────────────── */
+app.use(errorHandler)
+
+/* ── Server Startup ───────────────────────────────────────────── */
+if (process.env.NODE_ENV !== 'test') {
+  const server = app.listen(config.port, () => {
+    console.log(`\n📻 Gully Radio API Server is running on port ${config.port}`)
+    console.log(`📡 Health Check:  http://localhost:${config.port}/api/health`)
+    console.log(`🎵 Tracks API:    http://localhost:${config.port}/api/tracks`)
+    console.log(`📼 Mixtapes API:  http://localhost:${config.port}/api/mixtapes`)
+    console.log(`🔍 Search API:    http://localhost:${config.port}/api/search?q=gully\n`)
   })
-})
 
-// Placeholder: future routes will be mounted here
-// e.g. app.use('/api/tracks', require('./routes/tracks'))
+  // Graceful shutdown handling
+  const shutdown = (signal) => {
+    console.log(`\nReceived ${signal}. Shutting down gracefully...`)
+    server.close(() => {
+      console.log('Server closed. Exiting process.')
+      process.exit(0)
+    })
+  }
 
-// ─── 404 Handler ─────────────────────────────────────────────────
-app.use((_req, res) => {
-  res.status(404).json({ error: 'Route not found' })
-})
-
-// ─── Global Error Handler ────────────────────────────────────────
-// eslint-disable-next-line no-unused-vars
-app.use((err, _req, res, _next) => {
-  console.error(err.stack)
-  res.status(err.status || 500).json({
-    error: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message,
-  })
-})
-
-// ─── Start ───────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n🎙️  Gully Radio Backend`)
-  console.log(`   ➜  Listening on  http://localhost:${PORT}`)
-  console.log(`   ➜  Health check  http://localhost:${PORT}/api/health`)
-  console.log(`   ➜  CORS origin   ${FRONTEND_URL}`)
-  console.log(`   ➜  Environment   ${process.env.NODE_ENV}\n`)
-})
+  process.on('SIGTERM', () => shutdown('SIGTERM'))
+  process.on('SIGINT', () => shutdown('SIGINT'))
+}
 
 module.exports = app

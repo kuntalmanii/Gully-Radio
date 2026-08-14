@@ -1,3 +1,15 @@
-// ─── Services ─────────────────────────────────────────────────────
-// Business logic, third-party integrations, and data-access helpers live here.
-// Controllers call services; services are framework-agnostic.
+/**
+ * services/index.js
+ * ──────────────────────────────────────────────────────────────
+ * Unified services exporter.
+ */
+
+const trackService = require('./trackService')
+const mixtapeService = require('./mixtapeService')
+const searchService = require('./searchService')
+
+module.exports = {
+  trackService,
+  mixtapeService,
+  searchService,
+}
