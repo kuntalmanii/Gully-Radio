@@ -48,7 +48,46 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
 }
+
+/* ─── Editorial Text Selection ───────────────────────────────────*/
+::selection {
+  background-color: #A84F35;
+  color: #F2E5CC;
+}
+
+/* ─── Keyboard Accessibility & Focus Visible ────────────────────*/
+:focus-visible {
+  outline: 1.5px solid #D7B27A;
+  outline-offset: 3px;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ─── Custom Analog Scrollbar ───────────────────────────────────*/
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #12100e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(215, 178, 122, 0.22);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(215, 178, 122, 0.45);
+}
+
 
 /* ─── Film Grain Animation ───────────────────────────────────────*/
 @keyframes grain {

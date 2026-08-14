@@ -505,20 +505,21 @@
   }
 
   .player-btn--play {
-    width: 36px !important;
-    height: 36px !important;
+    width: 38px !important;
+    height: 38px !important;
   }
 
   .player-queue-panel {
-    bottom: 98px;
+    bottom: 96px;
     width: 100vw;
     border-left: none;
+    border-top: 1px solid rgba(215, 178, 122, 0.12);
   }
 }
 
 /* Body padding compensation when player is visible */
 body.has-player {
-  padding-bottom: 76px;
+  padding-bottom: 78px;
 }
 
 @media (max-width: 768px) {
@@ -526,3 +527,4 @@ body.has-player {
     padding-bottom: 98px;
   }
 }
+
