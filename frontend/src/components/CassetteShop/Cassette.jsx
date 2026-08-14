@@ -1,15 +1,13 @@
 /**
  * Cassette.jsx
  * ──────────────────────────────────────────────────────────────
- * A CSS-rendered cassette tape.
+ * A CSS-rendered tactile analog cassette tape.
  *
- * Props:
- *   mixtape   — data from shopData.js
- *   size      — 'sm' | 'md' | 'lg'
- *   isPlaying — reel spin animation
- *   onClick   — click handler
- *   style     — extra inline styles (for GSAP overrides)
- *   ref       — forwarded ref (used for GSAP targeting)
+ * Enriched with:
+ *  - Plastic shell gloss & bevel sheen
+ *  - Metallic screw reflections
+ *  - Magnetic tape scanline texture
+ *  - Ambient reel backlight when playing
  */
 
 import { forwardRef } from 'react'
@@ -60,21 +58,30 @@ const Cassette = forwardRef(function Cassette(
       {/* Shell */}
       <div
         className="cassette-shell"
-        style={{ background: theme.shell }}
+        style={{
+          background: theme.shell,
+          boxShadow: isPlaying
+            ? `0 0 28px ${theme.accent}33, inset 0 1px 1px rgba(255,255,255,0.18)`
+            : '0 8px 24px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.12)',
+        }}
       >
-        {/* Corner pegs */}
+        {/* Analog Sheen Texture Overlay */}
+        <div className="tape-plastic-sheen" aria-hidden="true" />
+        <div className="analog-scanlines" aria-hidden="true" />
+
+        {/* Corner screws with metallic reflections */}
         <div className="cassette-pegs" aria-hidden="true">
-          <div className="cassette-peg cassette-peg--tl" style={{ background: theme.screw }} />
-          <div className="cassette-peg cassette-peg--tr" style={{ background: theme.screw }} />
-          <div className="cassette-peg cassette-peg--bl" style={{ background: theme.screw }} />
-          <div className="cassette-peg cassette-peg--br" style={{ background: theme.screw }} />
+          <div className="cassette-peg cassette-peg--tl metallic-screw-reflection" style={{ background: theme.screw }} />
+          <div className="cassette-peg cassette-peg--tr metallic-screw-reflection" style={{ background: theme.screw }} />
+          <div className="cassette-peg cassette-peg--bl metallic-screw-reflection" style={{ background: theme.screw }} />
+          <div className="cassette-peg cassette-peg--br metallic-screw-reflection" style={{ background: theme.screw }} />
         </div>
 
         {/* Left reel */}
         <div
           className={`cassette-reel-hole${isPlaying ? ' cassette-reel-hole--spinning' : ''}`}
           aria-hidden="true"
-          style={{ borderColor: `${theme.accent}22` }}
+          style={{ borderColor: `${theme.accent}33` }}
         />
 
         {/* Center label */}
@@ -85,7 +92,6 @@ const Cassette = forwardRef(function Cassette(
             style={{ background: theme.stripe }}
           >
             <ArtworkDecoration style={labelArt} accentColor={theme.accent} />
-            {/* Accent colour overlay */}
             <div
               style={{
                 position: 'absolute',
@@ -119,12 +125,19 @@ const Cassette = forwardRef(function Cassette(
         <div
           className={`cassette-reel-hole${isPlaying ? ' cassette-reel-hole--spinning-slow' : ''}`}
           aria-hidden="true"
-          style={{ borderColor: `${theme.accent}22` }}
+          style={{ borderColor: `${theme.accent}33` }}
         />
 
-        {/* Tape window (bottom strip) */}
+        {/* Tape window with illuminated backlight */}
         <div className="cassette-window" aria-hidden="true">
-          <div className="cassette-tape" style={{ background: `${theme.accent}44` }} />
+          <div
+            className="cassette-tape"
+            style={{
+              background: isPlaying
+                ? `linear-gradient(90deg, #120a05 0%, ${theme.accent}66 50%, #120a05 100%)`
+                : `${theme.accent}33`,
+            }}
+          />
         </div>
       </div>
     </div>

@@ -31,6 +31,7 @@ export default function App() {
         MusicPlayer rendered OUTSIDE <Routes> for the same reason.
       */}
       <AudioProvider>
+        <div className="film-grain-overlay" aria-hidden="true" />
         <CinematicTransition>
           <Routes>
             <Route path="/"           element={<HeroPage />} />

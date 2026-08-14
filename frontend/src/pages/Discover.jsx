@@ -241,16 +241,31 @@ export default function Discover() {
           animate="visible"
           aria-label="खास पेशकश (Featured Track)"
         >
+          {/* Ambient Spotlight Lighting Halo */}
+          <div
+            className="ambient-light-halo ambient-light-halo--amber"
+            style={{
+              width: '320px',
+              height: '320px',
+              left: '5%',
+              top: '15%',
+              opacity: isPlaying && isFeaturedActive ? 0.9 : 0.45,
+            }}
+            aria-hidden="true"
+          />
+
           <div className="featured-visual">
             <div className="featured-disc-wrapper">
               <div
                 className={`featured-disc ${isPlaying && isFeaturedActive ? 'featured-disc--spinning' : ''}`}
                 aria-hidden="true"
               >
+                <div className="analog-scanlines" aria-hidden="true" />
                 <div className="featured-disc-center">
                   <span className="featured-disc-label" style={{ fontFamily: "'Inter', sans-serif" }}>GULLY 7"</span>
                 </div>
               </div>
+
 
               <div
                 className="featured-play-overlay"

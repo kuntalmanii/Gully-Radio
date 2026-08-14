@@ -202,11 +202,25 @@ export default function Hero() {
         />
       </div>
 
-      {/* ── Overlays ───────────────────────────────────────────── */}
+      {/* ── Overlays & Ambient Light Halos ───────────────────── */}
       <div className="hero-color-grade" aria-hidden="true" />
       <div className="hero-vignette"    aria-hidden="true" />
       <div className="hero-bottom-fade" aria-hidden="true" />
       <div className="hero-grain"       aria-hidden="true" />
+
+      {/* Warm Ambient Lamp Halo over Cassette Stall */}
+      <div
+        className="ambient-light-halo ambient-light-halo--amber"
+        style={{
+          width: 'min(500px, 60vw)',
+          height: 'min(500px, 60vw)',
+          left: '12%',
+          bottom: '18%',
+          opacity: 0.75,
+        }}
+        aria-hidden="true"
+      />
+
 
       {/* ── Particles ──────────────────────────────────────────── */}
       <div className="hero-particles" aria-hidden="true">

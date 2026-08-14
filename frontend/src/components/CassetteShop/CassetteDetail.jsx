@@ -133,11 +133,24 @@ export default function CassetteDetail({ mixtape, onBack }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.35 }}
     >
-      {/* ── Deck / player slot ──────────────────────────────── */}
+      {/* ── Deck / player slot with Ambient Lighting Halo ──── */}
       <div ref={deckSlotRef} className="detail-deck">
+        <div
+          className="ambient-light-halo ambient-light-halo--amber"
+          style={{
+            width: '280px',
+            height: '280px',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            opacity: isPlaying && isThisCassetteActive ? 0.85 : 0.35,
+          }}
+          aria-hidden="true"
+        />
+
         <span
           className="detail-deck-label"
-          style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.62rem' }}
+          style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.62rem', position: 'relative', zIndex: 2 }}
         >
           {loading ? 'लोड हो रहा है...' : 'डेक में कैसेट'}
         </span>
@@ -148,6 +161,7 @@ export default function CassetteDetail({ mixtape, onBack }) {
           size="lg"
           isPlaying={isPlaying && isThisCassetteActive}
         />
+
 
         <div className="detail-deck-controls">
           <AnimatePresence>
