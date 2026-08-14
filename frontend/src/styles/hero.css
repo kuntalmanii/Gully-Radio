@@ -219,6 +219,11 @@
   padding: 0 6vw 8vh;
   max-width: min(800px, 90vw);
   width: 100%;
+  pointer-events: none;
+}
+
+.hero-content > * {
+  pointer-events: auto;
 }
 
 /* ─── Headline ───────────────────────────────────────────────────*/
@@ -349,6 +354,106 @@
   transform-origin: top;
   animation: scroll-pulse 2.4s ease-in-out infinite;
 }
+
+/* ─── Hero Shop Zone (interactive hotspot on street image) ───────*/
+.hero-shop-zone {
+  position: absolute;
+  /* Covers the cassette/radio shop stall on the left/middle-left */
+  left: 0;
+  width: 42%;
+  top: 15%;
+  bottom: 0;
+  z-index: 22;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Warm radial glow over shop area on hover */
+.hero-shop-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 85% 65% at 28% 70%,
+    rgba(197, 106, 62, 0.22) 0%,
+    rgba(215, 178, 122, 0.08) 45%,
+    transparent 75%
+  );
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.hero-shop-zone:hover .hero-shop-glow {
+  opacity: 1;
+}
+
+/* "Enter the shop" floating hint — appears after mount */
+.hero-shop-hint {
+  position: absolute;
+  left: 20%;
+  bottom: 34%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-shop-hint.is-visible {
+  opacity: 1;
+}
+
+.hero-shop-hint-ring {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(215, 178, 122, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: rgba(23, 21, 18, 0.4);
+  backdrop-filter: blur(4px);
+}
+
+.hero-shop-hint-ring::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid rgba(215, 178, 122, 0.2);
+  animation: hint-pulse 2.4s ease-in-out infinite;
+}
+
+.hero-shop-hint-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #D7B27A;
+}
+
+.hero-shop-hint-label {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.22em;
+  color: #F2E5CC;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  background: rgba(23, 21, 18, 0.6);
+  padding: 0.2rem 0.5rem;
+  border-radius: 2px;
+  border: 1px solid rgba(215, 178, 122, 0.15);
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%       { opacity: 0.8; transform: scale(1.4); }
+}
+
 
 /* ─── Responsive ─────────────────────────────────────────────────*/
 @media (max-width: 768px) {

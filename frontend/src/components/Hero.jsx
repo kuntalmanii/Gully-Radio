@@ -35,6 +35,7 @@ export default function Hero() {
   const taglineRef   = useRef(null)
   const ctaRef       = useRef(null)
   const kbTlRef      = useRef(null)   // Ken Burns timeline ref (to kill on transition)
+  const shopHintRef  = useRef(null)   // Floating hint over shop
 
   const { trigger } = useCinematicTransition()
 
@@ -48,6 +49,14 @@ export default function Hero() {
     kbTlRef.current = tl
 
     return () => tl.kill()
+  }, [])
+
+  /* ─── Shop hint — appears 3.5s after mount ─────────────────── */
+  useEffect(() => {
+    const hint = shopHintRef.current
+    if (!hint) return
+    const t = setTimeout(() => hint.classList.add('is-visible'), 3500)
+    return () => clearTimeout(t)
   }, [])
 
   /* ─── Subtle mouse parallax ──────────────────────────────────*/
@@ -129,6 +138,51 @@ export default function Hero() {
           .to('.hero-bottom-fade', { opacity: 2.0, duration: 2.0, ease: 'power2.inOut' }, 0.6)
           .to('.hero-color-grade', { opacity: 1.6, duration: 2.0, ease: 'power2.inOut' }, 0.8)
           .to('.hero-grain',       { opacity: 0.12, duration: 1.5 },                     0.4)
+      },
+    })
+  }, [trigger])
+
+  /* ─── Shop transition — zoom toward bottom-left cassette stall ─
+     Pan the bg toward the shop area, fade content, navigate /shop.
+  ─────────────────────────────────────────────────────────────── */
+  const handleEnterShop = useCallback(() => {
+    trigger({
+      to: '/shop',
+
+      onExit: (tl) => {
+        const bg       = bgRef.current
+        const headline = headlineRef.current
+        const tagline  = taglineRef.current
+        const cta      = ctaRef.current
+
+        kbTlRef.current?.kill()
+
+        // Clear UI
+        tl.to('.site-header',           { opacity: 0, y: -18, duration: 0.5, ease: 'power2.inOut' }, 0)
+          .to('.hero-scroll-indicator', { opacity: 0, duration: 0.3 }, 0)
+          .to(shopHintRef.current,      { opacity: 0, duration: 0.3 }, 0)
+
+        if (headline) {
+          const lines = headline.querySelectorAll('span')
+          tl.to(lines, { opacity: 0, y: -40, duration: 0.7, stagger: 0.06, ease: 'power3.inOut' }, 0.1)
+        }
+
+        tl.to(tagline, { opacity: 0, y: -24, duration: 0.6, ease: 'power2.inOut' }, 0.2)
+          .to(cta,     { opacity: 0, y: -18, duration: 0.5, ease: 'power2.inOut' }, 0.3)
+
+        // Zoom bg toward the shop stall (bottom-left of image)
+        tl.to(bg, {
+          scale:           2.8,
+          x:               '8%',   // shift right slightly → focuses on left of image
+          y:               '-6%',  // slight up shift → focuses on middle-top of shop stall
+          transformOrigin: '15% 60%',
+          duration:        3.2,
+          ease:            'power2.inOut',
+        }, 0.1)
+
+        tl.to('.hero-vignette',    { opacity: 2.0, duration: 2.2, ease: 'power2.inOut' }, 0.4)
+          .to('.hero-bottom-fade', { opacity: 2.0, duration: 1.8, ease: 'power2.inOut' }, 0.5)
+          .to('.hero-color-grade', { opacity: 1.8, duration: 2.0, ease: 'power2.inOut' }, 0.7)
       },
     })
   }, [trigger])
@@ -236,6 +290,27 @@ export default function Hero() {
         <span className="scroll-label">Scroll</span>
         <div className="scroll-line" />
       </motion.div>
+
+      {/* ── Shop zone — clickable hotspot over the cassette stall ─ */}
+      <div
+        className="hero-shop-zone"
+        onClick={handleEnterShop}
+        role="button"
+        tabIndex={0}
+        aria-label="Enter the cassette shop"
+        onKeyDown={(e) => e.key === 'Enter' && handleEnterShop()}
+      >
+        {/* Warm glow overlay — CSS hover transition */}
+        <div className="hero-shop-glow" aria-hidden="true" />
+
+        {/* Delayed floating hint */}
+        <div ref={shopHintRef} className="hero-shop-hint" aria-hidden="true">
+          <div className="hero-shop-hint-ring">
+            <div className="hero-shop-hint-dot" />
+          </div>
+          <span className="hero-shop-hint-label">Enter Shop</span>
+        </div>
+      </div>
     </section>
   )
 }

@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { AudioProvider }      from './contexts/AudioContext'
-import { CinematicTransition } from './components/CinematicTransition'
-import MusicPlayer             from './components/MusicPlayer'
-import Header                  from './components/Header'
-import Hero                    from './components/Hero'
-import ExperiencePage          from './pages/ExperiencePage'
+import { AudioProvider }       from './contexts/AudioContext'
+import { CinematicTransition }  from './components/CinematicTransition'
+import MusicPlayer              from './components/MusicPlayer'
+import CassetteShop             from './components/CassetteShop/CassetteShop'
+import Header                   from './components/Header'
+import Hero                     from './components/Hero'
+import ExperiencePage           from './pages/ExperiencePage'
 
 /* ── Hero page ────────────────────────────────────────────────── */
 function HeroPage() {
@@ -31,6 +32,7 @@ export default function App() {
         <CinematicTransition>
           <Routes>
             <Route path="/"           element={<HeroPage />} />
+            <Route path="/shop"       element={<CassetteShop />} />
             <Route path="/experience" element={<ExperiencePage />} />
           </Routes>
 
