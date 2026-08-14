@@ -1,0 +1,384 @@
+/* ─────────────────────────────────────────────────────────────────
+   Gully Radio — Mixtapes Page
+   Horizontally Scrollable Mixtape Experience
+   Desktop: Mouse wheel / Drag / Arrow navigation
+   Mobile: Native swipe
+───────────────────────────────────────────────────────────────── */
+
+.mixtapes-page {
+  position: relative;
+  min-height: 100svh;
+  background-color: #0e0c0a;
+  color: #F2E5CC;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.mixtapes-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 65% 55% at 50% 50%, rgba(197, 106, 62, 0.07) 0%, transparent 70%),
+    linear-gradient(180deg, #15120f 0%, #0d0a08 100%);
+}
+
+.mixtapes-grain {
+  position: fixed;
+  inset: -80px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 180px;
+  animation: grain 0.18s steps(1) infinite;
+}
+
+.mixtapes-content {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 6rem 0 5rem;
+}
+
+/* ── Editorial Header ─────────────────────────────────────────── */
+.mixtapes-header {
+  padding: 0 5vw;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid rgba(215, 178, 122, 0.1);
+  padding-bottom: 2rem;
+}
+
+.mixtapes-header-left {
+  max-width: 600px;
+}
+
+.mixtapes-tag {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  color: #C56A3E;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.mixtapes-headline {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  font-weight: 300;
+  line-height: 0.95;
+  color: #F2E5CC;
+}
+
+.mixtapes-subhead {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: clamp(0.78rem, 1.2vw, 0.88rem);
+  font-weight: 300;
+  color: rgba(242, 229, 204, 0.55);
+  margin-top: 0.6rem;
+  line-height: 1.6;
+}
+
+/* Navigation controls */
+.mixtapes-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mixtapes-nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(215, 178, 122, 0.2);
+  background: rgba(23, 21, 18, 0.6);
+  color: #D7B27A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mixtapes-nav-btn:hover:not(:disabled) {
+  border-color: #D7B27A;
+  background: rgba(215, 178, 122, 0.15);
+  transform: scale(1.05);
+}
+
+.mixtapes-nav-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* ── Horizontal Scroll Track Container ────────────────────────── */
+.mixtapes-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 1.5rem 0 3rem;
+  cursor: grab;
+}
+
+.mixtapes-carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+.mixtapes-track {
+  display: flex;
+  gap: 2.5rem;
+  padding: 0 5vw;
+  width: max-content;
+  user-select: none;
+}
+
+/* ── Individual Mixtape Card (Analog Editorial Format) ────────── */
+.mixtape-card {
+  width: 380px;
+  flex-shrink: 0;
+  background: linear-gradient(160deg, rgba(26, 20, 15, 0.9) 0%, rgba(14, 11, 8, 0.95) 100%);
+  border: 1px solid rgba(215, 178, 122, 0.12);
+  border-radius: 4px;
+  padding: 2.2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.3s ease,
+              box-shadow 0.4s ease;
+  min-height: 520px;
+}
+
+.mixtape-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(215, 178, 122, 0.35);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.mixtape-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.mixtape-index {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: rgba(215, 178, 122, 0.35);
+  font-weight: 500;
+}
+
+.mixtape-track-count {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: #C56A3E;
+  text-transform: uppercase;
+  border: 1px solid rgba(197, 106, 62, 0.3);
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+}
+
+/* Visual Cassette Showcase inside card */
+.mixtape-cassette-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0 2rem;
+  perspective: 800px;
+}
+
+.mixtape-cassette-3d {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+}
+
+.mixtape-card:hover .mixtape-cassette-3d {
+  transform: rotateY(8deg) rotateX(4deg) scale(1.05);
+}
+
+/* Card Body */
+.mixtape-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.mixtape-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.9rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: #F2E5CC;
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
+  transition: color 0.2s ease;
+}
+
+.mixtape-card:hover .mixtape-title {
+  color: #D7B27A;
+}
+
+.mixtape-curator {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: rgba(215, 178, 122, 0.5);
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+.mixtape-desc {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(242, 229, 204, 0.6);
+  margin-bottom: 1.8rem;
+}
+
+/* Action Strip */
+.mixtape-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(215, 178, 122, 0.08);
+}
+
+.mixtape-play-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #D7B27A;
+  color: #171512;
+  border: none;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.4rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.mixtape-play-btn:hover {
+  background: #F2E5CC;
+  transform: scale(1.03);
+}
+
+.mixtape-inspect-link {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: rgba(215, 178, 122, 0.45);
+  text-transform: uppercase;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.2s ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.mixtape-inspect-link:hover {
+  color: #D7B27A;
+}
+
+/* ── Hover Track Preview Strip ────────────────────────────────── */
+.mixtape-tracks-preview {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 10, 7, 0.96);
+  padding: 2.2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  border-radius: 4px;
+}
+
+.mixtape-card.show-preview .mixtape-tracks-preview {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(215, 178, 122, 0.1);
+  padding-bottom: 0.8rem;
+}
+
+.preview-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.3rem;
+  color: #D7B27A;
+}
+
+.preview-close {
+  background: none;
+  border: none;
+  color: rgba(215, 178, 122, 0.5);
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 1.2rem 0;
+}
+
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.72rem;
+  color: rgba(242, 229, 204, 0.7);
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(215, 178, 122, 0.04);
+}
+
+/* ── Responsive Rules ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .mixtapes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .mixtapes-carousel-wrapper {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2rem;
+  }
+
+  .mixtape-card {
+    width: 82vw;
+    max-width: 340px;
+    scroll-snap-align: center;
+    min-height: 480px;
+  }
+}

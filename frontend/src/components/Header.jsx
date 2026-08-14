@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const NAV_LINKS = ['DISCOVER', 'MIXTAPES', 'LIBRARY']
+const NAV_ITEMS = [
+  { label: 'DISCOVER', path: '/discover' },
+  { label: 'MIXTAPES', path: '/mixtapes' },
+  { label: 'CASSETTES', path: '/shop' },
+]
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const location = useLocation()
 
   // Darken header slightly after user scrolls down
   useEffect(() => {
@@ -29,24 +35,32 @@ export default function Header() {
         transition={{ duration: 1.1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         style={{
           background: scrolled
-            ? 'linear-gradient(to bottom, rgba(23,21,18,0.92) 0%, rgba(23,21,18,0.70) 100%)'
-            : 'linear-gradient(to bottom, rgba(23,21,18,0.72) 0%, transparent 100%)',
+            ? 'linear-gradient(to bottom, rgba(23,21,18,0.95) 0%, rgba(23,21,18,0.80) 100%)'
+            : 'linear-gradient(to bottom, rgba(23,21,18,0.78) 0%, transparent 100%)',
           transition: 'background 0.5s ease',
         }}
       >
         {/* Logo */}
-        <a href="/" className="site-logo" aria-label="Gully Radio home">
+        <Link to="/" className="site-logo" aria-label="Gully Radio home">
           GULLY RADIO
-        </a>
+        </Link>
 
         {/* Desktop navigation */}
         <nav aria-label="Main navigation">
           <ul className="site-nav" role="list">
-            {NAV_LINKS.map((link) => (
-              <li key={link}>
-                <a href={`#${link.toLowerCase()}`}>{link}</a>
-              </li>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const isActive = location.pathname === item.path
+              return (
+                <li key={item.label}>
+                  <Link
+                    to={item.path}
+                    style={{ color: isActive ? '#D7B27A' : undefined }}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </nav>
 
@@ -110,25 +124,22 @@ export default function Header() {
               }}
               aria-label="Mobile navigation"
             >
-              {NAV_LINKS.map((link, i) => (
-                <motion.a
-                  key={link}
-                  href={`#${link.toLowerCase()}`}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + i * 0.08, duration: 0.45 }}
+              {NAV_ITEMS.map((item, i) => (
+                <Link
+                  key={item.label}
+                  to={item.path}
                   onClick={() => setMenuOpen(false)}
                   style={{
                     fontFamily: "'DM Sans', system-ui, sans-serif",
-                    fontSize: '0.85rem',
-                    letterSpacing: '0.2em',
-                    color: 'rgba(242, 229, 204, 0.7)',
+                    fontSize: '0.95rem',
+                    letterSpacing: '0.22em',
+                    color: location.pathname === item.path ? '#D7B27A' : 'rgba(242, 229, 204, 0.8)',
                     textDecoration: 'none',
                     textTransform: 'uppercase',
                   }}
                 >
-                  {link}
-                </motion.a>
+                  {item.label}
+                </Link>
               ))}
             </motion.nav>
           </>

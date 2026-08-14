@@ -5,6 +5,8 @@ import MusicPlayer              from './components/MusicPlayer'
 import CassetteShop             from './components/CassetteShop/CassetteShop'
 import Header                   from './components/Header'
 import Hero                     from './components/Hero'
+import Discover                 from './pages/Discover'
+import Mixtapes                 from './pages/Mixtapes'
 import ExperiencePage           from './pages/ExperiencePage'
 
 /* ── Hero page ────────────────────────────────────────────────── */
@@ -32,6 +34,8 @@ export default function App() {
         <CinematicTransition>
           <Routes>
             <Route path="/"           element={<HeroPage />} />
+            <Route path="/discover"   element={<Discover />} />
+            <Route path="/mixtapes"   element={<Mixtapes />} />
             <Route path="/shop"       element={<CassetteShop />} />
             <Route path="/experience" element={<ExperiencePage />} />
           </Routes>
