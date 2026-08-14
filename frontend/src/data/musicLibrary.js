@@ -14,8 +14,27 @@ import { generateTrackAudioUrl } from '../services/audioGenerator'
 /* ── All Tracks in the Personal / Demo Library ─────────────────── */
 export const TRACKS = [
   {
+    id:          'track-heer',
+    title:       'हीर (Heer)',
+    titleEn:     'Heer',
+    artist:      'Ali Raza Shjr',
+    album:       'Gully Radio Special Archives',
+    cover:       null,
+    audioUrl:    '/audio/Heer_-_Ali_Raza_Shjr_Lyrics.mp3',
+    duration:    251,
+    genre:       'Sufi / Folk',
+    year:        2024,
+    mood:        'Late Night',
+    language:    'Punjabi',
+    description: 'वारिस शाह की हीर का रूहानी और भावुक तराना — अली रज़ा की आवाज़ में।',
+    featured:    true,
+    recentlyAdded: true,
+    trending:    true,
+  },
+  {
     id:          'track-001',
     title:       'तेरी याद (Extended Mix)',
+
     titleEn:     'Teri Yaad (Extended Mix)',
     artist:      'Ram Radio Sessions',
     album:       'वॉल्यूम 01 — शाम की धूप',
@@ -264,7 +283,8 @@ export const MIXTAPES = [
     theme:       { shell: '#0c1220', label: '#11213d', stripe: '#1e3a6e', accent: '#4a90d9', text: '#a8c8f0', screw: '#1a2a45' },
     description: 'जागती गलियों में देर रात की हलचल, रेडियो की सुरीली सरसराहट और आखिरी चाय की दुकान की लालटेन।',
     labelArt:    'grid',
-    trackIds:    ['track-001', 'track-002', 'track-004', 'track-005', 'track-012', 'track-013'],
+    trackIds:    ['track-heer', 'track-001', 'track-002', 'track-004', 'track-005', 'track-012', 'track-013'],
+
   },
   {
     id:          'mixtape-chai-and-rain',

@@ -6,8 +6,26 @@
 
 const TRACKS = [
   {
+    id: 'track-heer',
+    title: 'Heer',
+    artist: 'Ali Raza Shjr',
+    album: 'Gully Radio Special Archives',
+    cover: null,
+    audioUrl: '/audio/Heer_-_Ali_Raza_Shjr_Lyrics.mp3',
+    duration: 251,
+    genre: 'Sufi / Folk',
+    year: 2024,
+    mood: 'Late Night',
+    language: 'Punjabi',
+    description: 'Poetic folk masterpiece recorded with acoustic resonance.',
+    featured: true,
+    recentlyAdded: true,
+    trending: true,
+  },
+  {
     id: 'track-001',
     title: 'Teri Yaad (Extended Mix)',
+
     artist: 'Ram Radio Sessions',
     album: 'Vol. 01 — Golden Hours',
     cover: '/assets/album-art/song-01.jpg',
