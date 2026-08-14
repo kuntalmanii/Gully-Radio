@@ -1,0 +1,21 @@
+{
+  "name": "gully-radio",
+  "version": "1.0.0",
+  "description": "Gully Radio — Full-stack music streaming platform (monorepo root)",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --names \"BACKEND,FRONTEND\" --prefix-colors \"cyan,magenta\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "start:backend": "npm --prefix backend run start",
+    "install:all": "npm install && npm --prefix frontend install && npm --prefix backend install",
+    "lint:frontend": "npm --prefix frontend run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
