@@ -3,6 +3,28 @@
    "Inside the photograph" — the music experience
 ───────────────────────────────────────────────────────────────── */
 
+/* ── Back button ─────────────────────────────────────────────────*/
+.exp-back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(215, 178, 122, 0.45);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+  padding: 0;
+  width: fit-content;
+}
+
+.exp-back-btn:hover {
+  color: rgba(215, 178, 122, 0.8);
+}
+
 /* ── Page shell ─────────────────────────────────────────────────*/
 .exp-page {
   min-height: 100svh;
