@@ -110,7 +110,9 @@ export default function CassetteDetail({ mixtape, onBack }) {
   const handlePlayAll = useCallback(() => {
     const queue = getMixtapeQueue(mixtape.id)
     loadQueue(queue)
-    playTrack(queue[0]?.id)
+    if (queue.length > 0) {
+      playTrack(queue[0].id)
+    }
   }, [mixtape.id, loadQueue, playTrack])
 
   /* Select individual track */
@@ -118,9 +120,12 @@ export default function CassetteDetail({ mixtape, onBack }) {
     if (currentTrackId === trackId) {
       togglePlay()
     } else {
+      const queue = getMixtapeQueue(mixtape.id)
+      loadQueue(queue)
       playTrack(trackId)
     }
-  }, [currentTrackId, togglePlay, playTrack])
+  }, [currentTrackId, mixtape.id, loadQueue, togglePlay, playTrack])
+
 
   const queue = getMixtapeQueue(mixtape.id)
   const isThisCassetteActive = queue.some((t) => t.id === currentTrackId)
