@@ -1,7 +1,7 @@
 /**
  * server.js
  * ──────────────────────────────────────────────────────────────
- * Gully Radio — Express API Server
+ * Gully Radio — Hardened Express API Server
  */
 
 const express = require('express')
@@ -15,39 +15,65 @@ const { rateLimiter, notFoundHandler, errorHandler } = require('./middleware')
 
 const app = express()
 
-/* ── Security Middlewares ─────────────────────────────────────── */
-app.use(helmet())
+/* ── Hardened Security Headers via Helmet ─────────────────────── */
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'blob:'],
+        mediaSrc: ["'self'", 'data:', 'blob:'],
+        connectSrc: ["'self'", config.frontendUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+      },
+    },
+    crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allows audio elements to stream assets
+    crossOriginEmbedderPolicy: false,
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+    noSniff: true,
+    xssFilter: true,
+    hidePoweredBy: true,
+  })
+)
 
-// CORS configuration supporting frontend dev & preview origins
+/* ── CORS Security ────────────────────────────────────────────── */
+const allowedOrigins = [
+  config.frontendUrl,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+]
+
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
       if (!origin) return callback(null, true)
 
-      const allowedOrigins = [
-        config.frontendUrl,
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'http://localhost:3000',
-      ]
-
-      if (allowedOrigins.includes(origin) || config.isDev) {
+      if (allowedOrigins.includes(origin) || (config.isDev && origin.startsWith('http://localhost:'))) {
         return callback(null, true)
       }
 
-      callback(new Error('Cross-Origin Request Blocked by CORS'))
+      callback(new Error('Cross-Origin Request Blocked by CORS policy'))
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'HEAD', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
     credentials: true,
+    maxAge: 86400, // 24 hours preflight cache
   })
 )
 
-/* ── Request Parsers & Logging ────────────────────────────────── */
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+/* ── Payload Size Limits (DoS Mitigation) ─────────────────────── */
+app.use(express.json({ limit: '20kb' }))
+app.use(express.urlencoded({ extended: true, limit: '20kb' }))
 
+/* ── Request Logging ──────────────────────────────────────────── */
 if (config.isDev) {
   app.use(morgan('dev'))
 } else {
@@ -69,7 +95,7 @@ app.use(errorHandler)
 /* ── Server Startup ───────────────────────────────────────────── */
 if (process.env.NODE_ENV !== 'test') {
   const server = app.listen(config.port, () => {
-    console.log(`\n📻 Gully Radio API Server is running on port ${config.port}`)
+    console.log(`\n📻 Gully Radio API Server is running securely on port ${config.port}`)
     console.log(`📡 Health Check:  http://localhost:${config.port}/api/health`)
     console.log(`🎵 Tracks API:    http://localhost:${config.port}/api/tracks`)
     console.log(`📼 Mixtapes API:  http://localhost:${config.port}/api/mixtapes`)

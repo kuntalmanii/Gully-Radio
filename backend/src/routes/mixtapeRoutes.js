@@ -1,14 +1,17 @@
 /**
  * routes/mixtapeRoutes.js
  * ──────────────────────────────────────────────────────────────
- * Mixtape endpoints routing.
+ * Mixtape endpoints routing with security validation.
  */
 
 const { Router } = require('express')
 const { mixtapeController } = require('../controllers')
-const { validateIdParam } = require('../middleware')
+const { validateIdParam, enforceMethods } = require('../middleware')
 
 const router = Router()
+
+// Restrict to safe read-only methods
+router.use(enforceMethods(['GET', 'HEAD', 'OPTIONS']))
 
 // GET /api/mixtapes
 router.get('/', mixtapeController.getAllMixtapes)
