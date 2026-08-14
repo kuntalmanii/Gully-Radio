@@ -7,6 +7,7 @@ import Header                   from './components/Header'
 import Hero                     from './components/Hero'
 import Discover                 from './pages/Discover'
 import Mixtapes                 from './pages/Mixtapes'
+import Library                  from './pages/Library'
 import ExperiencePage           from './pages/ExperiencePage'
 
 /* ── Hero page ────────────────────────────────────────────────── */
@@ -37,9 +38,11 @@ export default function App() {
             <Route path="/"           element={<HeroPage />} />
             <Route path="/discover"   element={<Discover />} />
             <Route path="/mixtapes"   element={<Mixtapes />} />
+            <Route path="/library"    element={<Library />} />
             <Route path="/shop"       element={<CassetteShop />} />
             <Route path="/experience" element={<ExperiencePage />} />
           </Routes>
+
 
           {/* Persistent player — always rendered, slides in on first play */}
           <MusicPlayer />

@@ -4,14 +4,17 @@
  * Business logic for mixtape operations.
  */
 
-const { mixtapes } = require('../models')
+const { mixtapes, tracks } = require('../models')
 
 class MixtapeService {
   /**
-   * Retrieve all mixtapes.
+   * Retrieve all mixtapes with populated track counts.
    */
   async getAllMixtapes() {
-    return [...mixtapes]
+    return mixtapes.map((m) => ({
+      ...m,
+      trackCount: (m.trackIds || []).length,
+    }))
   }
 
   /**
@@ -23,9 +26,20 @@ class MixtapeService {
     const normalized = id.toLowerCase().trim()
     const mixtape = mixtapes.find((m) =>
       m.id.toLowerCase() === normalized ||
-      m.shortId.toLowerCase() === normalized
+      m.shortId.toLowerCase() === normalized ||
+      (m.slug && m.slug.toLowerCase() === normalized)
     )
-    return mixtape || null
+    if (!mixtape) return null
+
+    const resolvedTracks = (mixtape.trackIds || [])
+      .map((tid) => tracks.find((t) => String(t.id) === String(tid)))
+      .filter(Boolean)
+
+    return {
+      ...mixtape,
+      trackCount: resolvedTracks.length,
+      tracks: resolvedTracks,
+    }
   }
 
   /**
@@ -39,7 +53,7 @@ class MixtapeService {
   }
 
   /**
-   * Search mixtapes by title, curator, or genre.
+   * Search mixtapes by title, curator, genre, or description.
    * @param {string} query
    */
   async searchMixtapes(query) {

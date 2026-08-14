@@ -18,7 +18,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 const NAV_ITEMS = [
   { labelHi: 'खोजें', labelEn: 'DISCOVER', path: '/discover' },
   { labelHi: 'मिक्सटेप', labelEn: 'MIXTAPES', path: '/mixtapes' },
-  { labelHi: 'लाइब्रेरी', labelEn: 'LIBRARY', path: '/shop' },
+  { labelHi: 'लाइब्रेरी', labelEn: 'LIBRARY', path: '/library' },
+
 ]
 
 export default function Header() {

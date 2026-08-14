@@ -50,12 +50,15 @@ class TrackService {
     if (!query) return []
     const q = query.toLowerCase().trim()
     return tracks.filter((t) =>
-      t.title.toLowerCase().includes(q) ||
-      t.artist.toLowerCase().includes(q) ||
-      t.genre.toLowerCase().includes(q) ||
-      t.album.toLowerCase().includes(q)
+      t.title?.toLowerCase().includes(q) ||
+      t.artist?.toLowerCase().includes(q) ||
+      t.genre?.toLowerCase().includes(q) ||
+      t.album?.toLowerCase().includes(q) ||
+      t.mood?.toLowerCase().includes(q) ||
+      t.language?.toLowerCase().includes(q)
     )
   }
+
 }
 
 module.exports = new TrackService()
