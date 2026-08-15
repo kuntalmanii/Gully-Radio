@@ -14,27 +14,17 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search } from 'lucide-react'
+import { Search, Disc3, Music2, Radio } from 'lucide-react'
 import SearchModal from './SearchModal'
-
-const NAV_ITEMS = [
-  { labelHi: 'खोजें', labelEn: 'DISCOVER', path: '/discover' },
-  { labelHi: 'मिक्सटेप', labelEn: 'MIXTAPES', path: '/mixtapes' },
-  { labelHi: 'लाइब्रेरी', labelEn: 'LIBRARY', path: '/library' },
-]
+import MixtapesModal from './MixtapesModal'
+import LibraryModal from './LibraryModal'
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [mixtapesOpen, setMixtapesOpen] = useState(false)
+  const [libraryOpen, setLibraryOpen] = useState(false)
   const location = useLocation()
-
-  // Darken header slightly after user scrolls down
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   // Keyboard shortcut Cmd+K or Ctrl+K for search
   useEffect(() => {
@@ -48,52 +38,33 @@ export default function Header() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
-  // Lock body scroll when mobile menu is open and handle Escape key
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-    const onKeyDown = (e) => {
-      if (e.key === 'Escape' && menuOpen) {
-        setMenuOpen(false)
-      }
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.body.style.overflow = ''
-      window.removeEventListener('keydown', onKeyDown)
-    }
-  }, [menuOpen])
-
   return (
     <>
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <MixtapesModal isOpen={mixtapesOpen} onClose={() => setMixtapesOpen(false)} />
+      <LibraryModal isOpen={libraryOpen} onClose={() => setLibraryOpen(false)} />
 
       <motion.header
         className="site-header"
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        style={{
-          background: scrolled
-            ? 'linear-gradient(to bottom, rgba(21,19,16,0.96) 0%, rgba(21,19,16,0.85) 100%)'
-            : 'linear-gradient(to bottom, rgba(21,19,16,0.78) 0%, transparent 100%)',
-          transition: 'background 0.5s ease',
-        }}
       >
-        {/* Brand Presentation */}
+        {/* Left: Brand Presentation */}
         <Link
           to="/"
           className="site-logo-wrap"
-          aria-label="लेक्चर Time (Lecture Time) Home"
+          aria-label="लेक्चर Time Home"
         >
           <span
             style={{
               fontFamily: "'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif",
-              fontSize: '1.42rem',
+              fontSize: '1.45rem',
               fontWeight: 400,
               color: 'var(--color-warm-ivory, #F3E7D0)',
-              lineHeight: 1.15,
+              lineHeight: 1.1,
               letterSpacing: '0.02em',
-              textShadow: '0 2px 12px rgba(0,0,0,0.6)',
+              textShadow: '0 2px 14px rgba(0,0,0,0.7)',
             }}
           >
             लेक्चर Time
@@ -101,153 +72,158 @@ export default function Header() {
           <span
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: '0.48rem',
+              fontSize: '0.46rem',
               fontWeight: 500,
               letterSpacing: '0.28em',
               color: 'var(--color-muted-cream, #E8D5B5)',
               textTransform: 'uppercase',
-              opacity: 0.85,
+              opacity: 0.8,
             }}
           >
             LECTURE TIME
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="site-nav-desktop" aria-label="मुख्य नेविगेशन (Main Navigation)">
-          <ul className="site-nav" role="list" style={{ display: 'flex', alignItems: 'center', gap: '2.4rem', listStyle: 'none' }}>
-            {NAV_ITEMS.map((item) => {
-              const isActive = location.pathname === item.path
-              return (
-                <li key={item.path}>
-                  <Link
-                    to={item.path}
-                    style={{
-                      textDecoration: 'none',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '1px',
-                      position: 'relative',
-                      paddingBottom: '4px',
-                      transition: 'color 0.25s ease',
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "'Noto Sans Devanagari', sans-serif",
-                        fontSize: '0.86rem',
-                        fontWeight: isActive ? 600 : 400,
-                        color: isActive ? 'var(--color-burnt-orange, #C66A3E)' : 'var(--color-warm-ivory, #F3E7D0)',
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      {item.labelHi}
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: "'Inter', sans-serif",
-                        fontSize: '0.45rem',
-                        letterSpacing: '0.2em',
-                        color: isActive ? 'var(--color-burnt-orange, #C66A3E)' : 'rgba(232, 213, 181, 0.45)',
-                        textTransform: 'uppercase',
-                        fontWeight: 500,
-                      }}
-                    >
-                      {item.labelEn}
-                    </span>
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeNavIndicator"
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          height: '2px',
-                          background: 'var(--color-burnt-orange, #C66A3E)',
-                          boxShadow: '0 0 8px rgba(198, 106, 62, 0.6)',
-                          borderRadius: '1px',
-                        }}
-                      />
-                    )}
-                  </Link>
-                </li>
-              )
-            })}
+        {/* Center: Live Listener Pill Badge (Matching reference photo) */}
+        <div
+          className="header-live-badge"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            background: 'rgba(21, 19, 16, 0.65)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(232, 213, 181, 0.16)',
+            borderRadius: '20px',
+            padding: '0.35rem 0.9rem',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+          }}
+        >
+          <span
+            style={{
+              width: '7px',
+              height: '7px',
+              borderRadius: '50%',
+              backgroundColor: '#4ade80',
+              boxShadow: '0 0 8px #4ade80',
+              animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }}
+          />
+          <span
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '0.72rem',
+              fontWeight: 500,
+              color: 'var(--color-warm-ivory, #F3E7D0)',
+              letterSpacing: '0.02em',
+            }}
+          >
+            484 people listening
+          </span>
+        </div>
 
-            {/* Quick Search Button */}
-            <li>
-              <button
-                className="header-search-btn"
-                onClick={() => setSearchOpen(true)}
-                aria-label="गाने खोजें (Search songs) - Cmd+K"
-                title="गाने खोजें (Cmd+K)"
-                type="button"
+        {/* Right: Glass Quick Action Buttons */}
+        <nav className="site-nav-desktop" aria-label="मुख्य नेविगेशन">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {/* Quick Search */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="glass-pill"
+              style={{
+                padding: '0.45rem 0.95rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                cursor: 'pointer',
+                fontFamily: "'Noto Sans Devanagari', sans-serif",
+                fontSize: '0.8rem',
+              }}
+              type="button"
+            >
+              <Search size={14} />
+              <span>खोजें</span>
+              <span
                 style={{
-                  background: 'rgba(33, 27, 23, 0.6)',
-                  border: '1px solid var(--color-border-subtle, rgba(232, 213, 181, 0.15))',
-                  borderRadius: 'var(--radius-full, 9999px)',
-                  color: 'var(--color-muted-cream, #E8D5B5)',
-                  padding: '0.35rem 0.75rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.45rem',
-                  cursor: 'pointer',
-                  fontSize: '0.72rem',
-                  fontFamily: "'Noto Sans Devanagari', sans-serif",
-                  transition: 'all 0.2s ease',
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: '0.55rem',
+                  background: 'rgba(232, 213, 181, 0.12)',
+                  padding: '0.1rem 0.35rem',
+                  borderRadius: '3px',
+                  opacity: 0.7,
                 }}
               >
-                <Search size={14} />
-                <span>खोजें</span>
-                <span
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontSize: '0.55rem',
-                    background: 'rgba(232, 213, 181, 0.1)',
-                    padding: '0.05rem 0.35rem',
-                    borderRadius: '2px',
-                    opacity: 0.6,
-                  }}
-                >
-                  ⌘K
-                </span>
-              </button>
-            </li>
-          </ul>
+                ⌘K
+              </span>
+            </button>
+
+            {/* Mixtapes Modal Trigger */}
+            <button
+              onClick={() => setMixtapesOpen(true)}
+              className="glass-pill"
+              style={{
+                padding: '0.45rem 0.95rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                cursor: 'pointer',
+                fontFamily: "'Noto Sans Devanagari', sans-serif",
+                fontSize: '0.8rem',
+              }}
+              type="button"
+            >
+              <Disc3 size={14} />
+              <span>मिक्सटेप</span>
+            </button>
+
+            {/* Library Modal Trigger */}
+            <button
+              onClick={() => setLibraryOpen(true)}
+              className="glass-pill"
+              style={{
+                padding: '0.45rem 0.95rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                cursor: 'pointer',
+                fontFamily: "'Noto Sans Devanagari', sans-serif",
+                fontSize: '0.8rem',
+              }}
+              type="button"
+            >
+              <Music2 size={14} />
+              <span>लाइब्रेरी</span>
+            </button>
+          </div>
         </nav>
 
-        {/* Mobile Actions: Search + Hamburger */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        {/* Mobile Action Buttons */}
+        <div style={{ display: 'none' }} className="mobile-header-actions">
           <button
-            className="mobile-search-btn"
             onClick={() => setSearchOpen(true)}
-            aria-label="खोजें"
-            type="button"
             style={{
               background: 'none',
               border: 'none',
               color: 'var(--color-warm-ivory, #F3E7D0)',
               padding: '6px',
-              display: 'none', // shown via media query
               cursor: 'pointer',
             }}
-          >
-            <Search size={20} />
-          </button>
-
-          <button
-            className="nav-toggle"
-            aria-label={menuOpen ? 'मेनू बंद करें' : 'मेनू खोलें'}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-nav"
-            onClick={() => setMenuOpen((v) => !v)}
             type="button"
           >
-            <span style={{ opacity: menuOpen ? 0 : 1 }} />
-            <span />
-            <span style={{ opacity: menuOpen ? 0 : 1 }} />
+            <Search size={18} />
+          </button>
+          <button
+            onClick={() => setLibraryOpen(true)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--color-warm-ivory, #F3E7D0)',
+              padding: '6px',
+              cursor: 'pointer',
+            }}
+            type="button"
+          >
+            <Music2 size={18} />
           </button>
         </div>
       </motion.header>

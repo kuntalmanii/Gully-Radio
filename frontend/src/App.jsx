@@ -38,12 +38,7 @@ export default function App() {
 
         <CinematicTransition>
           <Routes>
-            <Route path="/"           element={<HeroPage />} />
-            <Route path="/discover"   element={<Discover />} />
-            <Route path="/mixtapes"   element={<Mixtapes />} />
-            <Route path="/library"    element={<Library />} />
-            <Route path="/shop"       element={<CassetteShop />} />
-            <Route path="/experience" element={<ExperiencePage />} />
+            <Route path="*" element={<HeroPage />} />
           </Routes>
 
 

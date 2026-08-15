@@ -168,132 +168,77 @@
   color: var(--color-warm-ivory, #F3E7D0);
 }
 
-/* ─── Hero Content Area (Directly over the Street Image) ──────────*/
+/* ─── Hero Content Area (Centered Single-Page Layout) ──────────*/
 .hero-content {
   position: relative;
   z-index: 20;
-  padding: 0 var(--container-pad, 6vw) clamp(4rem, 8vh, 6.5rem);
-  max-width: min(900px, 92vw);
+  padding: 0 var(--container-pad, 4vw);
   width: 100%;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .hero-content > * {
   pointer-events: auto;
 }
 
-/* ─── Headline (Large Expressive Devanagari) ──────────────────────*/
-.hero-headline {
-  font-family: var(--font-display, 'Tiro Devanagari Hindi', serif);
-  font-size: clamp(3.4rem, 8.8vw, 7.2rem);
-  font-weight: 400;
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  color: var(--color-warm-ivory, #F3E7D0);
+.hero-content--centered {
+  text-align: center;
+}
+
+.hero-headline-wrap {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
-  padding-top: 0.1em;
-  padding-bottom: 0.1em;
-  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.75), 0 2px 8px rgba(0, 0, 0, 0.6);
+  align-items: center;
+  gap: 0.8rem;
 }
 
-.hero-headline .line-1,
-.hero-headline .line-2 {
+/* ─── Iconic Center Brand Title (Matching Reference Photo) ──────────*/
+.hero-brand-title {
+  font-size: clamp(3.6rem, 10vw, 7.8rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--color-warm-ivory, #F3E7D0);
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35em;
+  text-shadow:
+    0 4px 36px rgba(0, 0, 0, 0.85),
+    0 2px 12px rgba(0, 0, 0, 0.7);
+  letter-spacing: -0.01em;
+}
+
+.hero-brand-title .brand-hindi {
+  font-family: var(--font-display, 'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif);
   color: var(--color-warm-ivory, #F3E7D0);
 }
 
-.hero-headline .line-3 {
-  color: var(--color-burnt-orange, #C66A3E);
-  font-style: normal;
+.hero-brand-title .brand-english {
+  font-family: 'Times New Roman', 'Noto Serif', serif;
   font-weight: 400;
-  text-shadow: 0 4px 32px rgba(198, 106, 62, 0.4), 0 2px 8px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.08em;
+  color: var(--color-warm-ivory, #F3E7D0);
 }
 
 /* ─── Supporting Tagline ──────────────────────────────────────────*/
 .hero-tagline {
   font-family: var(--font-serif, 'Noto Serif Devanagari', serif);
-  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-size: clamp(0.95rem, 1.6vw, 1.25rem);
   font-weight: 400;
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--color-muted-cream, #E8D5B5);
-  max-width: 480px;
-  margin-bottom: clamp(2rem, 3.8vw, 2.8rem);
-  letter-spacing: 0.02em;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
+  max-width: 620px;
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
+  opacity: 0.9;
 }
-
-/* ─── CTA Area ───────────────────────────────────────────────────*/
-.hero-cta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.1rem;
-}
-
-.btn-enter {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-ui, 'Noto Sans Devanagari', sans-serif);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--color-warm-ivory, #F3E7D0);
-  background: linear-gradient(135deg, var(--color-terracotta, #A94F35) 0%, var(--color-burnt-orange, #C66A3E) 100%);
-  border: 1px solid rgba(243, 231, 208, 0.25);
-  border-radius: var(--radius-xs, 2px);
-  padding: 0.95rem 2.8rem;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 6px 24px rgba(169, 79, 53, 0.4), 0 2px 6px rgba(0, 0, 0, 0.5);
-  transition:
-    transform var(--duration-standard, 320ms) var(--ease-smooth),
-    box-shadow var(--duration-standard, 320ms) var(--ease-smooth),
-    background var(--duration-standard, 320ms) var(--ease-smooth);
-}
-
-.btn-enter:hover {
-  background: linear-gradient(135deg, var(--color-burnt-orange, #C66A3E) 0%, #d47648 100%);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 32px rgba(198, 106, 62, 0.55), 0 0 0 1px rgba(243, 231, 208, 0.35);
-}
-
-.btn-enter:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.hero-listen-line {
-  font-family: var(--font-serif, 'Noto Serif Devanagari', serif);
-  font-size: 0.8rem;
-  letter-spacing: 0.12em;
-  color: var(--color-text-muted, rgba(232, 213, 181, 0.65));
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
-  padding-left: 0.2rem;
-}
-
-
-
-/* ─── Scroll Indicator Child Elements ────────────────────────────*/
-.scroll-label {
-  font-family: var(--font-ui);
-  font-size: 0.65rem;
-  letter-spacing: 0.22em;
-  color: var(--color-muted-cream, #E8D5B5);
-  opacity: 0.6;
-  text-transform: uppercase;
-  transition: color var(--duration-micro) var(--ease-standard), opacity var(--duration-micro) var(--ease-standard);
-}
-
-.scroll-line {
-  width: 1px;
-  height: 38px;
-  background: linear-gradient(to bottom, var(--color-burnt-orange, #C66A3E) 0%, transparent 100%);
-  animation: scroll-pulse 2.2s ease-in-out infinite;
-}
-
 /* ─── Cassette Stall Hotspot / Shop Zone ─────────────────────────*/
 .hero-shop-zone {
   position: absolute;
@@ -318,40 +263,7 @@
   opacity: 1;
 }
 
-/* Consolidated glassmorphism scroll indicator */
-.hero-scroll-indicator {
-  position: absolute;
-  bottom: clamp(1.6rem, 3.8vh, 2.6rem);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  outline: none;
-  background: rgba(26, 22, 18, 0.55);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(232, 213, 181, 0.16);
-  padding: 0.5rem 1.1rem 0.65rem;
-  border-radius: var(--radius-full, 9999px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(243, 231, 208, 0.12);
-  transition: all var(--duration-standard) var(--ease-smooth);
-}
 
-.hero-scroll-indicator:hover {
-  background: rgba(43, 35, 29, 0.75);
-  border-color: var(--color-burnt-orange, #C66A3E);
-  transform: translateX(-50%) translateY(-2px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(198, 106, 62, 0.25), inset 0 1px 0 rgba(243, 231, 208, 0.2);
-}
-
-.hero-scroll-indicator:hover .scroll-label {
-  color: var(--color-warm-ivory, #F3E7D0);
-  opacity: 1;
-}
 
 .hero-shop-hint {
   position: absolute;

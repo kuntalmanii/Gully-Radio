@@ -270,77 +270,34 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* ── Center / Lower Left Devanagari Headline & Copy ─────── */}
-      <div className="hero-content">
-        <motion.h1
-          ref={headlineRef}
-          className="hero-headline"
-          initial="hidden"
-          animate="visible"
-          aria-label="संगीत जो वक़्त से बाहर है।"
-        >
-          <motion.span className="line-1" variants={FADE_UP_BLUR} custom={0.65}>
-            संगीत
-          </motion.span>
-          <motion.span className="line-2" variants={FADE_UP_BLUR} custom={0.82}>
-            जो वक़्त
-          </motion.span>
-          <motion.span className="line-3" variants={FADE_UP_BLUR} custom={0.98}>
-            से बाहर है।
-          </motion.span>
-        </motion.h1>
-
-        <motion.p
-          ref={taglineRef}
-          className="hero-tagline"
-          variants={FADE_UP_BLUR}
-          custom={1.3}
-          initial="hidden"
-          animate="visible"
-        >
-          पुरानी गलियों की नई आवाज़।
-        </motion.p>
-
+      {/* ── Center Devanagari Headline & Branding (Single Page Layout) ─────── */}
+      <div className="hero-content hero-content--centered">
         <motion.div
-          ref={ctaRef}
-          className="hero-cta"
-          variants={FADE_UP_BLUR}
-          custom={1.6}
+          ref={headlineRef}
+          className="hero-headline-wrap"
           initial="hidden"
           animate="visible"
         >
-          <MagneticButton
-            className="btn-enter"
-            type="button"
-            strength={0.25}
-            onClick={handleEnterStreet}
-            aria-label="गली में चलें"
-            disabled={isTransitioning}
+          <motion.h1
+            className="hero-brand-title"
+            variants={FADE_UP_BLUR}
+            custom={0.5}
+            aria-label="लेक्चर TIME"
           >
-            गली में चलें
-          </MagneticButton>
+            <span className="brand-hindi">लेक्चर</span>{' '}
+            <span className="brand-english">TIME</span>
+          </motion.h1>
 
-          <span className="hero-listen-line" aria-hidden="true">
-            सुनें&nbsp;&bull;&nbsp;खोजें&nbsp;&bull;&nbsp;याद करें
-          </span>
+          <motion.p
+            ref={taglineRef}
+            className="hero-tagline"
+            variants={FADE_UP_BLUR}
+            custom={0.8}
+          >
+            पुरानी गलियों की नई आवाज़ • संगीत जो वक़्त से बाहर है
+          </motion.p>
         </motion.div>
       </div>
-
-      {/* ── Bottom-Center Scroll Indicator ─────────────────────── */}
-      <motion.div
-        className="hero-scroll-indicator"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, delay: 2.2 }}
-        onClick={handleEnterStreet}
-        role="button"
-        tabIndex={0}
-        aria-label="नीचे चलें (Scroll down to listen)"
-        onKeyDown={(e) => e.key === 'Enter' && handleEnterStreet()}
-      >
-        <span className="scroll-label">नीचे चलें</span>
-        <div className="scroll-line" />
-      </motion.div>
 
       {/* ── Cassette Stall Interactive Hotspot ──────────────────── */}
       <div

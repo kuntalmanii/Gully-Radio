@@ -170,9 +170,13 @@ html {
   color: var(--color-text-primary);
   font-family: var(--font-ui);
   font-size: 16px;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  scrollbar-gutter: stable;
+  overflow: hidden;
+  height: 100vh;
+  height: 100svh;
+  width: 100vw;
+  position: fixed;
+  inset: 0;
+  user-select: none;
 }
 
 body {
@@ -183,8 +187,23 @@ body {
   line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100vh;
+  height: 100svh;
+  width: 100vw;
+  position: fixed;
+  inset: 0;
   text-rendering: optimizeLegibility;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  position: relative;
 }
 
 /* Editorial Selection */
