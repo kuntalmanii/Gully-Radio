@@ -100,7 +100,7 @@ export default function Hero() {
     let rafId = null
 
     const onMouseMove = (e) => {
-      if (rafId) return
+      if (rafId || isTransitioning) return
       rafId = requestAnimationFrame(() => {
         const cx = e.clientX / window.innerWidth  - 0.5
         const cy = e.clientY / window.innerHeight - 0.5
@@ -121,7 +121,7 @@ export default function Hero() {
       hero.removeEventListener('mousemove', onMouseMove)
       if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [])
+  }, [isTransitioning])
 
   /* ─── 4. Enter the Street Transition ────────────────────────── */
   const handleEnterStreet = useCallback(() => {
@@ -164,9 +164,9 @@ export default function Hero() {
           ease:     'power2.inOut',
         }, 0.12)
 
-        tl.to('.hero-vignette',    { opacity: 1.8, duration: 2.2, ease: 'power2.inOut' }, 0.45)
-          .to('.hero-bottom-fade', { opacity: 2.0, duration: 1.8, ease: 'power2.inOut' }, 0.55)
-          .to('.hero-color-grade', { opacity: 1.5, duration: 1.8, ease: 'power2.inOut' }, 0.7)
+        tl.to('.hero-vignette',    { opacity: 1.0, duration: 2.2, ease: 'power2.inOut' }, 0.45)
+          .to('.hero-bottom-fade', { opacity: 1.0, duration: 1.8, ease: 'power2.inOut' }, 0.55)
+          .to('.hero-color-grade', { opacity: 1.0, duration: 1.8, ease: 'power2.inOut' }, 0.7)
           .to('.hero-grain',       { opacity: 0.1, duration: 1.4 },                     0.35)
       },
     })
