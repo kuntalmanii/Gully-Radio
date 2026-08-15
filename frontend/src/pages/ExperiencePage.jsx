@@ -114,14 +114,15 @@ export default function ExperiencePage() {
 
   const sides = [
     {
-      label: 'साइड A — चांदनी चौक से लाइव (1987)',
+      label: 'साइड A — विशेष अभिलेखागार (Special Archive)',
       tracks: tracks.filter((t) => t.side === 'A' || !t.side || t.id <= 4),
     },
     {
-      label: 'साइड B — आधी रात के राग (1989)',
+      label: 'साइड B — आधी रात के राग (Late Night Ragas)',
       tracks: tracks.filter((t) => t.side === 'B' || t.id > 4),
     },
-  ]
+  ].filter((s) => s.tracks.length > 0)
+
 
   return (
     <div className="experience-page">
@@ -231,13 +232,20 @@ export default function ExperiencePage() {
 
               <button
                 className="exp-ctrl-btn exp-ctrl-btn--play"
-                onClick={currentTrack ? togglePlay : undefined}
+                onClick={() => {
+                  if (currentTrack) {
+                    handleTrackClick(currentTrack.id)
+                  } else if (tracks.length > 0) {
+                    handleTrackClick(tracks[0].id)
+                  }
+                }}
                 aria-label={isPlaying ? 'रोकें' : 'चलाएँ'}
-                disabled={isLoading || !currentTrack}
+                disabled={isLoading || tracks.length === 0}
                 type="button"
               >
                 {isPlaying ? <Pause size={18} /> : <Play size={18} />}
               </button>
+
 
               <button className="exp-ctrl-btn" onClick={nextTrack} aria-label="अगला गाना" type="button">
                 <SkipForward size={16} />

@@ -57,16 +57,16 @@ export default function useAudioPlayer() {
     setState((s) => ({ ...s, duration: dur, isLoading: false }))
   }, [setState])
 
-  const handleWaiting  = useCallback(() => setState((s) => ({ ...s, isLoading: true  })), [setState])
+  const handleWaiting  = useCallback(() => setState((s) => ({ ...s, isLoading: true })), [setState])
   const handleCanPlay  = useCallback(() => setState((s) => ({ ...s, isLoading: false })), [setState])
-  const handlePlaying  = useCallback(() => setState((s) => ({ ...s, isPlaying: true,  isLoading: false })), [setState])
+  const handlePlaying  = useCallback(() => setState((s) => ({ ...s, isPlaying: true, isLoading: false })), [setState])
   const handlePause    = useCallback(() => setState((s) => ({ ...s, isPlaying: false })), [setState])
 
   const handleError = useCallback((e) => {
     console.warn('[useAudioPlayer] Audio loading error on src, fallback to synthesized audio...', e)
     const currentTrack = queueRef.current[queueIdxRef.current]
     if (currentTrack && audioRef.current) {
-      const fallbackUrl = generateTrackAudioUrl(currentTrack.id, currentTrack.genre)
+      const fallbackUrl = generateTrackAudioUrl(currentTrack.id, currentTrack.genre || 'default')
       if (audioRef.current.src !== fallbackUrl) {
         audioRef.current.src = fallbackUrl
         audioRef.current.load()
@@ -94,7 +94,6 @@ export default function useAudioPlayer() {
       }))
 
       addRecentlyPlayed(nextTrack)
-
       const validUrl = nextTrack.audioUrl || generateTrackAudioUrl(nextTrack.id, nextTrack.genre)
 
       audio.src = validUrl
@@ -111,7 +110,6 @@ export default function useAudioPlayer() {
     const audio = new Audio()
     audio.volume  = INITIAL_STATE.volume
     audio.preload = 'auto'
-    audio.crossOrigin = 'anonymous'
     audioRef.current = audio
 
     audio.addEventListener('timeupdate',     handleTimeUpdate)
@@ -140,6 +138,60 @@ export default function useAudioPlayer() {
      PUBLIC API
   ══════════════════════════════════════════════════════════════ */
 
+  /** Play a specific track by ID */
+  const playTrack = useCallback((trackId = null, directTrack = null) => {
+    let queue = queueRef.current
+    let idx = -1
+
+    if (trackId) {
+      idx = queue.findIndex((t) => String(t.id) === String(trackId))
+    }
+
+    if (idx === -1 && directTrack) {
+      queue = [directTrack, ...queue]
+      queueRef.current = queue
+      idx = 0
+    } else if (idx === -1 && queue.length > 0) {
+      idx = 0
+    }
+
+    const track = queue[idx]
+    if (!track) return
+
+    queueIdxRef.current = idx
+    addRecentlyPlayed(track)
+
+    const audio = audioRef.current
+    if (!audio) return
+
+    setState((s) => ({
+      ...s,
+      currentTrackId: track.id,
+      queueIndex:     idx,
+      currentTime:    0,
+      duration:       track.duration || 0,
+      isLoading:      true,
+      error:          null,
+    }))
+
+    const validUrl = track.audioUrl || generateTrackAudioUrl(track.id, track.genre || 'default')
+
+    audio.src = validUrl
+    audio.load()
+
+    const playPromise = audio.play()
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setState((s) => ({ ...s, isPlaying: true, isLoading: false, currentTrackId: track.id }))
+        })
+        .catch((err) => {
+          console.warn('[useAudioPlayer] Playback was interrupted or blocked:', err.message)
+          setState((s) => ({ ...s, isPlaying: false, isLoading: false }))
+        })
+    }
+  }, [setState])
+
   /** Load a full queue of tracks. */
   const loadQueue = useCallback((tracks, startIndex = 0) => {
     const sanitizedQueue = (tracks || []).map((t) => ({
@@ -149,7 +201,18 @@ export default function useAudioPlayer() {
 
     queueRef.current    = sanitizedQueue
     queueIdxRef.current = startIndex
-    setState((s) => ({ ...s, queue: sanitizedQueue, queueIndex: startIndex }))
+
+    setState((s) => {
+      const currentId = s.currentTrackId || (sanitizedQueue.length > 0 ? sanitizedQueue[startIndex || 0].id : null)
+      const currentDur = s.duration > 0 ? s.duration : (sanitizedQueue.length > 0 ? (sanitizedQueue[startIndex || 0].duration || 0) : 0)
+      return {
+        ...s,
+        queue: sanitizedQueue,
+        queueIndex: startIndex,
+        currentTrackId: currentId,
+        duration: currentDur,
+      }
+    })
   }, [setState])
 
   /** Add a single track to the end of the queue */
@@ -197,85 +260,44 @@ export default function useAudioPlayer() {
     setState((s) => ({ ...s, queue: updated, queueIndex: 0 }))
   }, [setState])
 
-  /** Play a specific track by ID */
-  const playTrack = useCallback((trackId, directTrack = null) => {
-    let queue = queueRef.current
-    let idx = queue.findIndex((t) => String(t.id) === String(trackId))
-
-    if (idx === -1 && directTrack) {
-      queue = [directTrack, ...queue]
-      queueRef.current = queue
-      idx = 0
-    } else if (idx === -1 && queue.length > 0) {
-      idx = 0
-    }
-
-    const track = queue[idx]
-    if (!track) return
-
-    queueIdxRef.current = idx
-    addRecentlyPlayed(track)
-
+  /** Toggle play / pause */
+  const togglePlay = useCallback((targetTrackId = null) => {
     const audio = audioRef.current
     if (!audio) return
 
-    setState((s) => ({
-      ...s,
-      currentTrackId: track.id,
-      queueIndex:     idx,
-      currentTime:    0,
-      duration:       track.duration || 0,
-      isLoading:      true,
-      error:          null,
-    }))
-
-    const validUrl = track.audioUrl || generateTrackAudioUrl(track.id, track.genre || 'default')
-
-    audio.src = validUrl
-    audio.load()
-
-    const playPromise = audio.play()
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          setState((s) => ({ ...s, isPlaying: true, isLoading: false }))
-        })
-        .catch((err) => {
-          console.warn('[useAudioPlayer] Playback was interrupted:', err.message)
-          setState((s) => ({ ...s, isPlaying: false, isLoading: false }))
-        })
+    let currentId = targetTrackId || stateRef.current.currentTrackId
+    if (!currentId && queueRef.current.length > 0) {
+      currentId = queueRef.current[0].id
+      playTrack(currentId)
+      return
     }
-  }, [setState])
-
-  /** Toggle play / pause */
-  const togglePlay = useCallback(() => {
-    const audio = audioRef.current
-    if (!audio || !stateRef.current.currentTrackId) return
+    if (!currentId) return
 
     if (stateRef.current.isPlaying) {
       audio.pause()
       setState((s) => ({ ...s, isPlaying: false }))
     } else {
-      if (!audio.src || audio.src === window.location.href) {
-        const curr = queueRef.current[queueIdxRef.current]
-        if (curr) {
-          audio.src = curr.audioUrl || generateTrackAudioUrl(curr.id, curr.genre)
-          audio.load()
-        }
+      const currentTrack = queueRef.current.find((t) => String(t.id) === String(currentId)) || queueRef.current[0]
+      const validUrl = currentTrack?.audioUrl || generateTrackAudioUrl(currentTrack?.id, currentTrack?.genre || 'default')
+
+      if (!audio.src || !audio.src.includes(encodeURI(validUrl)) || audio.src === window.location.href) {
+        audio.src = validUrl
+        audio.load()
       }
 
       const playPromise = audio.play()
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
-            setState((s) => ({ ...s, isPlaying: true }))
+            setState((s) => ({ ...s, isPlaying: true, isLoading: false, currentTrackId: currentId }))
           })
           .catch((err) => {
-            console.warn('[useAudioPlayer] togglePlay audio.play() blocked:', err.message)
+            console.warn('[useAudioPlayer] togglePlay audio.play() error:', err.message)
+            setState((s) => ({ ...s, isPlaying: false, isLoading: false }))
           })
       }
     }
-  }, [setState])
+  }, [setState, playTrack])
 
   /** Explicit play */
   const play = useCallback(() => {
