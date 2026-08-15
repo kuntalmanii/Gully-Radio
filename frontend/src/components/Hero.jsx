@@ -1,7 +1,7 @@
 /**
  * Hero.jsx
  * ──────────────────────────────────────────────────────────────
- * Gully Radio Hero Experience — Phase 2 Cinematic Indian Street
+ * लेक्चर Time Hero Experience — Phase 2 Cinematic Indian Street
  *
  * Visual hierarchy:
  *   TOP:
@@ -215,10 +215,6 @@ export default function Hero() {
     })
   }, [trigger, isTransitioning])
 
-  /* ─── Scroll Action ─────────────────────────────────────────── */
-  const handleScrollDown = useCallback(() => {
-    handleEnterStreet()
-  }, [handleEnterStreet])
 
   return (
     <section
@@ -336,11 +332,11 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, delay: 2.2 }}
-        onClick={handleScrollDown}
+        onClick={handleEnterStreet}
         role="button"
         tabIndex={0}
         aria-label="नीचे चलें (Scroll down to listen)"
-        onKeyDown={(e) => e.key === 'Enter' && handleScrollDown()}
+        onKeyDown={(e) => e.key === 'Enter' && handleEnterStreet()}
       >
         <span className="scroll-label">नीचे चलें</span>
         <div className="scroll-line" />

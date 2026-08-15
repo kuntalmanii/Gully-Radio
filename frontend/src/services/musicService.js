@@ -1,7 +1,7 @@
 /**
  * musicService.js
  * ──────────────────────────────────────────────────────────────
- * Single source of truth for Gully Radio track data.
+ * Single source of truth for Lecture Time track data.
  * Contains only your personal manually-added track(s).
  */
 
@@ -28,24 +28,12 @@ export const TRACKS = [
   },
 ]
 
-export function getPlayableTracks() {
-  return [...TRACKS]
-}
-
 export function getAllTracks() {
   return [...TRACKS]
 }
 
 export function getTrackById(id) {
   return TRACKS.find((t) => String(t.id) === String(id)) ?? (TRACKS.length > 0 ? TRACKS[0] : null)
-}
-
-export function getTracksBySide() {
-  return [...TRACKS]
-}
-
-export function getQueue() {
-  return [...TRACKS]
 }
 
 export function getDefaultQueue() {
