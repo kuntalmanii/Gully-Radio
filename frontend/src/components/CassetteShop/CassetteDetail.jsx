@@ -24,7 +24,7 @@ const FADE_UP = {
   }),
 }
 
-export default function CassetteDetail({ mixtape }) {
+export default function CassetteDetail({ mixtape, onBack }) {
 
   const cassetteRef  = useRef(null)
   const deckSlotRef  = useRef(null)
@@ -37,6 +37,17 @@ export default function CassetteDetail({ mixtape }) {
     loadQueue, playTrack, togglePlay,
     currentTrackId, isPlaying,
   } = useAudio()
+
+  /* Listen for Escape key to go back */
+  useEffect(() => {
+    if (!onBack) return
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onBack()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [onBack])
+
 
   /* ── Insertion animation ───────────────────────────────────── */
   useEffect(() => {

@@ -4,9 +4,10 @@
  * High-End Analog Persistent Player with Balanced 3-Section Layout.
  *
  * Layout:
- *  - Left: Track Info (Cover, Title, Artist, Favorite Heart)
+ *  - Left: Track Info (Cover, Title, Artist, Favorite Heart, Expand Now Playing)
  *  - Center: Playback Controls (Previous, Play/Pause, Next) + Timeline Scrub Bar
  *  - Right: Audio Visualizer + Volume Slider + Queue Drawer
+ *  - Modal: Immersive Full-Screen Now Playing Deck
  */
 
 import { useState, useEffect, useCallback } from 'react'
@@ -22,6 +23,7 @@ import PlaybackControls from './PlaybackControls'
 import ProgressBar      from './ProgressBar'
 import VolumeControl    from './VolumeControl'
 import QueueButton      from './QueueButton'
+import NowPlayingModal  from './NowPlayingModal'
 import './player.css'
 
 /* ── Queue panel ──────────────────────────────────────────────── */
@@ -52,32 +54,39 @@ function QueuePanel({ queue, currentTrackId, onSelect, onClose }) {
       </div>
 
       <div className="queue-panel-list">
-        {queue.map((track, i) => (
-          <div
-            key={track.id}
-            className={`queue-item${String(currentTrackId) === String(track.id) ? ' queue-item--active' : ''}`}
-            role="option"
-            aria-selected={String(currentTrackId) === String(track.id)}
-            onClick={() => { onSelect(track.id); onClose() }}
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter') { onSelect(track.id); onClose() } }}
-          >
-            <span className="queue-item-num" style={{ fontFamily: "'Inter', sans-serif" }}>
-              {(i + 1).toString().padStart(2, '0')}
-            </span>
-            <div className="queue-item-info">
-              <span className="queue-item-title" title={track.title} style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '0.88rem' }}>
-                {track.title}
+        {queue.length === 0 ? (
+          <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: 'rgba(232, 213, 181, 0.5)', fontFamily: "'Noto Sans Devanagari', sans-serif" }}>
+            <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--color-warm-ivory, #F3E7D0)' }}>अभी कतार खाली है।</p>
+            <p style={{ margin: '0.3rem 0 0', fontSize: '0.75rem' }}>लाइब्रेरी या खोज से गाने जोड़ें।</p>
+          </div>
+        ) : (
+          queue.map((track, i) => (
+            <div
+              key={track.id}
+              className={`queue-item${String(currentTrackId) === String(track.id) ? ' queue-item--active' : ''}`}
+              role="option"
+              aria-selected={String(currentTrackId) === String(track.id)}
+              onClick={() => { onSelect(track.id); onClose() }}
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter') { onSelect(track.id); onClose() } }}
+            >
+              <span className="queue-item-num" style={{ fontFamily: "'Inter', sans-serif" }}>
+                {(i + 1).toString().padStart(2, '0')}
               </span>
-              <span className="queue-item-artist" style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.68rem', opacity: 0.6 }}>
-                {track.artist}
+              <div className="queue-item-info">
+                <span className="queue-item-title" title={track.title} style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: '0.88rem' }}>
+                  {track.title}
+                </span>
+                <span className="queue-item-artist" style={{ fontFamily: "'Noto Sans Devanagari', sans-serif", fontSize: '0.68rem', opacity: 0.6 }}>
+                  {track.artist}
+                </span>
+              </div>
+              <span className="queue-item-dur" style={{ fontFamily: "'Inter', sans-serif" }}>
+                {formatTime(track.duration)}
               </span>
             </div>
-            <span className="queue-item-dur" style={{ fontFamily: "'Inter', sans-serif" }}>
-              {formatTime(track.duration)}
-            </span>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </motion.div>
   )
@@ -97,11 +106,12 @@ export default function MusicPlayer() {
 
   const [queueOpen, setQueueOpen] = useState(false)
   const [showVisualizer, setShowVisualizer] = useState(false)
+  const [nowPlayingOpen, setNowPlayingOpen] = useState(false)
 
   const allTracks = getAllTracks()
   const currentTrack = (queue && queue.find((t) => String(t.id) === String(currentTrackId)))
     ?? allTracks.find((t) => String(t.id) === String(currentTrackId))
-    ?? null
+    ?? (allTracks.length > 0 ? allTracks[0] : null)
 
   useEffect(() => {
     if (currentTrackId) {
@@ -115,13 +125,34 @@ export default function MusicPlayer() {
   useEffect(() => {
     if (!queueOpen) return
     const close = (e) => {
-      if (!e.target.closest('.player-queue-panel') && !e.target.closest('.player-queue-btn')) {
+      if (!e.target.closest('.player-queue-panel') && !e.target.closest('.player-queue-btn') && !e.target.closest('.now-playing-queue-btn')) {
         setQueueOpen(false)
       }
     }
     document.addEventListener('mousedown', close)
     return () => document.removeEventListener('mousedown', close)
   }, [queueOpen])
+
+  // Global Keyboard Shortcuts: Space (Play/Pause), ArrowLeft/Right (Seek)
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      const activeTag = document.activeElement?.tagName?.toLowerCase()
+      if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return
+
+      if (e.code === 'Space') {
+        e.preventDefault()
+        togglePlay()
+      } else if (e.code === 'ArrowRight') {
+        e.preventDefault()
+        seekTo(Math.min(duration, currentTime + 5))
+      } else if (e.code === 'ArrowLeft') {
+        e.preventDefault()
+        seekTo(Math.max(0, currentTime - 5))
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [togglePlay, seekTo, currentTime, duration])
 
   const toggleQueue = useCallback(() => setQueueOpen((v) => !v), [])
 
@@ -138,9 +169,9 @@ export default function MusicPlayer() {
               top: '1.8rem',
               left: '2rem',
               zIndex: 700,
-              background: 'rgba(23, 21, 18, 0.88)',
-              border: '1px solid rgba(215, 178, 122, 0.25)',
-              color: '#F2E5CC',
+              background: 'rgba(21, 19, 16, 0.88)',
+              border: '1px solid rgba(232, 213, 181, 0.25)',
+              color: 'var(--color-warm-ivory, #F3E7D0)',
               padding: '0.45rem 1rem',
               borderRadius: '3px',
               fontFamily: "'Noto Sans Devanagari', sans-serif",
@@ -154,6 +185,27 @@ export default function MusicPlayer() {
           </button>
         </div>
       )}
+
+      {/* Expanded Now Playing Modal */}
+      <NowPlayingModal
+        isOpen={nowPlayingOpen}
+        onClose={() => setNowPlayingOpen(false)}
+        track={currentTrack}
+        isPlaying={isPlaying}
+        isLoading={isLoading}
+        currentTime={currentTime}
+        duration={duration}
+        volume={volume}
+        isMuted={isMuted}
+        onTogglePlay={togglePlay}
+        onPrev={prevTrack}
+        onNext={nextTrack}
+        onSeek={seekTo}
+        onVolumeChange={setVolume}
+        onMuteToggle={toggleMute}
+        onToggleQueue={toggleQueue}
+        queueLength={queue.length}
+      />
 
       {/* Queue panel */}
       <AnimatePresence>
@@ -184,7 +236,11 @@ export default function MusicPlayer() {
 
             {/* ── Left: Track info ───────────────────────────── */}
             <div className="player-left-col">
-              <TrackInfo track={currentTrack} isPlaying={isPlaying} />
+              <TrackInfo
+                track={currentTrack}
+                isPlaying={isPlaying}
+                onExpand={() => setNowPlayingOpen(true)}
+              />
             </div>
 
             {/* ── Center: Playback controls + Timeline ───────── */}

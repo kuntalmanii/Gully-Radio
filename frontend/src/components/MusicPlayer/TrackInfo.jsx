@@ -2,14 +2,15 @@
  * TrackInfo.jsx
  * ──────────────────────────────────────────────────────────────
  * Track info with cassette cover, spinning reels, typography & favorite heart.
+ * Clicking track info opens the expanded Now Playing modal.
  */
 
 import { useState, useEffect } from 'react'
-import { Disc3, Heart } from 'lucide-react'
+import { Disc3, Heart, Maximize2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getFavorites, toggleFavorite } from '../../services/libraryStorage'
 
-export default function TrackInfo({ track, isPlaying }) {
+export default function TrackInfo({ track, isPlaying, onExpand }) {
   const [isFav, setIsFav] = useState(false)
 
   useEffect(() => {
@@ -34,7 +35,15 @@ export default function TrackInfo({ track, isPlaying }) {
   }
 
   return (
-    <div className="player-track-info">
+    <div
+      className="player-track-info"
+      onClick={onExpand}
+      role="button"
+      tabIndex={0}
+      aria-label="अब बज रहा है डेक खोलें (Open Now Playing)"
+      onKeyDown={(e) => e.key === 'Enter' && onExpand && onExpand()}
+      style={{ cursor: onExpand ? 'pointer' : 'default' }}
+    >
       {/* Cover / Cassette placeholder */}
       <div className="player-cover" aria-hidden="true">
         {track.cover ? (
@@ -97,6 +106,19 @@ export default function TrackInfo({ track, isPlaying }) {
           strokeWidth={1.6}
         />
       </button>
+
+      {/* Expand Icon */}
+      {onExpand && (
+        <button
+          className="player-btn player-expand-btn"
+          onClick={(e) => { e.stopPropagation(); onExpand() }}
+          aria-label="अब बज रहा है बड़ा करें"
+          title="अब बज रहा है (Now Playing)"
+          type="button"
+        >
+          <Maximize2 size={14} />
+        </button>
+      )}
     </div>
   )
 }

@@ -333,19 +333,20 @@ export default function Library() {
           <div className="library-tracklist">
             {displayedTracks.length === 0 ? (
               <div className="library-empty-state">
+                <Music2 size={36} style={{ color: 'var(--color-burnt-orange, #C66A3E)', opacity: 0.6, marginBottom: '0.6rem' }} />
                 <p className="library-empty-title">
                   {activeTab === 'favorites'
-                    ? 'कोई पसंदीदा गाना नहीं मिला'
+                    ? 'कुछ गाने दिल के लिए रखिए।'
                     : activeTab === 'recent'
-                    ? 'अभी तक कोई गाना नहीं बजा'
-                    : 'कोई गाना नहीं मिला'}
+                    ? 'अभी तक कोई गाना नहीं बजा।'
+                    : 'अभी कोई गाना नहीं।'}
                 </p>
                 <p className="library-empty-desc">
                   {activeTab === 'favorites'
                     ? 'किसी भी गाने पर दिल (♡) दबाकर उसे अपनी पसंदीदा सूची में जोड़ें।'
                     : activeTab === 'recent'
                     ? 'कोई भी गाना चलाकर अपनी सुनने की यात्रा शुरू करें।'
-                    : 'खोज के लिए कोई अन्य शब्द आज़माएँ।'}
+                    : 'अपना पहला पसंदीदा गाना चुनें या खोजें।'}
                 </p>
               </div>
             ) : (
