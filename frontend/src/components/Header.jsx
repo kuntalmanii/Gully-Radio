@@ -84,20 +84,27 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Center: Live Listener Pill Badge (Matching reference photo) */}
+        {/* Center: Live Listener Pill Badge (Perfect Viewport Centering) */}
         <div
           className="header-live-badge"
           style={{
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.45rem',
-            background: 'rgba(21, 19, 16, 0.65)',
+            justifyContent: 'center',
+            gap: '0.5rem',
+            background: 'rgba(21, 19, 16, 0.72)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(232, 213, 181, 0.16)',
+            border: '1px solid rgba(232, 213, 181, 0.18)',
             borderRadius: '20px',
-            padding: '0.35rem 0.9rem',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+            padding: '0.38rem 0.95rem',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.45)',
+            pointerEvents: 'none',
+            lineHeight: 1,
+            zIndex: 10,
           }}
         >
           <span
@@ -108,15 +115,19 @@ export default function Header() {
               backgroundColor: '#4ade80',
               boxShadow: '0 0 8px #4ade80',
               animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              flexShrink: 0,
+              display: 'inline-block',
             }}
           />
           <span
             style={{
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "'Inter', system-ui, sans-serif",
               fontSize: '0.72rem',
               fontWeight: 500,
               color: 'var(--color-warm-ivory, #F3E7D0)',
               letterSpacing: '0.02em',
+              lineHeight: 1,
+              display: 'inline-block',
             }}
           >
             484 people listening
