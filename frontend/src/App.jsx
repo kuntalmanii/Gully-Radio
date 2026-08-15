@@ -9,6 +9,7 @@ import Discover                 from './pages/Discover'
 import Mixtapes                 from './pages/Mixtapes'
 import Library                  from './pages/Library'
 import ExperiencePage           from './pages/ExperiencePage'
+import CustomCursor             from './components/CustomCursor'
 
 /* ── Hero page ────────────────────────────────────────────────── */
 function HeroPage() {
@@ -32,7 +33,9 @@ export default function App() {
         MusicPlayer rendered OUTSIDE <Routes> for the same reason.
       */}
       <AudioProvider>
+        <CustomCursor />
         <div className="film-grain-overlay" aria-hidden="true" />
+
         <CinematicTransition>
           <Routes>
             <Route path="/"           element={<HeroPage />} />

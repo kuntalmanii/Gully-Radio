@@ -8,8 +8,8 @@
 .mixtapes-page {
   position: relative;
   min-height: 100svh;
-  background-color: #0e0c0a;
-  color: #F2E5CC;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
@@ -21,19 +21,8 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 65% 55% at 50% 50%, rgba(197, 106, 62, 0.07) 0%, transparent 70%),
-    linear-gradient(180deg, #15120f 0%, #0d0a08 100%);
-}
-
-.mixtapes-grain {
-  position: fixed;
-  inset: -80px;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.038;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)'/%3E%3C/svg%3E");
-  background-size: 180px;
-  animation: grain 0.18s steps(1) infinite;
+    radial-gradient(ellipse 65% 55% at 50% 50%, rgba(198, 106, 62, 0.08) 0%, transparent 70%),
+    linear-gradient(180deg, var(--color-warm-black) 0%, var(--color-deep-brown) 100%);
 }
 
 .mixtapes-content {
@@ -42,75 +31,75 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 6rem 0 5rem;
+  padding: 6.5rem 0 5rem;
 }
 
 /* ── Editorial Header ─────────────────────────────────────────── */
 .mixtapes-header {
-  padding: 0 5vw;
-  margin-bottom: 2.5rem;
+  padding: 0 var(--container-pad);
+  margin-bottom: var(--space-xl);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  border-bottom: 1px solid rgba(215, 178, 122, 0.1);
-  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: var(--space-lg);
 }
 
 .mixtapes-header-left {
-  max-width: 600px;
+  max-width: 620px;
 }
 
 .mixtapes-tag {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.62rem;
+  font-family: var(--font-en);
+  font-size: var(--font-size-xs);
   letter-spacing: 0.28em;
-  color: #C56A3E;
+  color: var(--color-burnt-orange);
   text-transform: uppercase;
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-2xs);
 }
 
 .mixtapes-headline {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(2.4rem, 6vw, 4.5rem);
-  font-weight: 300;
-  line-height: 0.95;
-  color: #F2E5CC;
+  font-family: var(--font-display);
+  font-size: var(--font-size-h1);
+  font-weight: 400;
+  line-height: var(--line-height-display);
+  color: var(--color-warm-ivory);
 }
 
 .mixtapes-subhead {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: clamp(0.78rem, 1.2vw, 0.88rem);
-  font-weight: 300;
-  color: rgba(242, 229, 204, 0.55);
-  margin-top: 0.6rem;
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  color: var(--color-text-muted);
+  margin-top: var(--space-2xs);
+  line-height: var(--line-height-body);
 }
 
 /* Navigation controls */
 .mixtapes-nav-controls {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-sm);
 }
 
 .mixtapes-nav-btn {
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  border: 1px solid rgba(215, 178, 122, 0.2);
-  background: rgba(23, 21, 18, 0.6);
-  color: #D7B27A;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-medium);
+  background: rgba(33, 27, 23, 0.6);
+  color: var(--color-muted-cream);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-micro) var(--ease-standard);
 }
 
 .mixtapes-nav-btn:hover:not(:disabled) {
-  border-color: #D7B27A;
-  background: rgba(215, 178, 122, 0.15);
+  border-color: var(--color-muted-cream);
+  background: rgba(232, 213, 181, 0.15);
   transform: scale(1.05);
 }
 
@@ -124,7 +113,7 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  padding: 1.5rem 0 3rem;
+  padding: 1.5rem 0 3.5rem;
   cursor: grab;
 }
 
@@ -134,8 +123,8 @@
 
 .mixtapes-track {
   display: flex;
-  gap: 2.5rem;
-  padding: 0 5vw;
+  gap: var(--space-xl);
+  padding: 0 var(--container-pad);
   width: max-content;
   user-select: none;
 }
@@ -144,244 +133,102 @@
 .mixtape-card {
   width: 380px;
   flex-shrink: 0;
-  background: linear-gradient(160deg, rgba(24, 19, 14, 0.85) 0%, rgba(13, 10, 8, 0.95) 100%);
-  border: 1px solid rgba(215, 178, 122, 0.09);
-  border-radius: 2px;
+  background: linear-gradient(160deg, rgba(33, 27, 23, 0.85) 0%, rgba(21, 19, 16, 0.95) 100%);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xs);
   padding: 2.4rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
-  transition:
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  min-height: 520px;
+  gap: var(--space-lg);
+  box-shadow: var(--shadow-warm-md);
+  transition: transform var(--duration-standard) var(--ease-smooth), border-color var(--duration-standard) var(--ease-smooth), box-shadow var(--duration-standard) var(--ease-smooth);
 }
 
 .mixtape-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(215, 178, 122, 0.28);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7);
+  transform: translateY(-5px);
+  border-color: var(--color-border-medium);
+  box-shadow: var(--shadow-warm-lg);
 }
 
-
+/* Mixtape Card Top */
 .mixtape-card-top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  font-family: var(--font-en);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
-.mixtape-index {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  color: rgba(215, 178, 122, 0.35);
+.mixtape-card-tag {
+  color: var(--color-burnt-orange);
   font-weight: 500;
+}
+
+.mixtape-card-year {
+  color: var(--color-text-dim);
+}
+
+/* Mixtape Cassette Graphic Preview */
+.mixtape-card-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 0;
+}
+
+/* Mixtape Info */
+.mixtape-card-title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-h2);
+  font-weight: 400;
+  line-height: var(--line-height-display);
+  color: var(--color-warm-ivory);
+  margin-bottom: var(--space-3xs);
+}
+
+.mixtape-card-curator {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  color: var(--color-muted-cream);
+  opacity: 0.85;
+  margin-bottom: var(--space-xs);
+}
+
+.mixtape-card-desc {
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  line-height: var(--line-height-body);
+  color: var(--color-text-muted);
+}
+
+/* Mixtape Card Footer */
+.mixtape-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-sm);
 }
 
 .mixtape-track-count {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.55rem;
-  letter-spacing: 0.2em;
-  color: #C56A3E;
-  text-transform: uppercase;
-  border: 1px solid rgba(197, 106, 62, 0.3);
-  padding: 0.2rem 0.6rem;
-  border-radius: 2px;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-dim);
 }
 
-/* Visual Cassette Showcase inside card */
-.mixtape-cassette-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem 0 2rem;
-  perspective: 800px;
-}
-
-.mixtape-cassette-3d {
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  transform-style: preserve-3d;
-}
-
-.mixtape-card:hover .mixtape-cassette-3d {
-  transform: rotateY(8deg) rotateX(4deg) scale(1.05);
-}
-
-/* Card Body */
-.mixtape-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.mixtape-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.9rem;
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  color: #F2E5CC;
-  line-height: 1.1;
-  margin-bottom: 0.4rem;
-  transition: color 0.2s ease;
-}
-
-.mixtape-card:hover .mixtape-title {
-  color: #D7B27A;
-}
-
-.mixtape-curator {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  color: rgba(215, 178, 122, 0.5);
-  text-transform: uppercase;
-  margin-bottom: 0.9rem;
-}
-
-.mixtape-desc {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.78rem;
-  font-weight: 300;
-  line-height: 1.65;
-  color: rgba(242, 229, 204, 0.6);
-  margin-bottom: 1.8rem;
-}
-
-/* Action Strip */
-.mixtape-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 1.2rem;
-  border-top: 1px solid rgba(215, 178, 122, 0.08);
-}
-
-.mixtape-play-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: #D7B27A;
-  color: #171512;
-  border: none;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 0.7rem 1.4rem;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.mixtape-play-btn:hover {
-  background: #F2E5CC;
-  transform: scale(1.03);
-}
-
-.mixtape-inspect-link {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
-  color: rgba(215, 178, 122, 0.45);
-  text-transform: uppercase;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: color 0.2s ease;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-}
-
-.mixtape-inspect-link:hover {
-  color: #D7B27A;
-}
-
-/* ── Hover Track Preview Strip ────────────────────────────────── */
-.mixtape-tracks-preview {
-  position: absolute;
-  inset: 0;
-  background: rgba(14, 10, 7, 0.96);
-  padding: 2.2rem 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  border-radius: 4px;
-}
-
-.mixtape-card.show-preview .mixtape-tracks-preview {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.preview-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(215, 178, 122, 0.1);
-  padding-bottom: 0.8rem;
-}
-
-.preview-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.3rem;
-  color: #D7B27A;
-}
-
-.preview-close {
-  background: none;
-  border: none;
-  color: rgba(215, 178, 122, 0.5);
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.preview-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin: 1.2rem 0;
-}
-
-.preview-row {
-  display: flex;
-  justify-content: space-between;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.72rem;
-  color: rgba(242, 229, 204, 0.7);
-  padding: 0.3rem 0;
-  border-bottom: 1px solid rgba(215, 178, 122, 0.04);
-}
-
-/* ── Responsive Rules ─────────────────────────────────────────── */
+/* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .mixtapes-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
-  }
-
-  .mixtapes-carousel-wrapper {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 2rem;
+    gap: var(--space-md);
   }
 
   .mixtape-card {
-    width: 82vw;
-    max-width: 340px;
-    scroll-snap-align: center;
-    min-height: 480px;
+    width: 310px;
+    padding: 1.8rem 1.4rem;
   }
 }

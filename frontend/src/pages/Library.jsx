@@ -13,11 +13,12 @@
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   Play, Pause, Heart, ListPlus, Radio,
-  Search, Sparkles, Disc3, Music2, Clock
+  Search, Disc3, Music2, Clock
 } from 'lucide-react'
+
 import Header from '../components/Header'
 import { useAudio } from '../contexts/AudioContext'
 import {
@@ -142,10 +143,11 @@ export default function Library() {
     addToQueue(track)
   }, [addToQueue])
 
-  const handlePlayNext = useCallback((e, track) => {
+  const _handlePlayNext = useCallback((e, track) => {
     e.stopPropagation()
     playNextInQueue(track)
   }, [playNextInQueue])
+
 
   return (
     <div className="library-page">
