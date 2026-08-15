@@ -226,10 +226,11 @@ export default function MusicPlayer() {
             className="player-bar"
             role="region"
             aria-label="संगीत प्लेयर (Music player)"
-            initial={{ y: 110, opacity: 0 }}
-            animate={{ y: 0,   opacity: 1 }}
-            exit={{    y: 110, opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ y: 90, opacity: 0, scale: 0.97 }}
+            animate={{ y: 0,  opacity: 1, scale: 1 }}
+            exit={{    y: 90, opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            style={{ overflow: 'visible' }}
           >
             {/* Top Amber Ambient Highlight Line */}
             <div className="player-top-glow" aria-hidden="true" />
