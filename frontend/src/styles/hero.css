@@ -274,24 +274,9 @@
   padding-left: 0.2rem;
 }
 
-/* ─── Scroll Down Indicator ──────────────────────────────────────*/
-.hero-scroll-indicator {
-  position: absolute;
-  bottom: clamp(1.6rem, 3.8vh, 2.6rem);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0.4rem;
-  transition: opacity var(--duration-standard) var(--ease-smooth);
-}
 
+
+/* ─── Scroll Indicator Child Elements ────────────────────────────*/
 .scroll-label {
   font-family: var(--font-ui);
   font-size: 0.65rem;
@@ -308,12 +293,6 @@
   background: linear-gradient(to bottom, var(--color-burnt-orange, #C66A3E) 0%, transparent 100%);
   animation: scroll-pulse 2.2s ease-in-out infinite;
 }
-
-.hero-scroll-indicator:hover .scroll-label {
-  color: var(--color-warm-ivory, #F3E7D0);
-  opacity: 1;
-}
-
 
 /* ─── Cassette Stall Hotspot / Shop Zone ─────────────────────────*/
 .hero-shop-zone {
@@ -339,15 +318,19 @@
   opacity: 1;
 }
 
+/* Consolidated glassmorphism scroll indicator */
 .hero-scroll-indicator {
   position: absolute;
-  bottom: 2.2rem;
+  bottom: clamp(1.6rem, 3.8vh, 2.6rem);
   left: 50%;
   transform: translateX(-50%);
+  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
+  outline: none;
   background: rgba(26, 22, 18, 0.55);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -355,9 +338,6 @@
   padding: 0.5rem 1.1rem 0.65rem;
   border-radius: var(--radius-full, 9999px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(243, 231, 208, 0.12);
-  z-index: 10;
-  cursor: pointer;
-  outline: none;
   transition: all var(--duration-standard) var(--ease-smooth);
 }
 
@@ -366,6 +346,11 @@
   border-color: var(--color-burnt-orange, #C66A3E);
   transform: translateX(-50%) translateY(-2px);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(198, 106, 62, 0.25), inset 0 1px 0 rgba(243, 231, 208, 0.2);
+}
+
+.hero-scroll-indicator:hover .scroll-label {
+  color: var(--color-warm-ivory, #F3E7D0);
+  opacity: 1;
 }
 
 .hero-shop-hint {
