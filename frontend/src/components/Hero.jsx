@@ -26,7 +26,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
-import { useCinematicTransition, MagneticButton } from './CinematicTransition'
+import { useCinematicTransition } from './CinematicTransition'
 import '../styles/hero.css'
 
 const PARTICLE_COUNT = 18

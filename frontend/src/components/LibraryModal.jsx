@@ -75,8 +75,6 @@ export default function LibraryModal({ isOpen, onClose }) {
     return getTracksByCategory(selectedCat)
   }, [activeTab, selectedCat, allLibraryTracks, favorites, recentIds])
 
-  if (!isOpen) return null
-
   const handlePlayTrack = (track) => {
     if (currentTrackId === track.id) {
       togglePlay()
@@ -93,24 +91,29 @@ export default function LibraryModal({ isOpen, onClose }) {
 
   return (
     <AnimatePresence>
-      <div
-        className="modal-backdrop-overlay"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) onClose()
-        }}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 800,
-          background: 'rgba(12, 10, 8, 0.78)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '1.5rem',
-        }}
-      >
+      {isOpen && (
+        <motion.div
+          className="modal-backdrop-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) onClose()
+          }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 800,
+            background: 'rgba(12, 10, 8, 0.78)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '2rem 1.5rem',
+          }}
+        >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -432,7 +435,8 @@ export default function LibraryModal({ isOpen, onClose }) {
             )}
           </div>
         </motion.div>
-      </div>
+      </motion.div>
+      )}
     </AnimatePresence>
   )
 }

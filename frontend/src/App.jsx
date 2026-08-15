@@ -2,13 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AudioProvider }       from './contexts/AudioContext'
 import { CinematicTransition }  from './components/CinematicTransition'
 import MusicPlayer              from './components/MusicPlayer'
-import CassetteShop             from './components/CassetteShop/CassetteShop'
 import Header                   from './components/Header'
 import Hero                     from './components/Hero'
-import Discover                 from './pages/Discover'
-import Mixtapes                 from './pages/Mixtapes'
-import Library                  from './pages/Library'
-import ExperiencePage           from './pages/ExperiencePage'
 import CustomCursor             from './components/CustomCursor'
 
 /* ── Hero page ────────────────────────────────────────────────── */

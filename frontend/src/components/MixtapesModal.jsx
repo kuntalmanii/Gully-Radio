@@ -25,16 +25,6 @@ export default function MixtapesModal({ isOpen, onClose }) {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [isOpen, onClose])
 
-  if (!isOpen) return null
-
-  const handlePlayMixtape = (mixtape) => {
-    const queue = getMixtapeQueue(mixtape.id)
-    if (queue && queue.length > 0) {
-      loadQueue(queue)
-      playTrack(queue[0].id)
-    }
-  }
-
   const handlePlayTrack = (track, mixtape) => {
     if (currentTrackId === track.id) {
       togglePlay()
@@ -49,24 +39,29 @@ export default function MixtapesModal({ isOpen, onClose }) {
 
   return (
     <AnimatePresence>
-      <div
-        className="modal-backdrop-overlay"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) onClose()
-        }}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 800,
-          background: 'rgba(12, 10, 8, 0.78)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '1.5rem',
-        }}
-      >
+      {isOpen && (
+        <motion.div
+          className="modal-backdrop-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) onClose()
+          }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 800,
+            background: 'rgba(12, 10, 8, 0.78)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem',
+          }}
+        >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -402,7 +397,8 @@ export default function MixtapesModal({ isOpen, onClose }) {
             </div>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
+      )}
     </AnimatePresence>
   )
 }
