@@ -83,7 +83,7 @@ export default function Header() {
         <Link
           to="/"
           className="site-logo-wrap"
-          aria-label="गली रेडियो (Gully Radio) Home"
+          aria-label="लेक्चर Time (Lecture Time) Home"
         >
           <span
             style={{
@@ -96,7 +96,7 @@ export default function Header() {
               textShadow: '0 2px 12px rgba(0,0,0,0.6)',
             }}
           >
-            गली रेडियो
+            लेक्चर Time
           </span>
           <span
             style={{
@@ -109,7 +109,7 @@ export default function Header() {
               opacity: 0.85,
             }}
           >
-            GULLY RADIO
+            LECTURE TIME
           </span>
         </Link>
 
@@ -309,7 +309,7 @@ export default function Header() {
                         display: 'block',
                       }}
                     >
-                      गली रेडियो
+                      लेक्चर Time
                     </span>
                     <span
                       style={{
@@ -321,7 +321,7 @@ export default function Header() {
                         opacity: 0.7,
                       }}
                     >
-                      GULLY RADIO ARCHIVE
+                      LECTURE TIME ARCHIVE
                     </span>
                   </div>
                   <button

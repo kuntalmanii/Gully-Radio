@@ -103,7 +103,7 @@ export default function Discover() {
           <motion.div className="discover-issue-tag" variants={FADE_UP} custom={0.1}>
             <Sparkles size={13} />
             <span style={{ fontFamily: "'Noto Sans Devanagari', sans-serif" }}>
-              गली रेडियो संपादकीय · लाइव संग्रह
+              लेक्चर Time संपादकीय · लाइव संग्रह
             </span>
           </motion.div>
 

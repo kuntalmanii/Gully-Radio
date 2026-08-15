@@ -10,7 +10,7 @@ export const FEATURED_TRACK = {
   title:       'हीर (Heer)',
   titleEn:     'Heer',
   artist:      'Ali Raza Shjr',
-  album:       'Gully Radio Special Archives',
+  album:       'Lecture Time Special Archives',
   location:    'विशेष अभिलेखागार · 2024',
   recordedAt:  'विशेष अभिलेखागार · 2024',
   linerNotes:  'वारिस शाह की कालजयी रचना का एक अत्यंत भावुक और रूहानी प्रस्तुतीकरण। असली सुर, शांत गिटार और अली रज़ा की जादू भरी आवाज़।',

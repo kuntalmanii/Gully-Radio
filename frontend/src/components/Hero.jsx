@@ -224,7 +224,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       className="hero-section"
-      aria-label="गली रेडियो — मुख्य पृष्ठ"
+      aria-label="लेक्चर Time — मुख्य पृष्ठ"
     >
       {/* ── Background Layer (Street Photograph) ───────────────── */}
       <div className="hero-bg-wrap" aria-hidden="true">

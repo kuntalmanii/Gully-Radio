@@ -19,7 +19,7 @@ export const TRACKS = [
     title:       'हीर (Heer)',
     titleEn:     'Heer',
     artist:      'Ali Raza Shjr',
-    album:       'Gully Radio Special Archives',
+    album:       'Lecture Time Special Archives',
     cover:       null,
     audioUrl:    '/audio/Heer_-_Ali_Raza_Shjr_Lyrics.mp3',
     duration:    251,

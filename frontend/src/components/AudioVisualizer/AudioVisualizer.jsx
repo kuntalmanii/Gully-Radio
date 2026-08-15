@@ -260,7 +260,7 @@ export default function AudioVisualizer({
               </div>
 
               <span style={{ fontFamily: "'DM Sans'", fontSize: '0.6rem', color: 'rgba(215,178,122,0.4)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-                GULLY RADIO · ANALOG AUDIO ENGINE
+                LECTURE TIME · ANALOG AUDIO ENGINE
               </span>
             </div>
           </motion.div>

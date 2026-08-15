@@ -149,7 +149,7 @@ export default function ExperiencePage() {
             className="exp-header-title"
             style={{ fontFamily: "'Tiro Devanagari Hindi', 'Noto Serif Devanagari', serif", fontSize: '1.2rem' }}
           >
-            गली रेडियो
+            लेक्चर Time
           </span>
 
           <span

@@ -82,7 +82,7 @@ export default function NowPlayingModal({
           <div className="now-playing-header">
             <div className="now-playing-tagline">
               <span className="now-playing-badge">अब बज रहा है</span>
-              <span className="now-playing-sub">GULLY RADIO ARCHIVE</span>
+              <span className="now-playing-sub">LECTURE TIME ARCHIVE</span>
             </div>
 
             <button
@@ -101,7 +101,7 @@ export default function NowPlayingModal({
               <div className="np-cassette-shell">
                 {/* Cassette Top Label */}
                 <div className="np-cassette-label">
-                  <span className="np-label-brand">गली रेडियो · C-60</span>
+                  <span className="np-label-brand">लेक्चर Time · C-60</span>
                   <span className="np-label-side">{track.side || 'A'}</span>
                 </div>
 
