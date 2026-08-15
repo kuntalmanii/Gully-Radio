@@ -15,7 +15,7 @@ import { useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Play, Pause, SkipBack, SkipForward, Volume2, VolumeX,
-  Heart, ListMusic, Activity, X, Disc3
+  Heart, ListMusic, X
 } from 'lucide-react'
 import { formatTime } from './ProgressBar'
 import AudioVisualizer from '../AudioVisualizer'

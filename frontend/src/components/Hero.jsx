@@ -208,9 +208,9 @@ export default function Hero() {
           ease:            'power2.inOut',
         }, 0.08)
 
-        tl.to('.hero-vignette',    { opacity: 2.0, duration: 2.0, ease: 'power2.inOut' }, 0.35)
-          .to('.hero-bottom-fade', { opacity: 2.0, duration: 1.6, ease: 'power2.inOut' }, 0.45)
-          .to('.hero-color-grade', { opacity: 1.7, duration: 1.8, ease: 'power2.inOut' }, 0.6)
+        tl.to('.hero-vignette',    { opacity: 1.0, duration: 2.0, ease: 'power2.inOut' }, 0.35)
+          .to('.hero-bottom-fade', { opacity: 1.0, duration: 1.6, ease: 'power2.inOut' }, 0.45)
+          .to('.hero-color-grade', { opacity: 1.0, duration: 1.8, ease: 'power2.inOut' }, 0.6)
       },
     })
   }, [trigger, isTransitioning])
