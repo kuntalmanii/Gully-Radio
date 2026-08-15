@@ -87,10 +87,11 @@ export default function Hero() {
       rafId = requestAnimationFrame(() => {
         const cx = e.clientX / window.innerWidth  - 0.5
         const cy = e.clientY / window.innerHeight - 0.5
-        gsap.to(bg, { x: -cx * 18, y: -cy * 12, duration: 2, ease: 'power2.out', overwrite: 'auto' })
+        gsap.to(bg, { x: -cx * 12, y: -cy * 8, duration: 2.4, ease: 'power2.out', overwrite: 'auto' })
         rafId = null
       })
     }
+
 
     hero.addEventListener('mousemove', onMouseMove, { passive: true })
     return () => {

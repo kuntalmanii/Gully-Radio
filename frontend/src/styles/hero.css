@@ -1,29 +1,29 @@
 /* ─────────────────────────────────────────────────────────────────
-   Gully Radio — Hero Component Styles
-   All visual effects for the full-screen hero experience
+   Gully Radio — Enhanced Hero Component Styles
+   Cinematic Indian Street & Contemporary Devanagari Immersion
 ───────────────────────────────────────────────────────────────── */
 
-/* ─── Section shell ──────────────────────────────────────────────*/
+/* ─── Section Shell ──────────────────────────────────────────────*/
 .hero-section {
   position: relative;
   width: 100%;
-  height: 100svh;           /* small viewport units — correct on mobile */
-  min-height: 600px;
+  height: 100svh;
+  min-height: 620px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  background-color: #171512;
+  background-color: var(--color-warm-black, #151310);
+  user-select: none;
 }
 
-/* ─── Background layer ───────────────────────────────────────────
-   Extra padding so Ken Burns / parallax movement never exposes
-   a raw edge.
+/* ─── Background Layer (Cinematic Street Photograph) ───────────────
+   Extra padding so slow Ken Burns / mouse parallax never clips an edge.
 ───────────────────────────────────────────────────────────────── */
 .hero-bg-wrap {
   position: absolute;
-  inset: -6%;
+  inset: -5%;
   z-index: 0;
   overflow: hidden;
 }
@@ -33,15 +33,14 @@
   height: 100%;
   background-image: url('/assets/hero/hero-street.jpg');
   background-size: cover;
-  background-position: center 40%;
+  background-position: center 38%;
   background-repeat: no-repeat;
   transform-origin: center center;
   will-change: transform;
 }
 
-/* ─── Color-grade overlay ────────────────────────────────────────
-   Warms the image and ties it to our brand palette without 
-   hiding the photography. mix-blend-mode: multiply deepens shadows.
+/* ─── Color-Grade Overlay ────────────────────────────────────────
+   Warm analog grading that ties the photography to the Indian street palette.
 ───────────────────────────────────────────────────────────────── */
 .hero-color-grade {
   position: absolute;
@@ -50,9 +49,9 @@
   background:
     linear-gradient(
       160deg,
-      rgba(23, 21, 18, 0.38) 0%,
-      rgba(168, 79, 53, 0.10) 45%,
-      rgba(23, 21, 18, 0.55) 100%
+      rgba(21, 19, 16, 0.35) 0%,
+      rgba(169, 79, 53, 0.12) 45%,
+      rgba(21, 19, 16, 0.65) 100%
     );
   pointer-events: none;
 }
@@ -63,48 +62,44 @@
   inset: 0;
   z-index: 2;
   background: radial-gradient(
-    ellipse 80% 80% at 50% 50%,
-    transparent 20%,
-    rgba(23, 21, 18, 0.45) 60%,
-    rgba(23, 21, 18, 0.88) 100%
+    ellipse 85% 85% at 50% 45%,
+    transparent 25%,
+    rgba(21, 19, 16, 0.45) 65%,
+    rgba(21, 19, 16, 0.92) 100%
   );
   pointer-events: none;
 }
 
-/* Bottom-up darkness so text is always readable */
+/* Bottom-up atmospheric gradient for pristine typography contrast */
 .hero-bottom-fade {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 65%;
+  height: 70%;
   z-index: 3;
   background: linear-gradient(
     to top,
-    rgba(23, 21, 18, 0.96) 0%,
-    rgba(23, 21, 18, 0.60) 40%,
+    rgba(21, 19, 16, 0.98) 0%,
+    rgba(21, 19, 16, 0.72) 35%,
+    rgba(21, 19, 16, 0.25) 70%,
     transparent 100%
   );
   pointer-events: none;
 }
 
-/* ─── Film grain ─────────────────────────────────────────────────
-   Tiled SVG noise pattern shifted in steps to simulate real grain.
-   Kept at 4% opacity for subtlety.
-───────────────────────────────────────────────────────────────── */
+/* Film grain */
 .hero-grain {
   position: absolute;
-  inset: -80px;              /* oversized so shift doesn't show edge */
+  inset: -80px;
   z-index: 4;
   pointer-events: none;
-  opacity: 0.042;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 180px 180px;
-  animation: grain 0.18s steps(1) infinite;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  animation: grain 7s steps(10) infinite;
 }
 
-/* ─── Atmospheric particles ──────────────────────────────────────*/
+/* ─── Atmospheric Particles ──────────────────────────────────────*/
 .hero-particles {
   position: absolute;
   inset: 0;
@@ -117,107 +112,68 @@
   position: absolute;
   bottom: -4px;
   border-radius: 50%;
-  background: #D7B27A;
+  background: var(--color-muted-cream, #E8D5B5);
   animation: float-particle linear infinite;
   will-change: transform, opacity;
 }
 
-/* ─── Header ─────────────────────────────────────────────────────*/
+/* ─── Global Header ──────────────────────────────────────────────*/
 .site-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: var(--z-header, 200);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2rem 4vw;
-  /* Long gradient so header is always legible */
-  background: linear-gradient(
-    to bottom,
-    rgba(23, 21, 18, 0.78) 0%,
-    transparent 100%
-  );
-  backdrop-filter: blur(0px);      /* no blur — keeps cinematic feel */
+  padding: 1.8rem var(--container-pad, 4vw);
+  backdrop-filter: blur(0px);
+  transition: all var(--duration-standard, 320ms) var(--ease-smooth);
 }
 
-.site-logo {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: 400;
-  letter-spacing: 0.25em;
-  color: #F2E5CC;
-  text-transform: uppercase;
+.site-logo-wrap {
   text-decoration: none;
-  transition: color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: transform var(--duration-micro, 180ms) var(--ease-standard);
 }
 
-.site-logo:hover { color: #D7B27A; }
+.site-logo-wrap:hover {
+  transform: translateY(-1px);
+}
 
 .site-nav {
   display: flex;
   align-items: center;
-  gap: clamp(1.5rem, 3vw, 3rem);
+  gap: clamp(1.8rem, 3.5vw, 3rem);
   list-style: none;
 }
 
 .site-nav a {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  color: rgba(242, 229, 204, 0.65);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm, 0.82rem);
+  color: var(--color-text-muted, rgba(232, 213, 181, 0.65));
   text-decoration: none;
-  text-transform: uppercase;
-  transition: color 0.25s ease;
+  transition: color var(--duration-micro, 180ms) var(--ease-standard);
   position: relative;
-}
-
-.site-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: #C56A3E;
-  transition: width 0.3s var(--ease-cinematic, cubic-bezier(0.22, 1, 0.36, 1));
-}
-
-.site-nav a:hover {
-  color: #F2E5CC;
-}
-
-.site-nav a:hover::after {
-  width: 100%;
-}
-
-/* Mobile hamburger toggle (hidden on desktop) */
-.nav-toggle {
-  display: none;
+  display: flex;
   flex-direction: column;
-  gap: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
+  align-items: center;
 }
 
-.nav-toggle span {
-  display: block;
-  width: 22px;
-  height: 1px;
-  background: #F2E5CC;
-  transition: opacity 0.2s ease;
+.site-nav a:hover,
+.site-nav a.active {
+  color: var(--color-warm-ivory, #F3E7D0);
 }
 
-/* ─── Hero content ───────────────────────────────────────────────*/
+/* ─── Hero Content Area (Directly over the Street Image) ──────────*/
 .hero-content {
   position: relative;
   z-index: 20;
-  padding: 0 6vw 8vh;
-  max-width: min(800px, 90vw);
+  padding: 0 var(--container-pad, 6vw) clamp(4rem, 8vh, 6.5rem);
+  max-width: min(900px, 92vw);
   width: 100%;
   pointer-events: none;
 }
@@ -226,304 +182,257 @@
   pointer-events: auto;
 }
 
-/* ─── Headline ───────────────────────────────────────────────────*/
+/* ─── Headline (Large Expressive Devanagari) ──────────────────────*/
 .hero-headline {
-  font-family: 'Tiro Devanagari Hindi', 'Noto Serif Devanagari', Georgia, serif;
-  font-size: clamp(3.2rem, 9.5vw, 7.4rem);
+  font-family: var(--font-display, 'Tiro Devanagari Hindi', serif);
+  font-size: clamp(3.4rem, 8.8vw, 7.2rem);
   font-weight: 400;
-  line-height: 1.1;
+  line-height: 1.08;
   letter-spacing: -0.01em;
-  color: #F2E5CC;
+  color: var(--color-warm-ivory, #F3E7D0);
   display: flex;
   flex-direction: column;
   gap: 0;
   margin-bottom: clamp(1.2rem, 2.5vw, 1.8rem);
   padding-top: 0.1em;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  padding-bottom: 0.1em;
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.75), 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .hero-headline .line-1,
 .hero-headline .line-2 {
-  color: #F2E5CC;
+  color: var(--color-warm-ivory, #F3E7D0);
 }
 
 .hero-headline .line-3 {
-  color: #C56A3E;
+  color: var(--color-burnt-orange, #C66A3E);
   font-style: normal;
   font-weight: 400;
+  text-shadow: 0 4px 32px rgba(198, 106, 62, 0.4), 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
-/* ─── Tagline ────────────────────────────────────────────────────*/
+/* ─── Supporting Tagline ──────────────────────────────────────────*/
 .hero-tagline {
-  font-family: 'Noto Serif Devanagari', 'Tiro Devanagari Hindi', Georgia, serif;
-  font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+  font-family: var(--font-serif, 'Noto Serif Devanagari', serif);
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
   font-weight: 400;
-  line-height: 1.7;
-  color: #D7B27A;
-  max-width: 420px;
-  margin-bottom: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.6;
+  color: var(--color-muted-cream, #E8D5B5);
+  max-width: 480px;
+  margin-bottom: clamp(2rem, 3.8vw, 2.8rem);
   letter-spacing: 0.02em;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
 }
 
-/* ─── CTA area ───────────────────────────────────────────────────*/
+/* ─── CTA Area ───────────────────────────────────────────────────*/
 .hero-cta {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1.2rem;
+  gap: 1.1rem;
 }
 
 .btn-enter {
-  display: inline-block;
-  font-family: 'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
-  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui, 'Noto Sans Devanagari', sans-serif);
+  font-size: 0.95rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  color: #171512;
-  background: #D7B27A;
-  border: 1px solid transparent;
-  border-radius: 2px;
+  letter-spacing: 0.04em;
+  color: var(--color-warm-ivory, #F3E7D0);
+  background: linear-gradient(135deg, var(--color-terracotta, #A94F35) 0%, var(--color-burnt-orange, #C66A3E) 100%);
+  border: 1px solid rgba(243, 231, 208, 0.25);
+  border-radius: var(--radius-xs, 2px);
   padding: 0.95rem 2.8rem;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 24px rgba(169, 79, 53, 0.4), 0 2px 6px rgba(0, 0, 0, 0.5);
   transition:
-    background 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Subtle warm shimmer on hover */
-.btn-enter::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    transparent 100%
-  );
-  transform: translateX(-100%);
-  transition: transform 0.65s ease;
+    transform var(--duration-standard, 320ms) var(--ease-smooth),
+    box-shadow var(--duration-standard, 320ms) var(--ease-smooth),
+    background var(--duration-standard, 320ms) var(--ease-smooth);
 }
 
 .btn-enter:hover {
-  background: #F2E5CC;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(215, 178, 122, 0.25);
-}
-
-.btn-enter:hover::before {
-  transform: translateX(100%);
+  background: linear-gradient(135deg, var(--color-burnt-orange, #C66A3E) 0%, #d47648 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 32px rgba(198, 106, 62, 0.55), 0 0 0 1px rgba(243, 231, 208, 0.35);
 }
 
 .btn-enter:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  transform: translateY(0) scale(0.98);
 }
 
 .hero-listen-line {
-  font-family: 'Noto Sans Devanagari', 'Inter', system-ui, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  color: rgba(215, 178, 122, 0.6);
-  user-select: none;
+  font-family: var(--font-serif, 'Noto Serif Devanagari', serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted, rgba(232, 213, 181, 0.65));
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+  padding-left: 0.2rem;
 }
 
-
-/* ─── Scroll indicator ───────────────────────────────────────────*/
+/* ─── Scroll Down Indicator ──────────────────────────────────────*/
 .hero-scroll-indicator {
   position: absolute;
-  bottom: 2.5rem;
-  right: 4vw;
+  bottom: clamp(1.8rem, 4vh, 2.8rem);
+  right: var(--container-pad, 4vw);
   z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  pointer-events: none;
 }
 
 .scroll-label {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.55rem;
-  letter-spacing: 0.25em;
-  color: rgba(215, 178, 122, 0.35);
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: var(--color-muted-cream, #E8D5B5);
+  opacity: 0.65;
   text-transform: uppercase;
-  writing-mode: vertical-rl;
 }
 
 .scroll-line {
   width: 1px;
-  height: 3.5rem;
-  background: linear-gradient(to bottom, rgba(215, 178, 122, 0.5), transparent);
-  transform-origin: top;
-  animation: scroll-pulse 2.4s ease-in-out infinite;
+  height: 42px;
+  background: linear-gradient(to bottom, var(--color-burnt-orange, #C66A3E) 0%, transparent 100%);
+  animation: scroll-pulse 2.2s ease-in-out infinite;
 }
 
-/* ─── Hero Shop Zone (interactive hotspot on street image) ───────*/
+/* ─── Cassette Stall Hotspot / Shop Zone ─────────────────────────*/
 .hero-shop-zone {
   position: absolute;
-  /* Covers the cassette/radio shop stall on the left/middle-left */
-  left: 0;
-  width: 42%;
-  top: 15%;
-  bottom: 0;
-  z-index: 22;
+  left: 6%;
+  bottom: 12%;
+  width: min(340px, 42vw);
+  height: min(280px, 36vh);
+  z-index: 15;
   cursor: pointer;
-  pointer-events: auto;
 }
 
-/* Warm radial glow over shop area on hover */
 .hero-shop-glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 85% 65% at 28% 70%,
-    rgba(197, 106, 62, 0.22) 0%,
-    rgba(215, 178, 122, 0.08) 45%,
-    transparent 75%
-  );
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(198, 106, 62, 0.14) 0%, transparent 70%);
   opacity: 0;
-  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
 .hero-shop-zone:hover .hero-shop-glow {
   opacity: 1;
 }
 
-/* "Enter the shop" floating hint — appears after mount */
 .hero-shop-hint {
   position: absolute;
-  left: 20%;
-  bottom: 34%;
-  transform: translateX(-50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  pointer-events: none;
+  gap: 0.6rem;
+  background: rgba(21, 19, 16, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border-accent, rgba(169, 79, 53, 0.4));
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-full, 9999px);
   opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.8s ease, transform 0.4s ease;
 }
 
 .hero-shop-hint.is-visible {
+  opacity: 0.85;
+}
+
+.hero-shop-zone:hover .hero-shop-hint {
   opacity: 1;
+  transform: translate(-50%, -50%) scale(1.05);
+  border-color: var(--color-burnt-orange, #C66A3E);
 }
 
 .hero-shop-hint-ring {
-  width: 34px;
-  height: 34px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  border: 1px solid rgba(215, 178, 122, 0.45);
+  border: 1px solid var(--color-burnt-orange, #C66A3E);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  background: rgba(23, 21, 18, 0.4);
-  backdrop-filter: blur(4px);
-}
-
-.hero-shop-hint-ring::after {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  border: 1px solid rgba(215, 178, 122, 0.2);
-  animation: hint-pulse 2.4s ease-in-out infinite;
 }
 
 .hero-shop-hint-dot {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background: #D7B27A;
+  background: var(--color-burnt-orange, #C66A3E);
+  animation: scroll-pulse 1.8s ease-in-out infinite;
 }
 
 .hero-shop-hint-label {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 0.55rem;
-  letter-spacing: 0.22em;
-  color: #F2E5CC;
-  text-transform: uppercase;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  color: var(--color-warm-ivory, #F3E7D0);
   white-space: nowrap;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-  background: rgba(23, 21, 18, 0.6);
-  padding: 0.2rem 0.5rem;
-  border-radius: 2px;
-  border: 1px solid rgba(215, 178, 122, 0.15);
 }
 
-@keyframes hint-pulse {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50%       { opacity: 0.8; transform: scale(1.4); }
+.site-nav-desktop {
+  display: flex;
 }
 
+.nav-toggle {
+  display: none;
+}
 
-/* ─── Responsive ─────────────────────────────────────────────────*/
 @media (max-width: 768px) {
-  .site-header {
-    padding: 1.4rem 5vw;
+  .site-nav-desktop {
+    display: none !important;
   }
 
-  /* Show hamburger, hide nav links */
   .nav-toggle {
-    display: flex;
-  }
-
-  .site-nav {
-    display: none;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: min(280px, 80vw);
-    background: rgba(23, 21, 18, 0.97);
+    display: flex !important;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 2.5rem;
-    padding: 4rem 3rem;
-    z-index: 200;
-    border-left: 1px solid rgba(215, 178, 122, 0.1);
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
   }
 
-  .site-nav.is-open {
-    display: flex;
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--color-warm-ivory, #F3E7D0);
+    border-radius: 1px;
+    transition: transform var(--duration-standard) var(--ease-smooth), opacity var(--duration-standard) var(--ease-smooth);
   }
 
-  .site-nav a {
-    font-size: 0.85rem;
-    letter-spacing: 0.2em;
-  }
 
-  .hero-content {
-    padding: 0 6vw 10vh;
+  .hero-headline {
+    font-size: clamp(2.6rem, 11.5vw, 4.2rem);
+    line-height: 1.12;
   }
 
   .hero-tagline {
-    max-width: 100%;
+    font-size: 0.96rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .btn-enter {
+    padding: 0.85rem 2.2rem;
+    font-size: 0.9rem;
   }
 
   .hero-scroll-indicator {
     display: none;
   }
-}
 
-@media (max-width: 480px) {
-  .hero-headline {
-    font-size: clamp(3rem, 15vw, 4.5rem);
+  .hero-shop-zone {
+    display: none;
   }
 }
 
-@media (min-width: 1440px) {
-  .hero-content {
-    padding: 0 8vw 10vh;
-    max-width: 960px;
-  }
-}

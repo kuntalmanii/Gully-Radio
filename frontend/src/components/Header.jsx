@@ -85,8 +85,9 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav aria-label="मुख्य नेविगेशन (Main Navigation)">
+        <nav className="site-nav-desktop" aria-label="मुख्य नेविगेशन (Main Navigation)">
           <ul className="site-nav" role="list" style={{ display: 'flex', alignItems: 'center', gap: '2.4rem', listStyle: 'none' }}>
+
             {NAV_ITEMS.map((item) => {
               const isActive = location.pathname === item.path
               return (
