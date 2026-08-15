@@ -239,87 +239,6 @@
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
   opacity: 0.9;
 }
-/* ─── Cassette Stall Hotspot / Shop Zone ─────────────────────────*/
-.hero-shop-zone {
-  position: absolute;
-  left: 6%;
-  bottom: 12%;
-  width: min(340px, 42vw);
-  height: min(280px, 36vh);
-  z-index: 15;
-  cursor: pointer;
-}
-
-.hero-shop-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(198, 106, 62, 0.14) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.hero-shop-zone:hover .hero-shop-glow {
-  opacity: 1;
-}
-
-
-
-.hero-shop-hint {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: rgba(26, 22, 18, 0.72);
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  border: 1px solid var(--color-border-accent, rgba(169, 79, 53, 0.45));
-  padding: 0.45rem 1rem;
-  border-radius: var(--radius-full, 9999px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(243, 231, 208, 0.15);
-  opacity: 0;
-  transition: opacity 0.8s ease, transform 0.4s ease, border-color 0.3s ease;
-}
-
-.hero-shop-hint.is-visible {
-  opacity: 0.9;
-}
-
-.hero-shop-zone:hover .hero-shop-hint {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1.05);
-  border-color: var(--color-burnt-orange, #C66A3E);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 24px rgba(198, 106, 62, 0.35);
-}
-
-.hero-shop-hint-ring {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 1px solid var(--color-burnt-orange, #C66A3E);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-shop-hint-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--color-burnt-orange, #C66A3E);
-  animation: scroll-pulse 1.8s ease-in-out infinite;
-}
-
-.hero-shop-hint-label {
-  font-family: var(--font-ui);
-  font-size: 0.72rem;
-  color: var(--color-warm-ivory, #F3E7D0);
-  white-space: nowrap;
-}
-
 .site-nav-desktop {
   display: flex;
 }
@@ -352,7 +271,6 @@
     transition: transform var(--duration-standard) var(--ease-smooth), opacity var(--duration-standard) var(--ease-smooth);
   }
 
-
   .hero-headline {
     font-size: clamp(2.6rem, 11.5vw, 4.2rem);
     line-height: 1.12;
@@ -369,10 +287,6 @@
   }
 
   .hero-scroll-indicator {
-    display: none;
-  }
-
-  .hero-shop-zone {
     display: none;
   }
 }

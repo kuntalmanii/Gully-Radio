@@ -60,9 +60,7 @@ export default function Hero() {
   const heroRef      = useRef(null)
   const headlineRef  = useRef(null)
   const taglineRef   = useRef(null)
-  const ctaRef       = useRef(null)
   const kbTlRef      = useRef(null)
-  const shopHintRef  = useRef(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const { trigger } = useCinematicTransition()
@@ -81,15 +79,7 @@ export default function Hero() {
     return () => tl.kill()
   }, [])
 
-  /* ─── 2. Shop Hint Hotspot (Cassette stall area) ─────────────── */
-  useEffect(() => {
-    const hint = shopHintRef.current
-    if (!hint) return
-    const t = setTimeout(() => hint.classList.add('is-visible'), 3200)
-    return () => clearTimeout(t)
-  }, [])
-
-  /* ─── 3. Desktop Subtle Mouse Parallax (Damped) ───────────────── */
+  /* ─── 2. Desktop Subtle Mouse Parallax (Damped) ───────────────── */
   useEffect(() => {
     const hero = heroRef.current
     const bg   = bgRef.current
@@ -123,7 +113,7 @@ export default function Hero() {
     }
   }, [isTransitioning])
 
-  /* ─── 4. Enter the Street Transition ────────────────────────── */
+  /* ─── 3. Enter the Street Transition ────────────────────────── */
   const handleEnterStreet = useCallback(() => {
     if (isTransitioning) return
     setIsTransitioning(true)
@@ -134,12 +124,10 @@ export default function Hero() {
         const bg        = bgRef.current
         const headline  = headlineRef.current
         const tagline   = taglineRef.current
-        const cta       = ctaRef.current
 
         kbTlRef.current?.kill()
 
-        tl.to('.site-header',           { opacity: 0, y: -16, duration: 0.5, ease: 'power2.inOut' }, 0)
-          .to('.hero-scroll-indicator', { opacity: 0, duration: 0.25 }, 0)
+        tl.to('.site-header', { opacity: 0, y: -16, duration: 0.5, ease: 'power2.inOut' }, 0)
 
         if (headline) {
           const lines = headline.querySelectorAll('span')
@@ -154,7 +142,6 @@ export default function Hero() {
         }
 
         tl.to(tagline, { opacity: 0, y: -28, duration: 0.6, ease: 'power2.inOut' }, 0.22)
-          .to(cta,     { opacity: 0, y: -18, duration: 0.5, ease: 'power2.inOut' }, 0.3)
 
         tl.to(bg, {
           scale:    2.3,
@@ -172,63 +159,19 @@ export default function Hero() {
     })
   }, [trigger, isTransitioning])
 
-  /* ─── 5. Enter Shop Transition ───────────────────────────────── */
-  const handleEnterShop = useCallback(() => {
-    if (isTransitioning) return
-    setIsTransitioning(true)
-
-    trigger({
-      to: '/shop',
-      onExit: (tl) => {
-        const bg       = bgRef.current
-        const headline = headlineRef.current
-        const tagline  = taglineRef.current
-        const cta      = ctaRef.current
-
-        kbTlRef.current?.kill()
-
-        tl.to('.site-header',           { opacity: 0, y: -16, duration: 0.5, ease: 'power2.inOut' }, 0)
-          .to('.hero-scroll-indicator', { opacity: 0, duration: 0.25 }, 0)
-          .to(shopHintRef.current,      { opacity: 0, duration: 0.25 }, 0)
-
-        if (headline) {
-          const lines = headline.querySelectorAll('span')
-          tl.to(lines, { opacity: 0, y: -36, filter: 'blur(6px)', duration: 0.7, stagger: 0.05, ease: 'power3.inOut' }, 0.08)
-        }
-
-        tl.to(tagline, { opacity: 0, y: -22, duration: 0.55, ease: 'power2.inOut' }, 0.18)
-          .to(cta,     { opacity: 0, y: -16, duration: 0.45, ease: 'power2.inOut' }, 0.25)
-
-        tl.to(bg, {
-          scale:           2.7,
-          x:               '8%',
-          y:               '-5%',
-          transformOrigin: '15% 60%',
-          duration:        3.0,
-          ease:            'power2.inOut',
-        }, 0.08)
-
-        tl.to('.hero-vignette',    { opacity: 1.0, duration: 2.0, ease: 'power2.inOut' }, 0.35)
-          .to('.hero-bottom-fade', { opacity: 1.0, duration: 1.6, ease: 'power2.inOut' }, 0.45)
-          .to('.hero-color-grade', { opacity: 1.0, duration: 1.8, ease: 'power2.inOut' }, 0.6)
-      },
-    })
-  }, [trigger, isTransitioning])
-
-
   return (
     <section
       ref={heroRef}
       className="hero-section"
       aria-label="लेक्चर Time — मुख्य पृष्ठ"
     >
-      {/* ── Background Layer (Street Photograph) ───────────────── */}
+      {/* ── Background Layer (Classroom / Street Photograph) ───── */}
       <div className="hero-bg-wrap" aria-hidden="true">
         <div
           ref={bgRef}
           className="hero-bg"
           role="img"
-          aria-label="Old Indian street with nostalgic cassette stall"
+          aria-label="PW IOI School of Technology Classroom & Indian Street"
         />
       </div>
 
@@ -238,7 +181,7 @@ export default function Hero() {
       <div className="hero-bottom-fade" aria-hidden="true" />
       <div className="hero-grain"       aria-hidden="true" />
 
-      {/* Warm Ambient Lamp Halo over Cassette Stall */}
+      {/* Warm Ambient Lamp Halo */}
       <div
         className="ambient-light-halo ambient-light-halo--amber"
         style={{
@@ -297,24 +240,6 @@ export default function Hero() {
             पुरानी गलियों की नई आवाज़ • संगीत जो वक़्त से बाहर है
           </motion.p>
         </motion.div>
-      </div>
-
-      {/* ── Cassette Stall Interactive Hotspot ──────────────────── */}
-      <div
-        className="hero-shop-zone"
-        onClick={handleEnterShop}
-        role="button"
-        tabIndex={0}
-        aria-label="दुकान में चलें (Enter cassette shop)"
-        onKeyDown={(e) => e.key === 'Enter' && handleEnterShop()}
-      >
-        <div className="hero-shop-glow" aria-hidden="true" />
-        <div ref={shopHintRef} className="hero-shop-hint" aria-hidden="true">
-          <div className="hero-shop-hint-ring">
-            <div className="hero-shop-hint-dot" />
-          </div>
-          <span className="hero-shop-hint-label">दुकान में चलें</span>
-        </div>
       </div>
     </section>
   )
