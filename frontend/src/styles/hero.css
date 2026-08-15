@@ -33,7 +33,7 @@
   height: 100%;
   background-image: url('/assets/hero/hero-street.jpg');
   background-size: cover;
-  background-position: center 38%;
+  background-position: center center;
   background-repeat: no-repeat;
   transform-origin: center center;
   will-change: transform;
