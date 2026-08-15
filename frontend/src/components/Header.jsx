@@ -135,7 +135,7 @@ export default function Header() {
         </div>
 
         {/* Right: Glass Quick Action Buttons */}
-        <nav className="site-nav-desktop" aria-label="मुख्य नेविगेशन">
+        <nav className="site-nav-desktop" aria-label="Main Navigation">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             {/* Quick Search */}
             <button
@@ -147,13 +147,14 @@ export default function Header() {
                 alignItems: 'center',
                 gap: '0.45rem',
                 cursor: 'pointer',
-                fontFamily: "'Noto Sans Devanagari', sans-serif",
-                fontSize: '0.8rem',
+                fontFamily: "'Inter', system-ui, sans-serif",
+                fontSize: '0.78rem',
+                fontWeight: 500,
               }}
               type="button"
             >
               <Search size={14} />
-              <span>खोजें</span>
+              <span>Search</span>
               <span
                 style={{
                   fontFamily: "'Inter', sans-serif",
@@ -178,13 +179,14 @@ export default function Header() {
                 alignItems: 'center',
                 gap: '0.45rem',
                 cursor: 'pointer',
-                fontFamily: "'Noto Sans Devanagari', sans-serif",
-                fontSize: '0.8rem',
+                fontFamily: "'Inter', system-ui, sans-serif",
+                fontSize: '0.78rem',
+                fontWeight: 500,
               }}
               type="button"
             >
               <Disc3 size={14} />
-              <span>मिक्सटेप</span>
+              <span>Mixtapes</span>
             </button>
 
             {/* Library Modal Trigger */}
@@ -197,13 +199,14 @@ export default function Header() {
                 alignItems: 'center',
                 gap: '0.45rem',
                 cursor: 'pointer',
-                fontFamily: "'Noto Sans Devanagari', sans-serif",
-                fontSize: '0.8rem',
+                fontFamily: "'Inter', system-ui, sans-serif",
+                fontSize: '0.78rem',
+                fontWeight: 500,
               }}
               type="button"
             >
               <Music2 size={14} />
-              <span>लाइब्रेरी</span>
+              <span>Library</span>
             </button>
           </div>
         </nav>
