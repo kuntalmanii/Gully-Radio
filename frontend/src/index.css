@@ -24,8 +24,20 @@
   --color-bg-primary:      var(--color-warm-black);
   --color-bg-surface:      var(--color-deep-brown);
   --color-bg-elevated:     var(--color-charcoal-brown);
-  --color-bg-glass:        rgba(21, 19, 16, 0.88);
-  --color-bg-glass-card:   rgba(33, 27, 23, 0.45);
+  --color-bg-glass:        rgba(21, 19, 16, 0.76);
+  --color-bg-glass-card:   rgba(33, 27, 23, 0.52);
+  --color-bg-glass-subtle: rgba(21, 19, 16, 0.42);
+
+  /* ── Glassmorphism System Tokens ─────────────────────────── */
+  --glass-blur-sm:         blur(12px) saturate(160%);
+  --glass-blur-md:         blur(22px) saturate(180%);
+  --glass-blur-lg:         blur(36px) saturate(200%);
+  --glass-border-subtle:   1px solid rgba(232, 213, 181, 0.12);
+  --glass-border-medium:   1px solid rgba(232, 213, 181, 0.2);
+  --glass-border-glow:     1px solid rgba(198, 106, 62, 0.45);
+  --glass-inner-light:     inset 0 1px 0 rgba(243, 231, 208, 0.15);
+  --glass-shadow-card:     0 12px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(243, 231, 208, 0.12);
+  --glass-shadow-elevated: 0 24px 64px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(243, 231, 208, 0.18);
 
   /* ── Semantic Text Tokens ─────────────────────────────────── */
   --color-text-primary:    var(--color-warm-ivory);
@@ -372,8 +384,70 @@ a:focus:not(:focus-visible) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   4.5. GLASSMORPHISM CORE UTILITY CLASSES
+══════════════════════════════════════════════════════════════ */
+.glass-panel {
+  background: var(--color-bg-glass);
+  backdrop-filter: var(--glass-blur-md);
+  -webkit-backdrop-filter: var(--glass-blur-md);
+  border: var(--glass-border-medium);
+  box-shadow: var(--glass-shadow-elevated);
+}
+
+.glass-card {
+  background: var(--color-bg-glass-card);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: var(--glass-border-subtle);
+  box-shadow: var(--glass-shadow-card);
+  transition: all var(--duration-standard) var(--ease-smooth);
+}
+
+.glass-card:hover {
+  background: rgba(43, 35, 29, 0.65);
+  border-color: var(--color-border-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65), 0 0 24px rgba(198, 106, 62, 0.2), inset 0 1px 0 rgba(243, 231, 208, 0.2);
+}
+
+.glass-pill {
+  background: rgba(33, 27, 23, 0.6);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: var(--glass-border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--color-warm-ivory);
+  box-shadow: inset 0 1px 0 rgba(243, 231, 208, 0.1);
+  transition: all var(--duration-micro) var(--ease-standard);
+}
+
+.glass-pill:hover {
+  background: rgba(169, 79, 53, 0.25);
+  border-color: var(--color-burnt-orange);
+  color: var(--color-warm-ivory);
+}
+
+.glass-input {
+  background: rgba(21, 19, 16, 0.65);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: var(--glass-border-medium);
+  border-radius: var(--radius-xs);
+  color: var(--color-warm-ivory);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: border-color var(--duration-micro) var(--ease-standard);
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: var(--color-burnt-orange);
+  box-shadow: 0 0 0 2px rgba(198, 106, 62, 0.25), inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* ══════════════════════════════════════════════════════════════
    5. ATMOSPHERIC OVERLAYS & TEXTURES
 ══════════════════════════════════════════════════════════════ */
+
 /* Procedural SVG Film Grain Overlay (Restrained Multi-Octave Noise) */
 .film-grain-overlay {
   position: fixed;
